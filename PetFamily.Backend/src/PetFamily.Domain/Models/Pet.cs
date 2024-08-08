@@ -19,5 +19,7 @@ public class Pet
     public HelpStatusPet HelpStatus { get; }
     public Requisites Requisites { get; }
     public DateTimeOffset DateCreated { get; }
+    
+    public List<PetPhoto> Photos { get; }
 }
 
