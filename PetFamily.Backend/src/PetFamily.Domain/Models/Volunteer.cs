@@ -8,11 +8,11 @@ public class Volunteer
     public string Patronymic { get; }
     public string GeneralDescription { get; }
     public string AgeExperience { get; }
-    public string PhoneNumber { get; set; }
+    public string PhoneNumber { get; }
     
-    public int PetsAdoptedCount { get; set; }            // Количество которые нашли дом
-    public int PetsLookingForHomeCount { get; set; }     // Количество которые ищут дом
-    public int PetsUnderTreatmentCount { get; set; }     // Количество которые находятся на лечении
+    public int PetsAdoptedCount { get; }            // Количество которые нашли дом
+    public int PetsFoundHomeQuantity  { get; }     // Количество которые ищут дом
+    public int PetsUnderTreatmentCount { get; }     // Количество которые находятся на лечении
     
     public List<SocialLink> SocialLinks { get; }
     public List<Requisites> Requisites { get; }
