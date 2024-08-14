@@ -11,12 +11,8 @@ public class ApplicationDbContext(IConfiguration configuration) : DbContext
 
     private const string DATABASE = "ApplicationDbContext";
     public DbSet<Volunteer> Volunteers { get; set; }
-    public DbSet<Pet> Pets { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.ApplyConfiguration(new PetConfiguration());
-        builder.ApplyConfiguration(new VolunteerConfiguration());
-        builder.ApplyConfiguration(new PetConfiguration());
         builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
     
