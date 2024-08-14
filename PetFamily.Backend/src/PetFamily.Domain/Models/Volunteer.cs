@@ -2,6 +2,10 @@
 
 public class Volunteer
 {
+    protected Volunteer() {}
+    
+    public const int MAX_LENGTH_USERNAME = 50;
+    public const int MAX_GENERAL_DESCRIPTION = 500;
     public Guid Id { get; }
     public string Name { get; }
     public string Surname { get; }

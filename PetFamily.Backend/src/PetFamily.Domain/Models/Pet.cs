@@ -2,6 +2,10 @@
 
 public class Pet
 {
+    protected Pet() { }
+    
+    public const int MIN_TEXT_LENGTH = 50;
+    public const int MAX_TEXT_LENGTH = 500;
     public Guid Id { get; }
     public string NickName { get; }
     public TypeAnimal TypeAnimal { get; } // Тип животного
