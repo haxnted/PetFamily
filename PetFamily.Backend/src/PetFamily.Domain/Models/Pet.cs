@@ -1,4 +1,6 @@
-﻿namespace PetFamily.Domain.Models;
+﻿using PetFamily.Domain.Shared;
+
+namespace PetFamily.Domain.Models;
 
 public class Pet
 {
@@ -6,7 +8,7 @@ public class Pet
     
     public const int MIN_TEXT_LENGTH = 50;
     public const int MAX_TEXT_LENGTH = 500;
-    public Guid Id { get; }
+    public PetId Id { get; }
     public string NickName { get; }
     public TypeAnimal TypeAnimal { get; } // Тип животного
     public string GeneralDescription { get; } // Общее описание животного

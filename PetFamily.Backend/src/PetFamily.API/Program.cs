@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using PetFamily.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);

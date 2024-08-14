@@ -1,4 +1,6 @@
-﻿namespace PetFamily.Domain.Models;
+﻿using PetFamily.Domain.Shared;
+
+namespace PetFamily.Domain.Models;
 
 public class Volunteer
 {
@@ -6,7 +8,7 @@ public class Volunteer
     
     public const int MAX_LENGTH_USERNAME = 50;
     public const int MAX_GENERAL_DESCRIPTION = 500;
-    public Guid Id { get; }
+    public VolunteerId Id { get; }
     public string Name { get; }
     public string Surname { get; }
     public string Patronymic { get; }
