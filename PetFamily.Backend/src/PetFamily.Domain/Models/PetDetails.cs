@@ -1,6 +1,6 @@
 ﻿namespace PetFamily.Domain.Models;
 
-public class PetDetails
+public record class PetDetails
 {
     public List<PetPhoto> Photos { get; }
 }

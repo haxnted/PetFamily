@@ -24,25 +24,23 @@ public  class PetConfiguration : IEntityTypeConfiguration<Pet>
         builder.Property(p => p.TypeAnimal)
             .IsRequired();
 
-        builder.Property(p => p.GeneralDescription)
-            .HasConversion(
-                value => value.Value,
-                res => Description.Create(res).Value
-            )
-            .HasMaxLength(Constants.EXTRA_TEXT_LENGTH)
-            .IsRequired();
+        builder.ComplexProperty(p => p.GeneralDescription, vb =>
+        {
+            vb.Property(d => d.Value)
+                .HasMaxLength(Constants.EXTRA_TEXT_LENGTH)
+                .IsRequired();
+        });
         
         builder.Property(p => p.Breed).IsRequired();
         
         builder.Property(p => p.Color).IsRequired();
         
-        builder.Property(p => p.HealthInformation)
-            .HasConversion(
-                value => value.Value,
-                res => Description.Create(res).Value
-            )
-            .HasMaxLength(Constants.EXTRA_TEXT_LENGTH)
-            .IsRequired();
+        builder.ComplexProperty(p => p.HealthInformation, vb =>
+        {
+            vb.Property(d => d.Value)
+                .HasMaxLength(Constants.EXTRA_TEXT_LENGTH)
+                .IsRequired();
+        });
 
         builder.ComplexProperty(p => p.Address, pb =>
         {
@@ -67,22 +65,20 @@ public  class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .HasColumnName("zipcode");
         });
 
-        builder.OwnsOne(p => p.PhysicalAttributes, pb =>
+        builder.ComplexProperty(p => p.PhysicalAttributes, pb =>
         {
-            pb.ToJson();
-
             pb.Property(p => p.Weight)
                 .IsRequired();
 
             pb.Property(p => p.Height)
                 .IsRequired();
-
         });
         
-        builder.Property(p => p.PhoneNumber)
-            .HasConversion(
-                number => number.Value,
-                value => PhoneNumber.Create(value).Value);
+        builder.ComplexProperty(p => p.PhoneNumber, pb =>
+        {
+            pb.Property(p => p.Value)
+                .IsRequired();
+        });
         
         builder.Property(p => p.BirthDate).IsRequired();
         

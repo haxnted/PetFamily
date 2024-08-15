@@ -36,27 +36,24 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         });
         
         
-        builder.Property(v => v.GeneralDescription)
-            .HasConversion(
-                description => description.Value,
-                value => Description.Create(value).Value
-                )
-            .HasMaxLength(Constants.MAX_TEXT_LENGTH)
-            .IsRequired();
+        builder.ComplexProperty(v => v.GeneralDescription, vb =>
+        {
+            vb.Property(d => d.Value)
+                .HasMaxLength(Constants.MAX_TEXT_LENGTH)
+                .IsRequired();
+        });
 
         builder.ComplexProperty(v => v.AgeExperience, vb =>
         {
             vb.Property(v => v.Years)
                 .IsRequired();
-            vb.Property(v => v.Months)
-                .IsRequired();
         });
 
-        builder.Property(v => v.PhoneNumber)
-            .HasConversion(
-                number => number.Value,
-                result => PhoneNumber.Create(result).Value
-            );
+        builder.ComplexProperty(v => v.PhoneNumber, vb =>
+        {
+            vb.Property(p => p.Value)
+                .IsRequired();
+        });
 
         builder.Property(v => v.PetsAdoptedCount);
         
