@@ -11,4 +11,5 @@ public record class VolunteerId
     public static VolunteerId NewId() => new VolunteerId(Guid.NewGuid());
     public static VolunteerId Empty() => new VolunteerId(Guid.Empty);
     public static VolunteerId Create(Guid id) => new VolunteerId(id);
+    public static implicit operator Guid(VolunteerId breedId) => breedId.Id;
 }

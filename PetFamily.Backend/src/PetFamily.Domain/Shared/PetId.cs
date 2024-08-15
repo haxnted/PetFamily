@@ -10,4 +10,6 @@ public record class PetId
     public static PetId Empty() => new PetId(Guid.Empty);
 
     public static PetId Create(Guid id) => new (id);
+    
+    public static implicit operator Guid(PetId breedId) => breedId.Id;
 }

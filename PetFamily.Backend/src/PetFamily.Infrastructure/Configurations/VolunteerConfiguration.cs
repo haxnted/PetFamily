@@ -55,12 +55,6 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                 .IsRequired();
         });
 
-        builder.Property(v => v.PetsAdoptedCount);
-        
-        builder.Property(v => v.PetsFoundHomeQuantity);
-        
-        builder.Property(v => v.PetsUnderTreatmentCount);
-
         builder.OwnsOne(v => v.Details, vb =>
         {
             vb.ToJson();
