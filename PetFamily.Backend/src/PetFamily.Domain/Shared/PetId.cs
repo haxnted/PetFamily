@@ -4,7 +4,7 @@ public record class PetId
 {
     public Guid Id { get; }
 
-    protected PetId(Guid id) => Id = id;
+    private PetId(Guid id) => Id = id;
 
     public static PetId NewId() => new PetId(Guid.NewGuid());
     public static PetId Empty() => new PetId(Guid.Empty);
