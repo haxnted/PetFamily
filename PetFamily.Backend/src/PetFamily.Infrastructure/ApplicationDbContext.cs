@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PetFamily.Domain.Models;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Infrastructure;
 
@@ -9,7 +10,9 @@ public class ApplicationDbContext(IConfiguration configuration) : DbContext
 {
 
     private const string DATABASE = "ApplicationDbContext";
+    
     public DbSet<Volunteer> Volunteers { get; set; }
+    public DbSet<Species> Species { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);

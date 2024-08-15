@@ -2,18 +2,17 @@
 
 namespace PetFamily.Domain.Models;
 
-public class Pet
+public class Pet : Entity<PetId>
 {
-    protected Pet() { }
-    public PetId Id { get; } = null!;
+    protected Pet(PetId id): base(id) { }
     public string NickName { get; } = string.Empty;
-    public TypeAnimal TypeAnimal { get; }
     public Description GeneralDescription { get; } = null!;
-    public string Breed { get; }  // Порода животного
-    public string Color { get; } // Окрас животного
-    public Description HealthInformation { get; }  
-    public Address Address { get; }
-
+    public Description HealthInformation { get; } = null!;
+    
+    public BreedId BreedId { get; } = null!;
+    
+    public SpeciesId SpeciesId { get; } = null!;
+    public Address Address { get; } = null!;
     public PetPhysicalAttributes PhysicalAttributes { get; } = null!;
     public PhoneNumber PhoneNumber { get; } = null!;
     public DateOnly BirthDate { get; }
@@ -21,9 +20,8 @@ public class Pet
     public bool IsVaccinated { get; } 
     
     public HelpStatusPet HelpStatus { get; }
-    public Requisite Requisite { get; }
+    public Requisite Requisite { get; } = null!;
     public DateTimeOffset DateCreated { get; }
-
-    public PetDetails Details { get; }
+    public PetDetails Details { get; } = null!;
 }
 
