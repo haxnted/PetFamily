@@ -5,27 +5,25 @@ namespace PetFamily.Domain.Models;
 public class Pet
 {
     protected Pet() { }
-    
-    public const int MIN_TEXT_LENGTH = 50;
-    public const int MAX_TEXT_LENGTH = 500;
-    public PetId Id { get; }
-    public string NickName { get; }
-    public TypeAnimal TypeAnimal { get; } // Тип животного
-    public string GeneralDescription { get; } // Общее описание животного
+    public PetId Id { get; } = null!;
+    public string NickName { get; } = string.Empty;
+    public TypeAnimal TypeAnimal { get; }
+    public Description GeneralDescription { get; } = null!;
     public string Breed { get; }  // Порода животного
     public string Color { get; } // Окрас животного
-    public string PetHealthInformation { get; }  // Информация о здоровье животного
-    public string Address { get; } 
-    public double Weight { get; } // Вес
-    public double Height { get; } // Рост
-    public string PhoneNumber { get; } 
+    public Description HealthInformation { get; }  
+    public Address Address { get; }
+
+    public PetPhysicalAttributes PhysicalAttributes { get; } = null!;
+    public PhoneNumber PhoneNumber { get; } = null!;
     public DateOnly BirthDate { get; }
     public bool IsCastrated { get; } 
     public bool IsVaccinated { get; } 
-    public HelpStatusPet HelpStatus { get; }
-    public Requisites Requisites { get; }
-    public DateTimeOffset DateCreated { get; }
     
-    public List<PetPhoto> Photos { get; }
+    public HelpStatusPet HelpStatus { get; }
+    public Requisite Requisite { get; }
+    public DateTimeOffset DateCreated { get; }
+
+    public PetDetails Details { get; }
 }
 
