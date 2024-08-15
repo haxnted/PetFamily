@@ -2,17 +2,17 @@
 
 namespace PetFamily.Domain.Models;
 
-public class Volunteer
+public class Volunteer : Entity<VolunteerId>
 {
-    protected Volunteer() {}
+    protected Volunteer(VolunteerId id) : base(id) {}
     
-    public VolunteerId Id { get; }
+    public SpeciesId SpeciesId { get; }
     
+    public BreedId BreedId { get; }
     public FullName FullName { get; }
     public Description GeneralDescription { get; }
     public AgeExperience AgeExperience { get; }
     public PhoneNumber PhoneNumber { get; }
-    
     public int PetsAdoptedCount { get; }            // Количество которые нашли дом
     public int PetsFoundHomeQuantity  { get; }     // Количество которые ищут дом
     public int PetsUnderTreatmentCount { get; }     // Количество которые находятся на лечении

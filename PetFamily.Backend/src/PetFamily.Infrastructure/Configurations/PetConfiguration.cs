@@ -21,19 +21,24 @@ public  class PetConfiguration : IEntityTypeConfiguration<Pet>
             .HasMaxLength(Constants.MIN_TEXT_LENGTH)
             .IsRequired();
         
-        builder.Property(p => p.TypeAnimal)
-            .IsRequired();
-
         builder.ComplexProperty(p => p.GeneralDescription, vb =>
         {
             vb.Property(d => d.Value)
                 .HasMaxLength(Constants.EXTRA_TEXT_LENGTH)
                 .IsRequired();
         });
+
+        builder.ComplexProperty(p => p.SpeciesId, pb =>
+        {
+            pb.Property(p => p.Id)
+                .IsRequired();
+        });
         
-        builder.Property(p => p.Breed).IsRequired();
-        
-        builder.Property(p => p.Color).IsRequired();
+        builder.ComplexProperty(p => p.BreedId, pb =>
+        {
+            pb.Property(p => p.Id)
+                .IsRequired();
+        });
         
         builder.ComplexProperty(p => p.HealthInformation, vb =>
         {
