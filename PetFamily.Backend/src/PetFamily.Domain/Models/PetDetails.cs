@@ -3,7 +3,8 @@
 namespace PetFamily.Domain.Models;
 
 public record PetDetails
-{
+{ 
+    protected PetDetails() {}
     private readonly List<PetPhoto> _photos = [];
     public IReadOnlyCollection<PetPhoto> PetPhotos => _photos;
     private PetDetails(List<PetPhoto> photos) =>
