@@ -1,8 +1,9 @@
-﻿using PetFamily.Domain.Shared;
+﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Models;
 
-public class Species : Entity<SpeciesId>
+public class Species : Shared.Entity<SpeciesId>
 {
     protected Species(SpeciesId id) : base(id){}
 
@@ -15,11 +16,11 @@ public class Species : Entity<SpeciesId>
     public TypeAnimal TypeAnimal { get; } 
     public List<Breed>? Breeds { get; }
 
-    public static Result<Species> Create(SpeciesId? id, TypeAnimal typeAnimal, List<Breed>? breeds)
+    public static Result<Species, Error> Create(SpeciesId? id, TypeAnimal typeAnimal, List<Breed>? breeds)
     {
         if (id == null)
-            return Result<Species>.Failure("SpeciesId cannot be null");
+            return Errors.General.ValueIsInvalid("SpeciesId cannot be null");
         
-        return Result<Species>.Success(new Species(id, typeAnimal, breeds));
+        return new Species(id, typeAnimal, breeds);
     }
 }

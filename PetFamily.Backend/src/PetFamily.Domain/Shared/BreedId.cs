@@ -1,8 +1,6 @@
-﻿using PetFamily.Domain.Models;
+﻿namespace PetFamily.Domain.Shared;
 
-namespace PetFamily.Domain.Shared;
-
-public class BreedId 
+public record BreedId 
 {
     public Guid Id { get; }
     private BreedId(Guid id) => Id = id;

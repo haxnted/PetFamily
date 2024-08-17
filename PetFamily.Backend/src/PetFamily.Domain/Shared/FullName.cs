@@ -1,6 +1,8 @@
-﻿namespace PetFamily.Domain.Shared;
+﻿using CSharpFunctionalExtensions;
 
-public record class FullName
+namespace PetFamily.Domain.Shared;
+
+public record FullName
 {
     public string Name { get; }
     public string Surname { get; }
@@ -13,17 +15,17 @@ public record class FullName
         Patronymic = patronymic;
     }
 
-    public static Result<FullName> Create(string name, string surname, string patronymic)
+    public static Result<FullName, Error> Create(string name, string surname, string patronymic)
     {
         if (string.IsNullOrWhiteSpace(name) || name.Length > Constants.MIN_TEXT_LENGTH)
-            return Result<FullName>.Failure($"Name cannot be empty or more then {Constants.MIN_TEXT_LENGTH}");
+            return Errors.General.ValueIsInvalid($"Name cannot be empty or more then {Constants.MIN_TEXT_LENGTH}");
 
         if (string.IsNullOrWhiteSpace(surname) || name.Length > Constants.MIN_TEXT_LENGTH)
-            return Result<FullName>.Failure($"Surname cannot be empty or more then {Constants.MIN_TEXT_LENGTH}");
+            return Errors.General.ValueIsInvalid($"Surname cannot be empty or more then {Constants.MIN_TEXT_LENGTH}");
 
         if (string.IsNullOrWhiteSpace(surname) || name.Length > Constants.MIN_TEXT_LENGTH)
-            return Result<FullName>.Failure($"Patronymic cannot be empty or more then {Constants.MIN_TEXT_LENGTH}");
+            return Errors.General.ValueIsInvalid($"Patronymic cannot be empty or more then {Constants.MIN_TEXT_LENGTH}");
 
-        return Result<FullName>.Success(new FullName(name, surname, patronymic));
+        return new FullName(name, surname, patronymic);
     }
 }

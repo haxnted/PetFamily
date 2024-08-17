@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PetFamily.Application.Volunteers;
-using PetFamily.Domain.Models;
-using PetFamily.Domain.Shared;
+using PetFamily.Application.Volunteers.CreateVolunteer;
 
 namespace PetFamily.API.Controllers;
 
@@ -10,32 +8,17 @@ namespace PetFamily.API.Controllers;
 public class VolunteersController : ControllerBase
 {
     [HttpPost]
-    public IActionResult Create([FromQuery] Guid id, [FromBody] CreateVolunteerRequest request)
+    public async Task<ActionResult<Guid>> Create([FromServices] CreateVolunteerHandler service, 
+        [FromBody] CreateVolunteerRequest request,
+        CancellationToken cancellationToken = default)
     {
-        var volunteerId = VolunteerId.Create(id);
-        
-        var fullName = FullName.Create(request.Name, request.Surname, request.Patronymic);
-        if (fullName.IsFailure)
-            return BadRequest(fullName.Error);
+       var result = await service.Execute(request, cancellationToken);
+       if (result.IsFailure)
+       {
+           return BadRequest();
+       }
 
-        var generalDescription = Description.Create(request.Description);
-        if (generalDescription.IsFailure)
-            return BadRequest(generalDescription.Error);
-
-        var ageExperience = AgeExperience.Create(request.AgeExperience);
-        if (ageExperience.IsFailure)
-            return BadRequest(ageExperience.Error);
-        
-        var phoneNumber = PhoneNumber.Create(request.Number);
-        if (phoneNumber.IsFailure)
-            return BadRequest(phoneNumber.Error);
-
-        var volunteer = Volunteer.Create(volunteerId, fullName.Value,
-            generalDescription.Value, ageExperience.Value, phoneNumber.Value);
-        if (volunteer.IsFailure)
-            return BadRequest(volunteer.Error);
-
-        return Ok(volunteerId);
+       return Ok(result.Value);
     }
 }
 

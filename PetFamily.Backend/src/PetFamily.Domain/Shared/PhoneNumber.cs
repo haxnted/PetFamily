@@ -1,22 +1,23 @@
 ﻿using System.Text.RegularExpressions;
+using CSharpFunctionalExtensions;
 
 namespace PetFamily.Domain.Shared;
 
-public record class PhoneNumber
+public record PhoneNumber
 {
-    private const string phoneRegex = @"^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\-]?)?[\d\-]{7,10}$";
+    private const string PhoneRegex = @"^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\-]?)?[\d\-]{7,10}$";
     public string Value { get; }
     private PhoneNumber(string number) => Value = number;
 
-    public static Result<PhoneNumber> Create(string number)
+    public static Result<PhoneNumber, Error> Create(string number)
     {
         if (string.IsNullOrWhiteSpace(number))
-            return Result<PhoneNumber>.Failure("Number cannot be null");
+            return Errors.General.ValueIsInvalid("Number cannot be null");
 
-        if (!Regex.IsMatch(number, phoneRegex))
-            return Result<PhoneNumber>.Failure("Phone number is incorrect");
+        if (Regex.IsMatch(number, PhoneRegex) == false)
+            return Errors.General.ValueIsInvalid("Phone number is incorrect");
         
-        return Result<PhoneNumber>.Success(new PhoneNumber(number));
+        return new PhoneNumber(number);
     } 
     
 }

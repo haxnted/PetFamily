@@ -1,4 +1,6 @@
-﻿namespace PetFamily.Domain.Shared;
+﻿using CSharpFunctionalExtensions;
+
+namespace PetFamily.Domain.Shared;
 
 public record PetPhysicalAttributes
 {
@@ -11,14 +13,14 @@ public record PetPhysicalAttributes
         Height = height;
     }
     
-    public static Result<PetPhysicalAttributes> Create(double weight, double height)
+    public static Result<PetPhysicalAttributes, Error> Create(double weight, double height)
     {
         if (weight <= 0)
-            return Result<PetPhysicalAttributes>.Failure("Weight must be greater than zero.");
+            return Errors.General.ValueIsInvalid("Weight must be greater than zero.");
 
         if (height <= 0)
-            return Result<PetPhysicalAttributes>.Failure("Height must be greater than zero.");
+            return Errors.General.ValueIsInvalid("Height must be greater than zero.");
         
-        return Result<PetPhysicalAttributes>.Success(new PetPhysicalAttributes(weight, height));
+        return new PetPhysicalAttributes(weight, height);
     }
 }

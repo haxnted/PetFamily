@@ -1,8 +1,9 @@
-﻿using PetFamily.Domain.Models;
+﻿using PetFamily.Application.Volunteers;
+using PetFamily.Domain.Models;
 
 namespace PetFamily.Infrastructure.Repositories;
 
-public class VolunteersRepository(ApplicationDbContext context)
+public class VolunteersRepository(ApplicationDbContext context) : IVolunteerRepository
 {
     public async Task<Guid> Add(Volunteer volunteer, CancellationToken cancellationToken = default)
     {

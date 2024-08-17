@@ -1,8 +1,9 @@
-﻿using PetFamily.Domain.Shared;
+﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Models;
 
-public class Breed : Entity<BreedId>
+public class Breed : Shared.Entity<BreedId>
 {
     public string Value { get; set; }
     
@@ -12,14 +13,14 @@ public class Breed : Entity<BreedId>
     {
         Value = breed;
     }
-    public static Result<Breed> Create(BreedId id, string breed)
+    public static Result<Breed, Error> Create(BreedId? id, string breed)
     {
         if (id == null)
-            return Result<Breed>.Failure("BreedId cannot be null");
-        
-        if (string.IsNullOrWhiteSpace(breed) || breed.Length > Constants.MIN_TEXT_LENGTH)
-            return Result<Breed>.Failure($"breed cannot be empty or more then {Constants.MIN_TEXT_LENGTH}. ");
+            return Errors.General.ValueIsInvalid("BreedId cannot be null");
 
-        return Result<Breed>.Success(new Breed(id, breed));
+        if (string.IsNullOrWhiteSpace(breed) || breed.Length > Constants.MIN_TEXT_LENGTH)
+            return Errors.General.ValueIsInvalid($"breed cannot be empty or more then {Constants.MIN_TEXT_LENGTH}.");
+
+        return (new Breed(id, breed));
     }
 }

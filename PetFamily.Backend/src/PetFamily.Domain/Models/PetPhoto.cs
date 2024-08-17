@@ -1,8 +1,9 @@
-﻿using PetFamily.Domain.Shared;
+﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Models;
 
-public record class PetPhoto
+public record PetPhoto
 {
     public string Path { get; }
     public bool IsImageMain { get; }
@@ -13,11 +14,11 @@ public record class PetPhoto
         IsImageMain = isImageMain;
     }
 
-    public static Result<PetPhoto> Create(string path, bool isImageMain)
+    public static Result<PetPhoto, Error> Create(string path, bool isImageMain)
     {
         if (string.IsNullOrWhiteSpace(path))
-            return Result<PetPhoto>.Failure("path cannot be empty");
+            return Errors.General.ValueIsInvalid("path cannot be empty");
 
-        return Result<PetPhoto>.Success(new PetPhoto(path, isImageMain));
+        return new PetPhoto(path, isImageMain);
     }
 }
