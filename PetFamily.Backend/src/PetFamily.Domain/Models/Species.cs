@@ -10,7 +10,7 @@ public class Species : Shared.Entity<SpeciesId>
     private Species(SpeciesId id, TypeAnimal typeAnimal, List<Breed>? breeds) : base(id)
     {
         TypeAnimal = typeAnimal;
-        Breeds = breeds;
+        Breeds = breeds ?? [];
     }
     
     public TypeAnimal TypeAnimal { get; } 
