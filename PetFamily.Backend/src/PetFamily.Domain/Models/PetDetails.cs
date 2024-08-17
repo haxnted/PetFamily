@@ -1,6 +1,18 @@
-﻿namespace PetFamily.Domain.Models;
+﻿using CSharpFunctionalExtensions;
 
-public record class PetDetails
+namespace PetFamily.Domain.Models;
+
+public record PetDetails
 {
-    public List<PetPhoto> Photos { get; }
+    private readonly List<PetPhoto> _photos = [];
+    public IReadOnlyCollection<PetPhoto> PetPhotos => _photos;
+    private PetDetails(List<PetPhoto> photos) =>
+        _photos = photos ??= [];
+    public void AddPhoto(PetPhoto photo) =>
+        _photos.Add(photo);
+
+    public static Result<PetDetails> Create(List<PetPhoto> photos)
+    {
+        return new PetDetails(photos);
+    }
 }

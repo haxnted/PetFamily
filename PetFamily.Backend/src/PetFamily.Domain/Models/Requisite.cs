@@ -1,4 +1,5 @@
-﻿using PetFamily.Domain.Shared;
+﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Models;
 
@@ -13,14 +14,14 @@ public record class Requisite
         RequisiteDescription = requisiteDescription;
     }
 
-    public static Result<Requisite> Create(string requisiteName, string requisiteDescription)
+    public static Result<Requisite, Error> Create(string requisiteName, string requisiteDescription)
     {
         if (string.IsNullOrWhiteSpace(requisiteName) || requisiteName.Length > Constants.MIDDLE_TEXT_LENGTH)
-            return Result<Requisite>.Failure($"Requisite name cannot be empty or more then {Constants.MIDDLE_TEXT_LENGTH}. ");
+            return Errors.General.ValueIsInvalid($"Requisite name cannot be empty or more then {Constants.MIDDLE_TEXT_LENGTH}. ");
 
         if (string.IsNullOrWhiteSpace(requisiteDescription) || requisiteDescription.Length > Constants.EXTRA_TEXT_LENGTH)
-            return Result<Requisite>.Failure($"Requisite description cannot be empty or more then {Constants.EXTRA_TEXT_LENGTH}");
+            return Errors.General.ValueIsInvalid($"Requisite description cannot be empty or more then {Constants.EXTRA_TEXT_LENGTH}");
 
-        return Result<Requisite>.Success(new Requisite(requisiteName, requisiteDescription));
+        return new Requisite(requisiteName, requisiteDescription);
     }
 }

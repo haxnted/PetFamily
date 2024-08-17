@@ -1,23 +1,61 @@
-﻿using PetFamily.Domain.Shared;
+﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Models;
 
-public class Volunteer : Entity<VolunteerId>
+public class Volunteer : Shared.Entity<VolunteerId>
 {
     protected Volunteer(VolunteerId id) : base(id) {}
-    
-    public SpeciesId SpeciesId { get; }
-    
-    public BreedId BreedId { get; }
+
+    private Volunteer(
+        VolunteerId id, 
+        FullName fullName, 
+        Description generalDescription,
+        AgeExperience ageExperience,
+        PhoneNumber number,
+        List<Pet> pets,
+        VolunteerDetails details) : base(id)
+    {
+        FullName = fullName;
+        GeneralDescription = generalDescription;
+        AgeExperience = ageExperience;
+        PhoneNumber = number;
+        _pets = pets;
+        Details = details;
+        
+    }
     public FullName FullName { get; }
     public Description GeneralDescription { get; }
     public AgeExperience AgeExperience { get; }
     public PhoneNumber PhoneNumber { get; }
-    public int PetsAdoptedCount { get; }            // Количество которые нашли дом
-    public int PetsFoundHomeQuantity  { get; }     // Количество которые ищут дом
-    public int PetsUnderTreatmentCount { get; }     // Количество которые находятся на лечении
+    private readonly List<Pet> _pets = [];
+    public IReadOnlyList<Pet> Pets => _pets;
+    public VolunteerDetails? Details { get; } 
+
+    public void AddPet(Pet pet) =>
+        _pets.Add(pet);
     
-    public List<Pet> Pets { get; }
+    public static Result<Volunteer> Create(
+        VolunteerId id,
+        FullName fullName,
+        Description generalDescription,
+        AgeExperience ageExperience,
+        PhoneNumber number,
+        List<Pet> pets,
+        VolunteerDetails details
+    )
+    {
+        pets ??= [];
+        return new Volunteer(id, fullName, generalDescription, 
+                ageExperience, number, pets, details);
+    }
+    public int PetsAdoptedCount() =>
+       Pets.Count(x => x.HelpStatus == HelpStatusPet.FoundHome);
     
-    public VolunteerDetails Details { get; }
+    public int PetsFoundHomeQuantity() =>
+     Pets.Count(x => x.HelpStatus == HelpStatusPet.LookingForHome);
+    
+    public int PetsUnderTreatmentCount() => 
+         Pets.Count(x => x.HelpStatus == HelpStatusPet.NeedsHelp);
+    
 }

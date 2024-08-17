@@ -1,6 +1,6 @@
 ﻿namespace PetFamily.Domain.Shared;
 
-public record class SpeciesId
+public record SpeciesId
 {
     public Guid Id { get; }
 
@@ -8,6 +8,6 @@ public record class SpeciesId
 
     public static SpeciesId NewId() => new SpeciesId(Guid.NewGuid());
     public static SpeciesId Empty() => new SpeciesId(Guid.Empty);
-
     public static SpeciesId Create(Guid id) => new (id);
+    public static implicit operator Guid(SpeciesId breedId) => breedId.Id;
 }

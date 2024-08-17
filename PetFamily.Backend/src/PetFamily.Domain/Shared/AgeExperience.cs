@@ -1,19 +1,20 @@
-﻿namespace PetFamily.Domain.Shared;
+﻿using CSharpFunctionalExtensions;
 
-public record class AgeExperience
+namespace PetFamily.Domain.Shared;
+
+public record AgeExperience
 {
     public int Years { get; }
-
-    private AgeExperience(int years, int months)
+    private AgeExperience(int years)
     {
         Years = years;
     }
 
-    public static Result<AgeExperience> Create(int years, int months)
+    public static Result<AgeExperience, Error> Create(int years)
     {
         if (years < 0 )
-            return Result<AgeExperience>.Failure("Years and months must both be zero or positive.");
+            return Errors.General.ValueIsInvalid("Years and months must both be zero or positive.");
         
-        return Result<AgeExperience>.Success(new AgeExperience(years, months));
+        return new AgeExperience(years);
     }
 }

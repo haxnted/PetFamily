@@ -1,6 +1,8 @@
-﻿namespace PetFamily.Domain.Shared;
+﻿using CSharpFunctionalExtensions;
 
-public record class Description
+namespace PetFamily.Domain.Shared;
+
+public record Description
 {
     public string Value { get; }
 
@@ -9,11 +11,11 @@ public record class Description
         Value = description;
     }
 
-    public static Result<Description> Create(string description)
+    public static Result<Description, Error> Create(string description)
     {
         if (string.IsNullOrWhiteSpace(description) || description.Length > Constants.EXTRA_TEXT_LENGTH)
-            return Result<Description>.Failure($"Description cannot be null or more then {Constants.EXTRA_TEXT_LENGTH}. ");
+            return Errors.General.ValueIsInvalid($"Description cannot be null or more then {Constants.EXTRA_TEXT_LENGTH}. ");
 
-        return Result<Description>.Success(new Description(description));
+        return new Description(description);
     }
 }

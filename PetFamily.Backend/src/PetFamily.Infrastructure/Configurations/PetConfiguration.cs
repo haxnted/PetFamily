@@ -108,7 +108,7 @@ public  class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             pd.ToJson();
 
-            pd.OwnsMany(d => d.Photos, db =>
+            pd.OwnsMany(d => d.PetPhotos, db =>
             {
                 db.Property(p => p.Path)
                     .IsRequired();
