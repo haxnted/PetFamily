@@ -21,7 +21,7 @@ public class Pet : Shared.Entity<PetId>
     public Requisite Requisite { get; } = null!;
     public DateTimeOffset DateCreated { get; }
     public PetDetails Details { get; } = null!;
-
+    
     private Pet(PetId id, 
                 string nickName,
                 Description generalDescription,

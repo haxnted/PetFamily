@@ -5,9 +5,10 @@ namespace PetFamily.Domain.Shared;
 
 public record PhoneNumber
 {
+    protected PhoneNumber() {}
+    private PhoneNumber(string number) => Value = number;
     private const string PhoneRegex = @"^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\-]?)?[\d\-]{7,10}$";
     public string Value { get; }
-    private PhoneNumber(string number) => Value = number;
 
     public static Result<PhoneNumber, Error> Create(string number)
     {

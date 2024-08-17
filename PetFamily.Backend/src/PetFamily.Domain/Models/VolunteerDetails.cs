@@ -9,18 +9,16 @@ public record VolunteerDetails
     public IReadOnlyCollection<SocialLink> SocialLinks => _socialLinks;
     public IReadOnlyCollection<Requisite> Requisites => _requisites;
     
+    protected VolunteerDetails(){}
     private VolunteerDetails(List<SocialLink> socialLinks,
         List<Requisite> requisites)
     {
-        _socialLinks = socialLinks;
-        _requisites = requisites;
+        _socialLinks = socialLinks ??= [];
+        _requisites = requisites ??= [];
     }
-    public static Result<VolunteerDetails> Create(List<SocialLink>? socialLinks,
-        List<Requisite>? requisites)
+    public static Result<VolunteerDetails> Create(List<SocialLink> socialLinks,
+        List<Requisite> requisites)
     {
-        socialLinks ??= [];
-        requisites ??= [];
-
         return new VolunteerDetails(socialLinks, requisites);
     }
     
