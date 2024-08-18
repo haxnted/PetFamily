@@ -3,7 +3,7 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Models;
 
-public record class SocialLink
+public record SocialLink
 {
     public string Name { get; }
     public string Url { get; }

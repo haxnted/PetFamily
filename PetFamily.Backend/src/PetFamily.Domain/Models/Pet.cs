@@ -18,10 +18,8 @@ public class Pet : Shared.Entity<PetId>
     public bool IsCastrated { get; } 
     public bool IsVaccinated { get; } 
     public HelpStatusPet HelpStatus { get; }
-    public Requisite Requisite { get; } = null!;
     public DateTimeOffset DateCreated { get; }
     public PetDetails Details { get; } = null!;
-    
     private Pet(PetId id, 
                 string nickName,
                 Description generalDescription,
@@ -45,7 +43,6 @@ public class Pet : Shared.Entity<PetId>
         IsCastrated = isCastrated;
         IsVaccinated = isVaccinated;
         HelpStatus = helpStatus;
-        Requisite = requisite;
         DateCreated = dateTimeOffset;
         Details = details;
     }
@@ -68,7 +65,7 @@ public class Pet : Shared.Entity<PetId>
             return Errors.General.ValueIsInvalid($"Nickname pet cannot be null or more then {Constants.MIN_TEXT_LENGTH}. ");
 
         var pet = new Pet(id, nickName, generalDescription, address, attributes, number,
-            birthDate, isCastrated, isVaccinated, helpStatus, requisite, dateTimeOffset, details);
+            birthDate, isCastrated, isVaccinated, helpStatus, requisite, dateTimeOffset ,details);
 
         return pet;
     }

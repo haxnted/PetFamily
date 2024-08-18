@@ -97,17 +97,6 @@ public  class PetConfiguration : IEntityTypeConfiguration<Pet>
         
         builder.Property(p => p.IsVaccinated).IsRequired();
         
-        builder.OwnsOne(p => p.Requisite, pv =>
-        {
-            pv.ToJson();
-
-            pv.Property(p => p.RequisiteName)
-                .IsRequired();
-
-            pv.Property(p => p.RequisiteDescription)
-                .IsRequired();
-        });
-        
         builder.Property(p => p.DateCreated).IsRequired();
 
         builder.OwnsOne(p => p.Details, pd =>
@@ -123,6 +112,14 @@ public  class PetConfiguration : IEntityTypeConfiguration<Pet>
                     .IsRequired();
             });
 
+            pd.OwnsMany(p => p.Requisites, pb =>
+            {
+                pb.Property(p => p.RequisiteName)
+                    .IsRequired();
+
+                pb.Property(p => p.RequisiteDescription)
+                    .IsRequired();
+            });
         });
     }
 }
