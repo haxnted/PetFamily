@@ -2,7 +2,7 @@
 
 namespace PetFamily.Domain.Shared;
 
-public record class VolunteerId
+public record VolunteerId
 {
     public Guid Id { get; }
 

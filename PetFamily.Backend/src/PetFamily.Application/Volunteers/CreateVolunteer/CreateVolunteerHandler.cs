@@ -56,8 +56,11 @@ public class CreateVolunteerHandler(IVolunteersRepository repository)
             fullName.Value, description.Value, 
             ageExperience.Value, phoneNumber.Value, [], details.Value);
 
-        await repository.Add(volunteerResult.Value, token);
+        if (volunteerResult.IsFailure)
+            //Volunteer не возвращает Error
+            return Errors.General.ValueIsInvalid("Volunteer");
         
-        return volunteerId.Id;
+
+        return await repository.Add(volunteerResult.Value, token);
     }
 }

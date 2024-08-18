@@ -3,7 +3,7 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Models;
 
-public class PetPhoto 
+public record PetPhoto 
 {
     public string Path { get; }
     public bool IsImageMain { get; }
