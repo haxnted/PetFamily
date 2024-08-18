@@ -1,4 +1,4 @@
-﻿namespace PetFamily.Application.Volunteers;
+﻿namespace PetFamily.Application.Volunteers.CreateVolunteer;
 
 public record class CreateVolunteerRequest(
     string Name,

@@ -5,7 +5,8 @@ namespace PetFamily.Domain.Shared;
 public record Description
 {
     public string Value { get; }
-
+    
+    protected Description(){}
     private Description(string description)
     {
         Value = description;

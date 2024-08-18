@@ -9,6 +9,7 @@ public record VolunteerDetails
     public IReadOnlyCollection<SocialLink> SocialLinks => _socialLinks;
     public IReadOnlyCollection<Requisite> Requisites => _requisites;
     
+    protected VolunteerDetails(){}
     private VolunteerDetails(List<SocialLink> socialLinks,
         List<Requisite> requisites)
     {
