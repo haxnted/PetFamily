@@ -28,12 +28,12 @@ namespace PetFamily.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    age_experience_years = table.Column<int>(type: "integer", nullable: false),
+                    age_experience = table.Column<int>(type: "integer", nullable: false),
                     name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     patronymic = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     surname = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    general_description_value = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    phone_number_value = table.Column<string>(type: "text", nullable: false),
+                    general_description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    phone_number = table.Column<string>(type: "text", nullable: false),
                     details = table.Column<string>(type: "jsonb", nullable: true)
                 },
                 constraints: table =>
@@ -47,14 +47,14 @@ namespace PetFamily.Infrastructure.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     value = table.Column<string>(type: "text", nullable: false),
-                    species_id = table.Column<Guid>(type: "uuid", nullable: true)
+                    species_fk_id = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_breeds", x => x.id);
                     table.ForeignKey(
-                        name: "fk_breeds_species_species_id",
-                        column: x => x.species_id,
+                        name: "fk_breeds_species_species_fk_id",
+                        column: x => x.species_fk_id,
                         principalTable: "species",
                         principalColumn: "id");
                 });
@@ -72,15 +72,15 @@ namespace PetFamily.Infrastructure.Migrations
                     volunteer_id = table.Column<Guid>(type: "uuid", nullable: true),
                     city = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     state = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Street = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    zipcode = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    breed_id_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    general_description_value = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: false),
-                    health_information_value = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: false),
-                    phone_number_value = table.Column<string>(type: "text", nullable: false),
-                    physical_attributes_height = table.Column<double>(type: "double precision", nullable: false),
-                    physical_attributes_weight = table.Column<double>(type: "double precision", nullable: false),
-                    species_id_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    street = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    zipcode = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    breed_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    general_description = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: false),
+                    health_information = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true),
+                    phone_number = table.Column<string>(type: "text", nullable: false),
+                    height = table.Column<double>(type: "double precision", nullable: false),
+                    weight = table.Column<double>(type: "double precision", nullable: false),
+                    species_id = table.Column<Guid>(type: "uuid", nullable: false),
                     details = table.Column<string>(type: "jsonb", nullable: false)
                 },
                 constraints: table =>
@@ -94,9 +94,9 @@ namespace PetFamily.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "ix_breeds_species_id",
+                name: "ix_breeds_species_fk_id",
                 table: "breeds",
-                column: "species_id");
+                column: "species_fk_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_pets_volunteer_id",
