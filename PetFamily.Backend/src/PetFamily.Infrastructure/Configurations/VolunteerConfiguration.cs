@@ -39,48 +39,50 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         builder.ComplexProperty(v => v.GeneralDescription, vb =>
         {
             vb.Property(d => d.Value)
-                .HasMaxLength(Constants.MAX_TEXT_LENGTH)
-                .IsRequired();
+                .HasColumnName("general_description")
+                .HasMaxLength(Constants.MAX_TEXT_LENGTH);
         });
 
         builder.ComplexProperty(v => v.AgeExperience, vb =>
         {
             vb.Property(v => v.Years)
+                .HasColumnName("age_experience")
                 .IsRequired();
         });
 
         builder.ComplexProperty(v => v.PhoneNumber, vb =>
         {
             vb.Property(p => p.Value)
+                .HasColumnName("phone_number")
                 .IsRequired();
         });
 
         builder.OwnsOne(v => v.Details, vb =>
         {
             vb.ToJson();
+
             vb.OwnsMany(v => v.SocialLinks, vb =>
             {
                 vb.Property(v => v.Name)
                     .IsRequired()
                     .HasMaxLength(Constants.MIN_TEXT_LENGTH);
-            
+
                 vb.Property(v => v.Url)
                     .IsRequired()
                     .HasMaxLength(Constants.MIN_TEXT_LENGTH);
             });
-        
+
             vb.OwnsMany(v => v.Requisites, vb =>
             {
                 vb.Property(v => v.RequisiteName)
                     .IsRequired()
                     .HasMaxLength(Constants.MIN_TEXT_LENGTH);
-            
+
                 vb.Property(v => v.RequisiteDescription)
                     .IsRequired()
                     .HasMaxLength(Constants.EXTRA_TEXT_LENGTH);
             });
         });
-
         
         builder.HasMany(v => v.Pets)
             .WithOne()

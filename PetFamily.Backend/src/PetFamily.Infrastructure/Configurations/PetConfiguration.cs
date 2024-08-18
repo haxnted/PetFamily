@@ -25,26 +25,29 @@ public  class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             vb.Property(d => d.Value)
                 .HasMaxLength(Constants.EXTRA_TEXT_LENGTH)
+                .HasColumnName("general_description")
                 .IsRequired();
         });
 
         builder.ComplexProperty(p => p.SpeciesId, pb =>
         {
             pb.Property(p => p.Id)
-                .IsRequired();
+                .HasColumnName("species_id");
         });
         
         builder.ComplexProperty(p => p.BreedId, pb =>
         {
             pb.Property(p => p.Id)
-                .IsRequired();
+                .HasColumnName("breed_id");
+
         });
         
         builder.ComplexProperty(p => p.HealthInformation, vb =>
         {
             vb.Property(d => d.Value)
                 .HasMaxLength(Constants.EXTRA_TEXT_LENGTH)
-                .IsRequired();
+                .HasColumnName("health_information")
+                .IsRequired(false);
         });
 
         builder.ComplexProperty(p => p.Address, pb =>
@@ -52,7 +55,7 @@ public  class PetConfiguration : IEntityTypeConfiguration<Pet>
             pb.Property(p => p.Street)
                 .IsRequired()
                 .HasMaxLength(Constants.MIN_TEXT_LENGTH)
-                .HasColumnName("Street");
+                .HasColumnName("street");
             
             pb.Property(p => p.City)
                 .IsRequired()
@@ -65,7 +68,7 @@ public  class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .HasColumnName("state");
 
             pb.Property(p => p.ZipCode)
-                .IsRequired()
+                .IsRequired(false)
                 .HasMaxLength(Constants.MIN_TEXT_LENGTH)
                 .HasColumnName("zipcode");
         });
@@ -73,15 +76,18 @@ public  class PetConfiguration : IEntityTypeConfiguration<Pet>
         builder.ComplexProperty(p => p.PhysicalAttributes, pb =>
         {
             pb.Property(p => p.Weight)
+                .HasColumnName("weight")
                 .IsRequired();
 
             pb.Property(p => p.Height)
+                .HasColumnName("height")
                 .IsRequired();
         });
         
         builder.ComplexProperty(p => p.PhoneNumber, pb =>
         {
             pb.Property(p => p.Value)
+                .HasColumnName("phone_number")
                 .IsRequired();
         });
         
