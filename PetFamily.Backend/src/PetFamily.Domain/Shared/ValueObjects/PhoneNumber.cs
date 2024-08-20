@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using CSharpFunctionalExtensions;
 
-namespace PetFamily.Domain.Shared;
+namespace PetFamily.Domain.Shared.ValueObjects;
 
 public record PhoneNumber
 {
@@ -12,10 +12,10 @@ public record PhoneNumber
     public static Result<PhoneNumber, Error> Create(string number)
     {
         if (string.IsNullOrWhiteSpace(number))
-            return Errors.General.ValueIsInvalid("Number cannot be null");
+            return Errors.General.ValueIsInvalid("Number");
 
         if (Regex.IsMatch(number, PhoneRegex) == false)
-            return Errors.General.ValueIsInvalid("Phone number is incorrect");
+            return Errors.General.ValueIsInvalid("Phone");
         
         return new PhoneNumber(number);
     } 

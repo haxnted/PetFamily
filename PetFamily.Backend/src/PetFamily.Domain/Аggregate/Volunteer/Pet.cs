@@ -1,11 +1,14 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.Shared.EntityIds;
+using PetFamily.Domain.Shared.ValueObjects;
 
-namespace PetFamily.Domain.Models;
+namespace PetFamily.Domain.Аggregate.Volunteer;
 
 public class Pet : Shared.Entity<PetId>
 {
-    protected Pet(PetId id): base(id) { }
+    protected Pet(PetId id) : base(id) { }
+
     public string NickName { get; } = string.Empty;
     public Description GeneralDescription { get; } = null!;
     public Description HealthInformation { get; } = null!;
@@ -15,24 +18,25 @@ public class Pet : Shared.Entity<PetId>
     public PetPhysicalAttributes PhysicalAttributes { get; } = null!;
     public PhoneNumber PhoneNumber { get; } = null!;
     public DateOnly BirthDate { get; }
-    public bool IsCastrated { get; } 
-    public bool IsVaccinated { get; } 
+    public bool IsCastrated { get; }
+    public bool IsVaccinated { get; }
     public HelpStatusPet HelpStatus { get; }
     public DateTimeOffset DateCreated { get; }
     public PetDetails Details { get; } = null!;
-    private Pet(PetId id, 
-                string nickName,
-                Description generalDescription,
-                Address address,
-                PetPhysicalAttributes attributes,
-                PhoneNumber number,
-                DateOnly birthDate,
-                bool isCastrated,
-                bool isVaccinated,
-                HelpStatusPet helpStatus,
-                Requisite requisite,
-                DateTimeOffset dateTimeOffset,
-                PetDetails details) : base(id)
+
+    private Pet(PetId id,
+        string nickName,
+        Description generalDescription,
+        Address address,
+        PetPhysicalAttributes attributes,
+        PhoneNumber number,
+        DateOnly birthDate,
+        bool isCastrated,
+        bool isVaccinated,
+        HelpStatusPet helpStatus,
+        Requisite requisite,
+        DateTimeOffset dateTimeOffset,
+        PetDetails details) : base(id)
     {
         NickName = nickName;
         GeneralDescription = generalDescription;
@@ -47,7 +51,7 @@ public class Pet : Shared.Entity<PetId>
         Details = details;
     }
 
-    public static Result<Pet, Error> Create(PetId id, 
+    public static Result<Pet, Error> Create(PetId id,
         string nickName,
         Description generalDescription,
         Address address,
@@ -62,12 +66,11 @@ public class Pet : Shared.Entity<PetId>
         PetDetails details)
     {
         if (string.IsNullOrEmpty(nickName) || nickName.Length > Constants.MIN_TEXT_LENGTH)
-            return Errors.General.ValueIsInvalid($"Nickname pet cannot be null or more then {Constants.MIN_TEXT_LENGTH}. ");
+            return Errors.General.ValueIsInvalid("Nickname");
 
         var pet = new Pet(id, nickName, generalDescription, address, attributes, number,
-            birthDate, isCastrated, isVaccinated, helpStatus, requisite, dateTimeOffset ,details);
+            birthDate, isCastrated, isVaccinated, helpStatus, requisite, dateTimeOffset, details);
 
         return pet;
     }
 }
-

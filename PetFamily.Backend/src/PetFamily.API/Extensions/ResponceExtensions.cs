@@ -19,7 +19,7 @@ public static class ResponseExtensions
         };
 
         var envelope = Envelope.Error(result);
-        
+
         return new ObjectResult(envelope)
         {
             StatusCode = statusCode

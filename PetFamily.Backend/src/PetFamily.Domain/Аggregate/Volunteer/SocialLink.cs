@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Shared;
 
-namespace PetFamily.Domain.Models;
+namespace PetFamily.Domain.Аggregate.Volunteer;
 
 public record SocialLink
 {
@@ -20,7 +20,8 @@ public record SocialLink
             return Errors.General.ValueIsInvalid($"Name url cannot be empty or more then {Constants.MAX_TEXT_LENGTH}");
 
         if (string.IsNullOrWhiteSpace(url) || url.Length > Constants.EXTRA_TEXT_LENGTH)
-            return Errors.General.ValueIsInvalid($"Path url cannot be empty or more then {Constants.EXTRA_TEXT_LENGTH}");
+            return Errors.General.ValueIsInvalid(
+                $"Path url cannot be empty or more then {Constants.EXTRA_TEXT_LENGTH}");
 
         return new SocialLink(name, url);
     }

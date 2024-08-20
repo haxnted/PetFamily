@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PetFamily.Domain.Models;
-using PetFamily.Domain.Shared;
+using PetFamily.Domain.Shared.EntityIds;
+using PetFamily.Domain.Аggregate.Species;
 
 namespace PetFamily.Infrastructure.Configurations;
 
@@ -20,6 +20,5 @@ public class BreedConfiguration : IEntityTypeConfiguration<Breed>
 
         builder.Property(b => b.Value)
             .IsRequired();
-        
     }
 }

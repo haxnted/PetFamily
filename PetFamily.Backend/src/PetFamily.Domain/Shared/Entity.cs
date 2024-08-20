@@ -3,6 +3,7 @@
 public abstract class Entity<TId> where TId : notnull
 {
     public TId Id { get; }
+
     protected Entity(TId id)
     {
         Id = id;
@@ -21,17 +22,17 @@ public abstract class Entity<TId> where TId : notnull
 
     public override int GetHashCode()
     {
-        return Id.GetHashCode();
+        return (GetType().FullName + Id).GetHashCode();
     }
 
     public static bool operator ==(Entity<TId>? left, Entity<TId>? right)
     {
         if (ReferenceEquals(left, null) && ReferenceEquals(right, null))
             return true;
-        
+
         if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
             return false;
-        
+
         return left.Equals(right);
     }
 

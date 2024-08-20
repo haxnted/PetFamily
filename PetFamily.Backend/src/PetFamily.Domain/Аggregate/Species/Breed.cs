@@ -1,18 +1,20 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.Shared.EntityIds;
 
-namespace PetFamily.Domain.Models;
+namespace PetFamily.Domain.Аggregate.Species;
 
 public class Breed : Shared.Entity<BreedId>
 {
-    public string Value { get; set; }
-    
-    protected Breed(BreedId id) : base(id){}
+    public string Value { get; }
+
+    protected Breed(BreedId id) : base(id) { }
 
     private Breed(BreedId id, string breed) : base(id)
     {
         Value = breed;
     }
+
     public static Result<Breed, Error> Create(BreedId? id, string breed)
     {
         if (id == null)

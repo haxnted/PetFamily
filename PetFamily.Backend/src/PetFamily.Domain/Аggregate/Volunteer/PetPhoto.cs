@@ -1,13 +1,13 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Shared;
 
-namespace PetFamily.Domain.Models;
+namespace PetFamily.Domain.Аggregate.Volunteer;
 
-public record PetPhoto 
+public record PetPhoto
 {
     public string Path { get; }
     public bool IsImageMain { get; }
-    
+
     private PetPhoto(string path, bool isImageMain)
     {
         Path = path;
