@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 
-namespace PetFamily.Domain.Shared;
+namespace PetFamily.Domain.Shared.ValueObjects;
 
 public record Address
 {
@@ -16,19 +16,20 @@ public record Address
         State = state;
         ZipCode = zipCode;
     }
+
     public static Result<Address, Error> Create(string street, string city, string state, string zipCode)
     {
         if (string.IsNullOrWhiteSpace(street) || street.Length > Constants.MIN_TEXT_LENGTH)
-            return Errors.General.ValueIsInvalid($"Street cannot be empty or more then {Constants.MIN_TEXT_LENGTH}.");
+            return Errors.General.ValueIsInvalid("street");
 
         if (string.IsNullOrWhiteSpace(city) || city.Length > Constants.MIN_TEXT_LENGTH)
-            return Errors.General.ValueIsInvalid($"City cannot be empty or more then {Constants.MIN_TEXT_LENGTH}.");
+            return Errors.General.ValueIsInvalid("city");
 
         if (string.IsNullOrWhiteSpace(state) || state.Length > Constants.MIN_TEXT_LENGTH)
-            return Errors.General.ValueIsInvalid($"State cannot be empty or more then {Constants.MIN_TEXT_LENGTH}.");
+            return Errors.General.ValueIsInvalid("state");
 
         if (string.IsNullOrWhiteSpace(zipCode) || zipCode.Length > Constants.MIN_TEXT_LENGTH)
-            return Errors.General.ValueIsInvalid($"ZipCode cannot be empty or more then {Constants.MIN_TEXT_LENGTH}.");
+            return Errors.General.ValueIsInvalid("zipCode");
 
         return new Address(street, city, state, zipCode);
     }

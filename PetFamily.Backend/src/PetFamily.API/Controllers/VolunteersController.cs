@@ -9,16 +9,15 @@ namespace PetFamily.API.Controllers;
 public class VolunteersController : ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromServices] CreateVolunteerHandler service, 
+    public async Task<ActionResult<Guid>> Create([FromServices] CreateVolunteerHandler service,
         [FromBody] CreateVolunteerRequest request,
         CancellationToken cancellationToken)
     {
-       var result = await service.Execute(request, cancellationToken);
-       
-       if (result.IsFailure)
-           return result.Error.ToResponse();
+        var result = await service.Execute(request, cancellationToken);
 
-       return Created(result.Value.ToString(), null);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Created(result.Value.ToString(), null);
     }
 }
-

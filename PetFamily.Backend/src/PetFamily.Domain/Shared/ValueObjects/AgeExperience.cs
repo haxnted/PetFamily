@@ -1,10 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 
-namespace PetFamily.Domain.Shared;
+namespace PetFamily.Domain.Shared.ValueObjects;
 
 public record AgeExperience
 {
     public int Years { get; }
+
     private AgeExperience(int years)
     {
         Years = years;
@@ -12,9 +13,9 @@ public record AgeExperience
 
     public static Result<AgeExperience, Error> Create(int years)
     {
-        if (years < 0 )
-            return Errors.General.ValueIsInvalid("Years and months must both be zero or positive.");
-        
+        if (years < 0)
+            return Errors.General.ValueIsInvalid("Years");
+
         return new AgeExperience(years);
     }
 }

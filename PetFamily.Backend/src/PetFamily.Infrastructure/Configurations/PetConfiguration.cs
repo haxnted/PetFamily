@@ -1,26 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PetFamily.Domain.Models;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.Shared.EntityIds;
+using PetFamily.Domain.Аggregate.Volunteer;
 
 namespace PetFamily.Infrastructure.Configurations;
 
-public  class PetConfiguration : IEntityTypeConfiguration<Pet>
+public class PetConfiguration : IEntityTypeConfiguration<Pet>
 {
     public void Configure(EntityTypeBuilder<Pet> builder)
     {
         builder.ToTable("pets");
-        
+
         builder.HasKey(p => p.Id);
         builder.Property(p => p.Id)
             .HasConversion(
                 id => id.Id,
                 value => PetId.Create(value));
-        
+
         builder.Property(p => p.NickName)
             .HasMaxLength(Constants.MIN_TEXT_LENGTH)
             .IsRequired();
-        
+
         builder.ComplexProperty(p => p.GeneralDescription, vb =>
         {
             vb.Property(d => d.Value)
@@ -34,14 +35,13 @@ public  class PetConfiguration : IEntityTypeConfiguration<Pet>
             pb.Property(p => p.Id)
                 .HasColumnName("species_id");
         });
-        
+
         builder.ComplexProperty(p => p.BreedId, pb =>
         {
             pb.Property(p => p.Id)
                 .HasColumnName("breed_id");
-
         });
-        
+
         builder.ComplexProperty(p => p.HealthInformation, vb =>
         {
             vb.Property(d => d.Value)
@@ -56,12 +56,12 @@ public  class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .IsRequired()
                 .HasMaxLength(Constants.MIN_TEXT_LENGTH)
                 .HasColumnName("street");
-            
+
             pb.Property(p => p.City)
                 .IsRequired()
                 .HasMaxLength(Constants.MIN_TEXT_LENGTH)
                 .HasColumnName("city");
-            
+
             pb.Property(p => p.State)
                 .IsRequired()
                 .HasMaxLength(Constants.MIN_TEXT_LENGTH)
@@ -83,20 +83,20 @@ public  class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .HasColumnName("height")
                 .IsRequired();
         });
-        
+
         builder.ComplexProperty(p => p.PhoneNumber, pb =>
         {
             pb.Property(p => p.Value)
                 .HasColumnName("phone_number")
                 .IsRequired();
         });
-        
+
         builder.Property(p => p.BirthDate).IsRequired();
-        
+
         builder.Property(p => p.IsCastrated).IsRequired();
-        
+
         builder.Property(p => p.IsVaccinated).IsRequired();
-        
+
         builder.Property(p => p.DateCreated).IsRequired();
 
         builder.OwnsOne(p => p.Details, pd =>

@@ -9,7 +9,7 @@ public static class DependencyInjection
     public static IServiceCollection AddAInfrastructure(this IServiceCollection collection)
     {
         collection.AddScoped<ApplicationDbContext>();
-        collection.AddScoped<IVolunteersRepository, VolunteersesRepository>();
+        collection.AddScoped<IVolunteersRepository, VolunteersRepository>();
         return collection;
     }
 }

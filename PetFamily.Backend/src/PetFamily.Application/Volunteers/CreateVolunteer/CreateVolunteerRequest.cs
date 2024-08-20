@@ -1,18 +1,13 @@
-﻿using PetFamily.Domain.Models;
+﻿using PetFamily.Application.Dto;
 
 namespace PetFamily.Application.Volunteers.CreateVolunteer;
 
 public record CreateVolunteerRequest(
     string Name,
     string Surname,
-    string Patronymic,
+    string? Patronymic,
     string Description,
     int AgeExperience,
     string Number,
-    List<SocialLinkDto> SocialLinks,
-    List<RequisiteDto> Requisites);
-
-public record SocialLinkDto(string Name, string Url);
-public record RequisiteDto(string Name, string Description);
-    
-     
+    IEnumerable<SocialLinkDto> SocialLinks,
+    IEnumerable<RequisiteDto> Requisites);
