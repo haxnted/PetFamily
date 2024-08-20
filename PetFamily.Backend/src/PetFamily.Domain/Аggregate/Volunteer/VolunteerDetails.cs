@@ -5,7 +5,7 @@ public record VolunteerDetails
     public IReadOnlyCollection<SocialLink> SocialLinks { get; }
     public IReadOnlyCollection<Requisite> Requisites { get; }
 
-    protected VolunteerDetails() { }
+    private VolunteerDetails() { }
 
     public VolunteerDetails(IEnumerable<SocialLink> socialLinks,
         IEnumerable<Requisite> requisites)
