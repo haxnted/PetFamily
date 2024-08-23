@@ -16,7 +16,7 @@ public class CreateVolunteerHandler(IVolunteersRepository repository)
 
         var volunteer = await repository.GetByPhoneNumber(phoneNumber.Value);
 
-        if (volunteer.IsFailure)
+        if (volunteer.IsSuccess)
             return Errors.Model.AlreadyExist("Volunteer");
 
         var volunteerId = VolunteerId.NewId();

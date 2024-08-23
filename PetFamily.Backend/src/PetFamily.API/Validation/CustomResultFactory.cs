@@ -6,7 +6,7 @@ using SharpGrip.FluentValidation.AutoValidation.Mvc.Results;
 
 namespace PetFamily.API.Validation;
 
-public abstract class CustomResultFactory : IFluentValidationAutoValidationResultFactory
+public class CustomResultFactory : IFluentValidationAutoValidationResultFactory
 {
     public IActionResult CreateActionResult(ActionExecutingContext context,
         ValidationProblemDetails? validationProblemDetails)
