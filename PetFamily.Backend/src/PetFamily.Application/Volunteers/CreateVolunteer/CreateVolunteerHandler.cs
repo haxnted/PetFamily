@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Microsoft.Extensions.Logging;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
 using PetFamily.Domain.Shared.ValueObjects;
@@ -6,7 +7,7 @@ using PetFamily.Domain.Аggregate.Volunteer;
 
 namespace PetFamily.Application.Volunteers.CreateVolunteer;
 
-public class CreateVolunteerHandler(IVolunteersRepository repository)
+public class CreateVolunteerHandler(IVolunteersRepository repository, ILogger<CreateVolunteerHandler> logger)
 {
     public async Task<Result<Guid, Error>> Execute(
         CreateVolunteerRequest request, CancellationToken token = default
@@ -34,13 +35,15 @@ public class CreateVolunteerHandler(IVolunteersRepository repository)
         var requisites = request.Requisites
             .Select(x => Requisite.Create(x.Name, x.Description))
             .ToList();
-        
+
         var details = new VolunteerDetails(socialLinks.Select(x => x.Value).ToList(),
             requisites.Select(x => x.Value).ToList());
 
         var volunteerResult = new Volunteer(volunteerId,
             fullName.Value, description.Value,
             ageExperience.Value, phoneNumber.Value, details);
+
+        logger.Log(LogLevel.Information, "Created new volunteer: {VolunteerId}", volunteerId);
 
         return await repository.Add(volunteerResult, token);
     }

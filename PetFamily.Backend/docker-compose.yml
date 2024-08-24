@@ -11,5 +11,14 @@
       - postgres-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
+  seq:
+    container_name: PetFamily.Seq
+    image: datalust/seq:latest
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - 5341:5341
+      - 8081:80
 volumes:
   postgres-data:
