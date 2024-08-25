@@ -6,9 +6,9 @@ public record Description
 {
     public string Value { get; }
 
-    private Description(string description)
+    private Description(string value)
     {
-        Value = description;
+        Value = value;
     }
 
     public static Result<Description, Error> Create(string description)
@@ -18,5 +18,4 @@ public record Description
 
         return new Description(description);
     }
-    
 }
