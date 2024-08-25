@@ -2,6 +2,7 @@
 
 public record RequisitesList
 {
+    private RequisitesList(){}
     public IReadOnlyCollection<Requisite> Requisites { get; }
-    public RequisitesList(IEnumerable<Requisite> socialLinks) => Requisites = socialLinks.ToList();
+    public RequisitesList(IEnumerable<Requisite> requisites) => Requisites = requisites.ToList();
 };

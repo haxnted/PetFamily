@@ -60,16 +60,16 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         
         builder.OwnsOne(v => v.SocialLinksList, vb =>
         {
-            vb.ToJson();
+            vb.ToJson("social_links");
 
-            vb.OwnsMany(v => v.SocialLinks, vb =>
+            vb.OwnsMany(v => v.SocialLinks, vbs =>
             {
-                vb.Property(v => v.Name)
+                vbs.Property(v => v.Name)
                     .IsRequired()
                     .HasColumnName("name")
                     .HasMaxLength(Constants.MIN_TEXT_LENGTH);
 
-                vb.Property(v => v.Url)
+                vbs.Property(v => v.Url)
                     .IsRequired()
                     .HasColumnName("url");
             });
@@ -77,16 +77,16 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
 
         builder.OwnsOne(v => v.RequisitesList, vb =>
         {
-            vb.ToJson();
+            vb.ToJson("requisites");
 
-            vb.OwnsMany(v => v.Requisites, vb =>
+            vb.OwnsMany(v => v.Requisites, vbr =>
             {
-                vb.Property(v => v.RequisiteName)
+                vbr.Property(v => v.RequisiteName)
                     .IsRequired()
                     .HasColumnName("name")
                     .HasMaxLength(Constants.MIN_TEXT_LENGTH);
 
-                vb.Property(v => v.RequisiteDescription)
+                vbr.Property(v => v.RequisiteDescription)
                     .IsRequired()
                     .HasColumnName("description")
                     .HasMaxLength(Constants.EXTRA_TEXT_LENGTH);

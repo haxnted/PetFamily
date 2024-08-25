@@ -30,9 +30,14 @@ public class Volunteer : Shared.Entity<VolunteerId>
     public PhoneNumber PhoneNumber { get; }
     private readonly List<Pet> _pets;
     public IReadOnlyList<Pet> Pets => _pets;
-    public SocialLinksList SocialLinksList { get; }
-    public RequisitesList RequisitesList { get; }
+    public SocialLinksList SocialLinksList { get; private set; }
+    public RequisitesList RequisitesList { get; private set; }
 
+    public void UpdateSocialLinks(SocialLinksList list) =>
+        SocialLinksList = list;
+    public void UpdateRequisites(RequisitesList list) =>
+        RequisitesList = list;
+    
     public int PetsAdoptedCount() =>
         _pets.Count(x => x.HelpStatus == HelpStatusPet.FoundHome);
 
