@@ -13,13 +13,15 @@ public class Volunteer : Shared.Entity<VolunteerId>
         Description generalDescription,
         AgeExperience ageExperience,
         PhoneNumber number,
-        VolunteerDetails details) : base(id)
+        SocialLinksList socialLinksList,
+        RequisitesList requisitesList) : base(id)
     {
         FullName = fullName;
         GeneralDescription = generalDescription;
         AgeExperience = ageExperience;
         PhoneNumber = number;
-        Details = details;
+        SocialLinksList = socialLinksList;
+        RequisitesList = requisitesList;
     }
 
     public FullName FullName { get; }
@@ -28,7 +30,8 @@ public class Volunteer : Shared.Entity<VolunteerId>
     public PhoneNumber PhoneNumber { get; }
     private readonly List<Pet> _pets;
     public IReadOnlyList<Pet> Pets => _pets;
-    public VolunteerDetails? Details { get; }
+    public SocialLinksList SocialLinksList { get; }
+    public RequisitesList RequisitesList { get; }
 
     public int PetsAdoptedCount() =>
         _pets.Count(x => x.HelpStatus == HelpStatusPet.FoundHome);

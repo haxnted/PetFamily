@@ -290,7 +290,7 @@ namespace PetFamily.Infrastructure.Migrations
                                 .HasForeignKey("PetId")
                                 .HasConstraintName("fk_pets_pets_id");
 
-                            b1.OwnsMany("PetFamily.Domain.Аggregate.Volunteer.Requisite", "Requisites", b2 =>
+                            b1.OwnsMany("PetFamily.Domain.Аggregate.Volunteer.Requisite", "RequisitesList", b2 =>
                                 {
                                     b2.Property<Guid>("PetDetailsPetId")
                                         .HasColumnType("uuid");
@@ -347,7 +347,7 @@ namespace PetFamily.Infrastructure.Migrations
 
                             b1.Navigation("PetPhotos");
 
-                            b1.Navigation("Requisites");
+                            b1.Navigation("RequisitesList");
                         });
 
                     b.Navigation("Details")
@@ -371,7 +371,7 @@ namespace PetFamily.Infrastructure.Migrations
                                 .HasForeignKey("VolunteerId")
                                 .HasConstraintName("fk_volunteers_volunteers_id");
 
-                            b1.OwnsMany("PetFamily.Domain.Аggregate.Volunteer.SocialLink", "SocialLinks", b2 =>
+                            b1.OwnsMany("PetFamily.Domain.Аggregate.Volunteer.SocialLink", "SocialLinksList", b2 =>
                                 {
                                     b2.Property<Guid>("VolunteerDetailsVolunteerId")
                                         .HasColumnType("uuid");
@@ -403,7 +403,7 @@ namespace PetFamily.Infrastructure.Migrations
                                         .HasConstraintName("fk_volunteers_volunteers_volunteer_details_volunteer_id");
                                 });
 
-                            b1.OwnsMany("PetFamily.Domain.Аggregate.Volunteer.Requisite", "Requisites", b2 =>
+                            b1.OwnsMany("PetFamily.Domain.Аggregate.Volunteer.Requisite", "RequisitesList", b2 =>
                                 {
                                     b2.Property<Guid>("VolunteerDetailsVolunteerId")
                                         .HasColumnType("uuid");
@@ -436,9 +436,9 @@ namespace PetFamily.Infrastructure.Migrations
                                         .HasConstraintName("fk_volunteers_volunteers_volunteer_details_volunteer_id");
                                 });
 
-                            b1.Navigation("Requisites");
+                            b1.Navigation("RequisitesList");
 
-                            b1.Navigation("SocialLinks");
+                            b1.Navigation("SocialLinksList");
                         });
 
                     b.Navigation("Details");

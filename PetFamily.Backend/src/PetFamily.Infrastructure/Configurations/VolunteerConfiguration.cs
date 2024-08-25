@@ -57,8 +57,8 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                 .HasColumnName("phone_number")
                 .IsRequired();
         });
-
-        builder.OwnsOne(v => v.Details, vb =>
+        
+        builder.OwnsOne(v => v.SocialLinksList, vb =>
         {
             vb.ToJson();
 
@@ -73,6 +73,11 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                     .IsRequired()
                     .HasColumnName("url");
             });
+        });
+
+        builder.OwnsOne(v => v.RequisitesList, vb =>
+        {
+            vb.ToJson();
 
             vb.OwnsMany(v => v.Requisites, vb =>
             {

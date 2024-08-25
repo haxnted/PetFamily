@@ -30,18 +30,17 @@ public class CreateVolunteerHandler(IVolunteersRepository repository, ILogger<Cr
 
         var socialLinks = request.SocialLinks
             .Select(x => SocialLink.Create(x.Name, x.Url))
-            .ToList();
+            .Select(x => x.Value);
+        var socialLinksList = new SocialLinksList(socialLinks);
 
         var requisites = request.Requisites
             .Select(x => Requisite.Create(x.Name, x.Description))
-            .ToList();
-
-        var details = new VolunteerDetails(socialLinks.Select(x => x.Value).ToList(),
-            requisites.Select(x => x.Value).ToList());
-
+            .Select(x => x.Value);
+        var requisitesList = new RequisitesList(requisites);
+        
         var volunteerResult = new Volunteer(volunteerId,
             fullName.Value, description.Value,
-            ageExperience.Value, phoneNumber.Value, details);
+            ageExperience.Value, phoneNumber.Value, socialLinksList, requisitesList);
 
         logger.Log(LogLevel.Information, "Created new volunteer: {VolunteerId}", volunteerId);
 
