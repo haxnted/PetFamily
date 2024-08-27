@@ -18,56 +18,15 @@ public class VolunteersRepository(ApplicationDbContext context) : IVolunteersRep
         return volunteer.Id;
     }
 
-    public async Task<Result<Guid, Error>> Update(VolunteerId id, FullName fullName,
-        Description description, AgeExperience ageExperience, PhoneNumber phoneNumber,
+    public async Task<Result<Guid, Error>> Update(Volunteer volunteer,
         CancellationToken cancellationToken = default)
     {
-        var updatedCount = await context.Volunteers
-            .Where(v => v.Id == id)
-            .ExecuteUpdateAsync(volunteer => volunteer
-                    .SetProperty(v => v.FullName.Name, fullName.Name)
-                    .SetProperty(v => v.FullName.Surname, fullName.Surname)
-                    .SetProperty(v => v.FullName.Patronymic, fullName.Patronymic)
-                    .SetProperty(v => v.GeneralDescription.Value, description.Value)
-                    .SetProperty(v => v.AgeExperience.Years, ageExperience.Years)
-                    .SetProperty(v => v.PhoneNumber.Value, phoneNumber.Value),
-                cancellationToken);
-
-        if (updatedCount == 0)
-            return Errors.General.NotFound(id.Id);
-
-        return id.Id;
-    }
-
-    public async Task<Result<Guid, Error>> UpdateRequisites(VolunteerId id, RequisitesList requisitesList,
-        CancellationToken cancellationToken = default)
-    {
-        var volunteer = await context.Volunteers
-            .FirstOrDefaultAsync(v => v.Id == id, cancellationToken);
-
-        if (volunteer == null)
-            return Errors.General.NotFound();
-
-        volunteer.UpdateRequisites(requisitesList);
+        context.Volunteers.Update(volunteer);
         await context.SaveChangesAsync(cancellationToken);
-        return id.Id;
+        return volunteer.Id.Id;
     }
 
 
-    public async Task<Result<Guid, Error>> UpdateSocialLinks(VolunteerId id, SocialLinksList socialLinksList,
-        CancellationToken cancellationToken = default)
-    {
-        var volunteer = await context.Volunteers
-            .FirstOrDefaultAsync(v => v.Id == id, cancellationToken);
-
-        if (volunteer == null)
-            return Errors.General.NotFound();
-
-        volunteer.UpdateSocialLinks(socialLinksList);
-        await context.SaveChangesAsync(cancellationToken);
-
-        return id.Id;
-    }
 
     public async Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber requestNumber,
         CancellationToken cancellationToken = default)

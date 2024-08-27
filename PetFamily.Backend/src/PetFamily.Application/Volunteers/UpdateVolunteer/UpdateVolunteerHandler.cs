@@ -23,7 +23,9 @@ public class UpdateVolunteerHandler(IVolunteersRepository repository, ILogger<Up
         var ageExperience = AgeExperience.Create(request.AgeExperience).Value;
         var phoneNumber = PhoneNumber.Create(request.PhoneNumber).Value;
 
-        var resultUpdate = await repository.Update(volunteerId, fullName, description, ageExperience, phoneNumber, token);
+        volunteer.Value.UpdateMainInfo(fullName, description, ageExperience, phoneNumber);
+        
+        var resultUpdate = await repository.Update(volunteer.Value, token);
         if (resultUpdate.IsFailure) 
             return resultUpdate.Error;
         

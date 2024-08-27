@@ -23,7 +23,9 @@ public class UpdateRequisitesHandler(IVolunteersRepository repository, ILogger<U
             .Select(x => x.Value);
         var requisitesList = new RequisitesList(requisites);
 
-        var resultUpdate = await repository.UpdateRequisites(volunteerId, requisitesList, token);
+        volunteer.Value.UpdateRequisites(requisitesList);
+        
+        var resultUpdate = await repository.Update(volunteer.Value, token);
         if (resultUpdate.IsFailure)
             return resultUpdate.Error;
 

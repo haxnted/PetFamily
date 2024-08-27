@@ -23,7 +23,8 @@ public class UpdateSocialLinksHandler(IVolunteersRepository repository, ILogger<
             .Select(x => x.Value);
         var socialLinksList = new SocialLinksList(socialLinks);
 
-        var resultUpdate = await repository.UpdateSocialLinks(volunteerId, socialLinksList, token);
+        volunteer.Value.UpdateSocialLinks(socialLinksList);
+        var resultUpdate = await repository.Update(volunteer.Value, token);
         if (resultUpdate.IsFailure)
             return resultUpdate.Error;
 
