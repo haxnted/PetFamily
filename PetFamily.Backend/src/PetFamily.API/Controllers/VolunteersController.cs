@@ -12,11 +12,11 @@ namespace PetFamily.API.Controllers;
 public class VolunteersController : ApplicationController
 {
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromServices] CreateVolunteerHandler service,
+    public async Task<ActionResult<Guid>> Create([FromServices] CreateVolunteerHandler handler,
         [FromBody] CreateVolunteerRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await service.Execute(request, cancellationToken);
+        var result = await handler.Execute(request, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();
@@ -25,7 +25,7 @@ public class VolunteersController : ApplicationController
     }
 
     [HttpPut("{id:guid}/main-info")]
-    public async Task<ActionResult> Update([FromServices] UpdateVolunteerHandler service,
+    public async Task<ActionResult> Update([FromServices] UpdateVolunteerHandler handler,
         [FromServices] IValidator<UpdateVolunteerRequest> validator,
         [FromRoute] Guid id,
         [FromBody] UpdateVolunteerDto request,
@@ -41,7 +41,7 @@ public class VolunteersController : ApplicationController
         if (validateResult.IsValid == false)
             return validateResult.ToValidationErrorResponse();
         
-        var result = await service.Execute(updateVolunteerRequest, cancellationToken);
+        var result = await handler.Execute(updateVolunteerRequest, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();
@@ -50,7 +50,7 @@ public class VolunteersController : ApplicationController
     }
 
     [HttpPatch("{id:guid}/social-links")]
-    public async Task<ActionResult> UpdateSocialLinks([FromServices] UpdateSocialLinksHandler service,
+    public async Task<ActionResult> UpdateSocialLinks([FromServices] UpdateSocialLinksHandler handler,
         [FromServices] IValidator<UpdateSocialLinksRequest> validator,
         [FromRoute] Guid id,
         [FromBody] UpdateSocialLinksDto request,
@@ -62,7 +62,7 @@ public class VolunteersController : ApplicationController
         if (validateResult.IsValid == false)
             return validateResult.ToValidationErrorResponse();
         
-        var result = await service.Execute(updateSocialLinksRequest, cancellationToken);
+        var result = await handler.Execute(updateSocialLinksRequest, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();
@@ -71,7 +71,7 @@ public class VolunteersController : ApplicationController
     }
 
     [HttpPatch("{id:guid}/requisites")]
-    public async Task<ActionResult> UpdateRequisites([FromServices] UpdateRequisitesHandler service,
+    public async Task<ActionResult> UpdateRequisites([FromServices] UpdateRequisitesHandler handler,
         [FromServices] IValidator<UpdateRequisitesRequest> validator,
         [FromRoute] Guid id,
         [FromBody] UpdateRequisitesDto request,
@@ -83,7 +83,7 @@ public class VolunteersController : ApplicationController
         if (validateResult.IsValid == false)
             return validateResult.ToValidationErrorResponse();
         
-        var result = await service.Execute(updateRequisitesRequest, cancellationToken);
+        var result = await handler.Execute(updateRequisitesRequest, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();
