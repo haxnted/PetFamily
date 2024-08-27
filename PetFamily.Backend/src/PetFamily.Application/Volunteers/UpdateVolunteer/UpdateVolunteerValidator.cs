@@ -1,14 +1,18 @@
 ﻿using FluentValidation;
 using PetFamily.Application.Validation;
+using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.ValueObjects;
-using PetFamily.Domain.Аggregate.Volunteer;
 
-namespace PetFamily.Application.Volunteers.CreateVolunteer;
+namespace PetFamily.Application.Volunteers.UpdateVolunteer;
 
-public class CreateVolunteerRequestValidator : AbstractValidator<CreateVolunteerRequest>
+public class UpdateVolunteerValidator : AbstractValidator<UpdateVolunteerRequest>
 {
-    public CreateVolunteerRequestValidator()
+    public UpdateVolunteerValidator()
     {
+        RuleFor(v => v.IdVolunteer)
+            .NotEmpty()
+            .WithError(Errors.General.ValueIsRequired("Id"));;
+        
         RuleFor(c => new { c.FullName.Name, c.FullName.Surname, c.FullName.Patronymic })
             .MustBeValueObject(x => FullName.Create(x.Name, x.Surname, x.Patronymic));
 
@@ -18,13 +22,7 @@ public class CreateVolunteerRequestValidator : AbstractValidator<CreateVolunteer
         RuleFor(c => c.AgeExperience)
             .MustBeValueObject(AgeExperience.Create);
 
-        RuleFor(c => c.Number)
+        RuleFor(c => c.PhoneNumber)
             .MustBeValueObject(PhoneNumber.Create);
-
-        RuleForEach(c => c.Requisites)
-            .MustBeValueObject(s => Requisite.Create(s.Name, s.Description));
-
-        RuleForEach(c => c.SocialLinks)
-            .MustBeValueObject(s => SocialLink.Create(s.Name, s.Url));
     }
 }
