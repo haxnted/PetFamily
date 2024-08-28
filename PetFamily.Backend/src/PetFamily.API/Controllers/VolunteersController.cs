@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.Application.Dto;
 using PetFamily.Application.Volunteers.CreateVolunteer;
+using PetFamily.Application.Volunteers.DeleteVolunteer;
 using PetFamily.Application.Volunteers.UpdateRequisites;
 using PetFamily.Application.Volunteers.UpdateSocialLinks;
 using PetFamily.Application.Volunteers.UpdateVolunteer;
@@ -24,8 +25,8 @@ public class VolunteersController : ApplicationController
         return Created(result.Value.ToString(), null);
     }
 
-    [HttpPut("{id:guid}/main-info")]
-    public async Task<ActionResult> Update([FromServices] UpdateVolunteerHandler handler,
+    [HttpPatch("{id:guid}/main-info")]
+    public async Task<ActionResult> UpdateMainInfo([FromServices] UpdateVolunteerHandler handler,
         [FromServices] IValidator<UpdateVolunteerRequest> validator,
         [FromRoute] Guid id,
         [FromBody] UpdateVolunteerDto request,
@@ -46,7 +47,7 @@ public class VolunteersController : ApplicationController
         if (result.IsFailure)
             return result.Error.ToResponse();
 
-        return Ok(new { Message = "Volunteer updated successfully" });
+        return Ok(new { Message = id });
     }
 
     [HttpPatch("{id:guid}/social-links")]
@@ -67,9 +68,9 @@ public class VolunteersController : ApplicationController
         if (result.IsFailure)
             return result.Error.ToResponse();
 
-        return Ok(new { Message = "SocialLinks updated successfully" });
+        return Ok(new { Message = id });
     }
-
+    
     [HttpPatch("{id:guid}/requisites")]
     public async Task<ActionResult> UpdateRequisites([FromServices] UpdateRequisitesHandler handler,
         [FromServices] IValidator<UpdateRequisitesRequest> validator,
@@ -88,6 +89,25 @@ public class VolunteersController : ApplicationController
         if (result.IsFailure)
             return result.Error.ToResponse();
 
-        return Ok(new { Message = "Requisites updated successfully" });
+        return Ok(new { Message = id });
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<ActionResult> Delete([FromServices] DeleteVolunteerHandler handler,
+        [FromServices] IValidator<DeleteVolunteerRequest> validator,
+        CancellationToken cancellationToken,
+        [FromRoute] Guid id)
+    {
+        var deleteVolunteerRequest = new DeleteVolunteerRequest(id);
+        
+        var validateResult = await validator.ValidateAsync(deleteVolunteerRequest, cancellationToken);
+        if (validateResult.IsValid == false)
+            return validateResult.ToValidationErrorResponse();
+
+        var result = await handler.Execute(deleteVolunteerRequest, cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+        
+        return Ok(new { Message = id });
     }
 }

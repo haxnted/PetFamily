@@ -18,15 +18,19 @@ public class VolunteersRepository(ApplicationDbContext context) : IVolunteersRep
         return volunteer.Id;
     }
 
-    public async Task<Result<Guid, Error>> Update(Volunteer volunteer,
+    public async Task<Result<Guid, Error>> Save(Volunteer volunteer,
         CancellationToken cancellationToken = default)
     {
-        context.Volunteers.Update(volunteer);
+        context.Volunteers.Attach(volunteer);
         await context.SaveChangesAsync(cancellationToken);
         return volunteer.Id.Id;
     }
 
-
+    public async Task<Result<Guid, Error>> Delete(Volunteer volunteer, CancellationToken cancellationToken = default)
+    {
+        await context.SaveChangesAsync(cancellationToken);
+        return volunteer.Id.Id;
+    }
 
     public async Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber requestNumber,
         CancellationToken cancellationToken = default)

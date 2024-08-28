@@ -1,9 +1,10 @@
-﻿using PetFamily.Domain.Shared.EntityIds;
+﻿using PetFamily.Domain.Interfaces;
+using PetFamily.Domain.Shared.EntityIds;
 using PetFamily.Domain.Shared.ValueObjects;
 
 namespace PetFamily.Domain.Аggregate.Volunteer;
 
-public class Volunteer : Shared.Entity<VolunteerId>
+public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 {
     private Volunteer(VolunteerId id) : base(id)
     {
@@ -30,10 +31,11 @@ public class Volunteer : Shared.Entity<VolunteerId>
     public Description GeneralDescription { get; private set; }
     public AgeExperience AgeExperience { get; private set; }
     public PhoneNumber PhoneNumber { get; private set; }
-    private readonly List<Pet> _pets;
-    public IReadOnlyList<Pet> Pets => _pets;
+    private readonly List<Pet>? _pets;
+    public IReadOnlyList<Pet>? Pets => _pets;
     public SocialLinksList SocialLinksList { get; private set; }
     public RequisitesList RequisitesList { get; private set; }
+    private bool _isDeleted = false;
 
     public void UpdateSocialLinks(SocialLinksList list) =>
         SocialLinksList = list;
@@ -41,8 +43,29 @@ public class Volunteer : Shared.Entity<VolunteerId>
     public void UpdateRequisites(RequisitesList list) =>
         RequisitesList = list;
 
-    public void UpdateMainInfo(FullName fullName, 
-        Description generalDescription, 
+    public void Activate()
+    {
+        _isDeleted = false;
+        if (_pets == null) return;
+        foreach (var pet in _pets)
+        {
+            pet.Activate();
+        }
+    }
+
+    public void Deactivate()
+    {
+        _isDeleted = true;
+        if (_pets == null) return;
+        
+        foreach (var pet in _pets)
+        {
+            pet.Deactivate();
+        }
+    }
+
+    public void UpdateMainInfo(FullName fullName,
+        Description generalDescription,
         AgeExperience ageExperience,
         PhoneNumber number)
     {
