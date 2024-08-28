@@ -29,7 +29,7 @@ public class UpdateRequisitesHandler(IVolunteersRepository repository, ILogger<U
         if (resultUpdate.IsFailure)
             return resultUpdate.Error;
 
-        logger.Log(LogLevel.Information, "VolunteerManagement {volunteerId} was updated requisites", volunteerId);
+        logger.Log(LogLevel.Information, "Volunteer {volunteerId} was updated requisites", volunteerId);
         return resultUpdate.Value;
     }
 }

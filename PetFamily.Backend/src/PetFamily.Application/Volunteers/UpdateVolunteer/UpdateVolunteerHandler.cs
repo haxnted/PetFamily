@@ -29,7 +29,7 @@ public class UpdateVolunteerHandler(IVolunteersRepository repository, ILogger<Up
         if (resultUpdate.IsFailure) 
             return resultUpdate.Error;
         
-        logger.LogDebug("VolunteerManagement {volunteerId} was full updated", volunteerId);
+        logger.LogDebug("Volunteer {volunteerId} was full updated", volunteerId);
 
         return resultUpdate.Value;
     }

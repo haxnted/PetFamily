@@ -28,7 +28,7 @@ public class UpdateSocialLinksHandler(IVolunteersRepository repository, ILogger<
         if (resultUpdate.IsFailure)
             return resultUpdate.Error;
 
-        logger.Log(LogLevel.Information, "VolunteerManagement {volunteerId} was updated social links", volunteerId);
+        logger.Log(LogLevel.Information, "Volunteer {volunteerId} was updated social links", volunteerId);
 
         return resultUpdate;
     }
