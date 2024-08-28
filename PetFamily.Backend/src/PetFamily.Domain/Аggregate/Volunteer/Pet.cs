@@ -1,13 +1,16 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Interfaces;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
 using PetFamily.Domain.Shared.ValueObjects;
 
 namespace PetFamily.Domain.Аggregate.Volunteer;
 
-public class Pet : Shared.Entity<PetId>
+public class Pet : Shared.Entity<PetId>, ISoftDeletable
 {
-    protected Pet(PetId id) : base(id) { }
+    protected Pet(PetId id) : base(id)
+    {
+    }
 
     public string NickName { get; } = string.Empty;
     public Description GeneralDescription { get; } = null!;
@@ -23,6 +26,7 @@ public class Pet : Shared.Entity<PetId>
     public HelpStatusPet HelpStatus { get; }
     public DateTimeOffset DateCreated { get; }
     public PetDetails Details { get; } = null!;
+    private bool _isDeleted = false;
 
     private Pet(PetId id,
         string nickName,
@@ -72,5 +76,15 @@ public class Pet : Shared.Entity<PetId>
             birthDate, isCastrated, isVaccinated, helpStatus, requisite, dateTimeOffset, details);
 
         return pet;
+    }
+
+    public void Activate()
+    {
+        _isDeleted = false;
+    }
+
+    public void Deactivate()
+    {
+        _isDeleted = true;
     }
 }

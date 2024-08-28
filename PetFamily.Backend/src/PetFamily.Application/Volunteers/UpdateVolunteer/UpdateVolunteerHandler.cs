@@ -25,7 +25,7 @@ public class UpdateVolunteerHandler(IVolunteersRepository repository, ILogger<Up
 
         volunteer.Value.UpdateMainInfo(fullName, description, ageExperience, phoneNumber);
         
-        var resultUpdate = await repository.Update(volunteer.Value, token);
+        var resultUpdate = await repository.Save(volunteer.Value, token);
         if (resultUpdate.IsFailure) 
             return resultUpdate.Error;
         
