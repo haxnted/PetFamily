@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
-using PetFamily.Domain.Аggregate.Volunteer;
+using PetFamily.Domain.VolunteerManagement;
 
 namespace PetFamily.Application.Volunteers.UpdateSocialLinks;
 
@@ -28,7 +28,7 @@ public class UpdateSocialLinksHandler(IVolunteersRepository repository, ILogger<
         if (resultUpdate.IsFailure)
             return resultUpdate.Error;
 
-        logger.Log(LogLevel.Information, "Volunteer {volunteerId} was updated social links", volunteerId);
+        logger.Log(LogLevel.Information, "VolunteerManagement {volunteerId} was updated social links", volunteerId);
 
         return resultUpdate;
     }

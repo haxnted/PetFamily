@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
 using PetFamily.Domain.Shared.ValueObjects;
-using PetFamily.Domain.Аggregate.Volunteer;
+using PetFamily.Domain.VolunteerManagement;
 
 namespace PetFamily.Application.Volunteers.CreateVolunteer;
 
@@ -19,7 +19,7 @@ public class CreateVolunteerHandler(IVolunteersRepository repository, ILogger<Cr
         var volunteer = await repository.GetByPhoneNumber(phoneNumber.Value, token);
 
         if (volunteer.IsSuccess)
-            return Errors.Model.AlreadyExist("Volunteer");
+            return Errors.Model.AlreadyExist("VolunteerManagement");
 
         var volunteerId = VolunteerId.NewId();
 

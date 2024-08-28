@@ -21,7 +21,7 @@ public class DeleteVolunteerHandler(IVolunteersRepository repository, ILogger<De
         if (result.IsFailure)
             return volunteer.Error;
         
-        logger.Log(LogLevel.Information, "Volunteer deleted with Id {volunteerId}", volunteerId);
+        logger.Log(LogLevel.Information, "VolunteerManagement deleted with Id {volunteerId}", volunteerId);
         
         return volunteer.Value.Id.Id;
     }

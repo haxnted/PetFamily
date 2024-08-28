@@ -2,7 +2,7 @@
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
 
-namespace PetFamily.Domain.Аggregate.Species;
+namespace PetFamily.Domain.Species;
 
 public class Breed : Shared.Entity<BreedId>
 {

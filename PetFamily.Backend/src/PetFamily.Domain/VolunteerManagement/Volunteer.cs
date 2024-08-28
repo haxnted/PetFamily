@@ -2,7 +2,7 @@
 using PetFamily.Domain.Shared.EntityIds;
 using PetFamily.Domain.Shared.ValueObjects;
 
-namespace PetFamily.Domain.Аggregate.Volunteer;
+namespace PetFamily.Domain.VolunteerManagement;
 
 public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 {
