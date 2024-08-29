@@ -21,7 +21,7 @@ public class UpdateRequisitesHandler(IVolunteersRepository repository, ILogger<U
         var requisites = request.Requisites
             .Select(x => Requisite.Create(x.Name, x.Description))
             .Select(x => x.Value);
-        var requisitesList = new RequisitesList(requisites);
+        var requisitesList = new RequisiteList(requisites);
 
         volunteer.Value.UpdateRequisites(requisitesList);
         

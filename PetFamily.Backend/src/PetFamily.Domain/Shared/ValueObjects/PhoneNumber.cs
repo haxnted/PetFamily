@@ -12,12 +12,12 @@ public record PhoneNumber
     public static Result<PhoneNumber, Error> Create(string number)
     {
         if (string.IsNullOrWhiteSpace(number?.Trim()))
-            return Errors.General.ValueIsInvalid("Number");
+            return Errors.General.ValueIsInvalid("PhoneNumber");
 
         number = number.Trim();
 
         if (Regex.IsMatch(number, PhoneRegex) == false)
-            return Errors.General.ValueIsInvalid("Phone");
+            return Errors.General.ValueIsInvalid("PhoneNumber");
 
         return new PhoneNumber(number);
     }

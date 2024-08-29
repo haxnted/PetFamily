@@ -32,12 +32,12 @@ public class CreateVolunteerHandler(IVolunteersRepository repository, ILogger<Cr
         var socialLinks = request.SocialLinks
             .Select(x => SocialLink.Create(x.Name, x.Url))
             .Select(x => x.Value);
-        var socialLinksList = new SocialLinksList(socialLinks);
+        var socialLinksList = new SocialLinkList(socialLinks);
 
         var requisites = request.Requisites
             .Select(x => Requisite.Create(x.Name, x.Description))
             .Select(x => x.Value);
-        var requisitesList = new RequisitesList(requisites);
+        var requisitesList = new RequisiteList(requisites);
 
         var volunteerResult = new Volunteer(volunteerId,
             fullName.Value, description.Value,
