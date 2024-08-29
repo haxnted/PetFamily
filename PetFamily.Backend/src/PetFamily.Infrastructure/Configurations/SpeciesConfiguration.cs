@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Shared.EntityIds;
-using PetFamily.Domain.Аggregate.Species;
+using PetFamily.Domain.Species;
 
 namespace PetFamily.Infrastructure.Configurations;
 
@@ -17,8 +17,12 @@ public class SpeciesConfiguration : IEntityTypeConfiguration<Species>
                 result => SpeciesId.Create(result)
             );
 
-        builder.Property(x => x.TypeAnimal)
-            .IsRequired();
+        builder.ComplexProperty(s => s.TypeAnimal, sb =>
+        {
+            sb.Property(s => s.Value)
+                .HasColumnName("type_animal")
+                .IsRequired();
+        });
 
         builder.HasMany(s => s.Breeds)
             .WithOne()

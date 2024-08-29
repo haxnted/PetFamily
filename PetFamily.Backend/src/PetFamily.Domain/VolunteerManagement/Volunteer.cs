@@ -2,13 +2,11 @@
 using PetFamily.Domain.Shared.EntityIds;
 using PetFamily.Domain.Shared.ValueObjects;
 
-namespace PetFamily.Domain.Аggregate.Volunteer;
+namespace PetFamily.Domain.VolunteerManagement;
 
 public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 {
-    private Volunteer(VolunteerId id) : base(id)
-    {
-    }
+    private Volunteer(VolunteerId id) : base(id) { }
 
     public Volunteer(
         VolunteerId id,
@@ -16,52 +14,48 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         Description generalDescription,
         AgeExperience ageExperience,
         PhoneNumber number,
-        SocialLinksList socialLinksList,
-        RequisitesList requisitesList) : base(id)
+        SocialLinkList socialLinkList,
+        RequisiteList requisiteList) : base(id)
     {
         FullName = fullName;
         GeneralDescription = generalDescription;
         AgeExperience = ageExperience;
         PhoneNumber = number;
-        SocialLinksList = socialLinksList;
-        RequisitesList = requisitesList;
+        SocialLinkList = socialLinkList;
+        RequisiteList = requisiteList;
     }
+
+    private bool _isDeleted = false;
+    private readonly List<Pet> _pets;
 
     public FullName FullName { get; private set; }
     public Description GeneralDescription { get; private set; }
     public AgeExperience AgeExperience { get; private set; }
     public PhoneNumber PhoneNumber { get; private set; }
-    private readonly List<Pet>? _pets;
-    public IReadOnlyList<Pet>? Pets => _pets;
-    public SocialLinksList SocialLinksList { get; private set; }
-    public RequisitesList RequisitesList { get; private set; }
-    private bool _isDeleted = false;
+    public IReadOnlyList<Pet> Pets => _pets;
+    public SocialLinkList SocialLinkList { get; private set; }
+    public RequisiteList RequisiteList { get; private set; }
 
-    public void UpdateSocialLinks(SocialLinksList list) =>
-        SocialLinksList = list;
+    public void UpdateSocialLinks(SocialLinkList list) => 
+        SocialLinkList = list;
 
-    public void UpdateRequisites(RequisitesList list) =>
-        RequisitesList = list;
+    public void UpdateRequisites(RequisiteList list) =>
+        RequisiteList = list;
 
     public void Activate()
     {
         _isDeleted = false;
-        if (_pets == null) return;
         foreach (var pet in _pets)
-        {
-            pet.Activate();
-        }
-    }
 
+            pet.Activate();
+    }
+    
     public void Deactivate()
     {
         _isDeleted = true;
-        if (_pets == null) return;
-        
+
         foreach (var pet in _pets)
-        {
             pet.Deactivate();
-        }
     }
 
     public void UpdateMainInfo(FullName fullName,

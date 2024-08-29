@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
-using PetFamily.Domain.Аggregate.Volunteer;
+using PetFamily.Domain.VolunteerManagement;
 
 namespace PetFamily.Infrastructure.Configurations;
 
@@ -57,8 +57,8 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                 .HasColumnName("phone_number")
                 .IsRequired();
         });
-        
-        builder.OwnsOne(v => v.SocialLinksList, vb =>
+
+        builder.OwnsOne(v => v.SocialLinkList, vb =>
         {
             vb.ToJson("social_links");
 
@@ -75,18 +75,18 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
             });
         });
 
-        builder.OwnsOne(v => v.RequisitesList, vb =>
+        builder.OwnsOne(v => v.RequisiteList, vb =>
         {
             vb.ToJson("requisites");
 
             vb.OwnsMany(v => v.Requisites, vbr =>
             {
-                vbr.Property(v => v.RequisiteName)
+                vbr.Property(v => v.Name)
                     .IsRequired()
                     .HasColumnName("name")
                     .HasMaxLength(Constants.MIN_TEXT_LENGTH);
 
-                vbr.Property(v => v.RequisiteDescription)
+                vbr.Property(v => v.Description)
                     .IsRequired()
                     .HasColumnName("description")
                     .HasMaxLength(Constants.EXTRA_TEXT_LENGTH);
@@ -96,7 +96,7 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         builder.Property<bool>("_isDeleted")
             .UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasColumnName("is_deleted");
-        
+
         builder.HasMany(v => v.Pets)
             .WithOne()
             .HasForeignKey("volunteer_id")

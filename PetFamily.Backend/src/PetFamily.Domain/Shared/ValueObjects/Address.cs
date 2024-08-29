@@ -2,7 +2,7 @@
 
 namespace PetFamily.Domain.Shared.ValueObjects;
 
-public record Address
+public record Address 
 {
     public string Street { get; }
     public string City { get; }

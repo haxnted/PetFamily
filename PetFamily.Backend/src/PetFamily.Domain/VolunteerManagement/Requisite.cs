@@ -1,17 +1,17 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Shared;
 
-namespace PetFamily.Domain.Аggregate.Volunteer;
+namespace PetFamily.Domain.VolunteerManagement;
 
-public record class Requisite
+public record Requisite
 {
-    public string RequisiteName { get; }
-    public string RequisiteDescription { get; }
+    public string Name { get; }
+    public string Description { get; }
 
-    private Requisite(string requisiteName, string requisiteDescription)
+    private Requisite(string name, string description)
     {
-        RequisiteName = requisiteName;
-        RequisiteDescription = requisiteDescription;
+        Name = name;
+        Description = description;
     }
 
     public static Result<Requisite, Error> Create(string requisiteName, string requisiteDescription)

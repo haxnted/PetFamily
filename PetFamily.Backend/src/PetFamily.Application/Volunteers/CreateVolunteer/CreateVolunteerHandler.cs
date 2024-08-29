@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
 using PetFamily.Domain.Shared.ValueObjects;
-using PetFamily.Domain.Аggregate.Volunteer;
+using PetFamily.Domain.VolunteerManagement;
 
 namespace PetFamily.Application.Volunteers.CreateVolunteer;
 
@@ -19,7 +19,7 @@ public class CreateVolunteerHandler(IVolunteersRepository repository, ILogger<Cr
         var volunteer = await repository.GetByPhoneNumber(phoneNumber.Value, token);
 
         if (volunteer.IsSuccess)
-            return Errors.Model.AlreadyExist("Volunteer");
+            return Errors.Model.AlreadyExist("VolunteerManagement");
 
         var volunteerId = VolunteerId.NewId();
 
@@ -32,12 +32,12 @@ public class CreateVolunteerHandler(IVolunteersRepository repository, ILogger<Cr
         var socialLinks = request.SocialLinks
             .Select(x => SocialLink.Create(x.Name, x.Url))
             .Select(x => x.Value);
-        var socialLinksList = new SocialLinksList(socialLinks);
+        var socialLinksList = new SocialLinkList(socialLinks);
 
         var requisites = request.Requisites
             .Select(x => Requisite.Create(x.Name, x.Description))
             .Select(x => x.Value);
-        var requisitesList = new RequisitesList(requisites);
+        var requisitesList = new RequisiteList(requisites);
 
         var volunteerResult = new Volunteer(volunteerId,
             fullName.Value, description.Value,
