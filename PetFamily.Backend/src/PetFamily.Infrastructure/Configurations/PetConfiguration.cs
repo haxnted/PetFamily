@@ -18,9 +18,13 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 id => id.Id,
                 value => PetId.Create(value));
 
-        builder.Property(p => p.NickName)
-            .HasMaxLength(Constants.MIN_TEXT_LENGTH)
-            .IsRequired();
+        builder.ComplexProperty(p => p.NickName, pb =>
+        {
+            pb.Property(p => p.Value)
+                .HasColumnName("nick_name")
+                .HasMaxLength(Constants.MIN_TEXT_LENGTH)
+                .IsRequired();
+        });
 
         builder.ComplexProperty(p => p.GeneralDescription, vb =>
         {
@@ -30,11 +34,8 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .IsRequired();
         });
 
-        builder.ComplexProperty(p => p.SpeciesId, pb =>
-        {
-            pb.Property(p => p.Id)
-                .HasColumnName("species_id");
-        });
+        builder.Property(p => p.SpeciesId)
+            .HasColumnName("species_id");
 
         builder.ComplexProperty(p => p.BreedId, pb =>
         {
@@ -91,34 +92,54 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .IsRequired();
         });
 
-        builder.Property(p => p.BirthDate).IsRequired();
+        builder.Property(p => p.BirthDate)
+            .HasColumnName("birth_date")
+            .IsRequired();
 
-        builder.Property(p => p.IsCastrated).IsRequired();
+        builder.Property(p => p.IsCastrated)
+            .HasColumnName("is_castrated")
+            .IsRequired();
 
-        builder.Property(p => p.IsVaccinated).IsRequired();
+        builder.Property(p => p.IsVaccinated)
+            .HasColumnName("is_vaccinated")
+            .IsRequired();
 
-        builder.Property(p => p.DateCreated).IsRequired();
+        builder.Property(p => p.DateCreated)
+            .HasColumnName("date_created")
+            .IsRequired();
 
-        builder.OwnsOne(p => p.Details, pd =>
+
+        builder.OwnsOne(v => v.RequisiteList, vb =>
         {
-            pd.ToJson();
+            vb.ToJson("requisites");
 
-            pd.OwnsMany(d => d.PetPhotos, db =>
+            vb.OwnsMany(v => v.Requisites, vbr =>
+            {
+                vbr.Property(v => v.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(Constants.MIN_TEXT_LENGTH);
+
+                vbr.Property(v => v.Description)
+                    .IsRequired()
+                    .HasColumnName("description")
+                    .HasMaxLength(Constants.EXTRA_TEXT_LENGTH);
+            });
+        });
+
+        builder.OwnsOne(p => p.PetPhotoList, pb =>
+        {
+            pb.ToJson("pet_photos");
+
+            pb.OwnsMany(d => d.PetPhotos, db =>
             {
                 db.Property(p => p.Path)
-                    .IsRequired();
+                    .IsRequired()
+                    .HasColumnName("path");
 
                 db.Property(p => p.IsImageMain)
-                    .IsRequired();
-            });
-
-            pd.OwnsMany(p => p.Requisites, pb =>
-            {
-                pb.Property(p => p.RequisiteName)
-                    .IsRequired();
-
-                pb.Property(p => p.RequisiteDescription)
-                    .IsRequired();
+                    .IsRequired()
+                    .HasColumnName("is_image_main");
             });
         });
 
