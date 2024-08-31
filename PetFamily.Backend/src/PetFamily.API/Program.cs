@@ -20,7 +20,7 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Services
     .AddApi()
-    .AddAInfrastructure()
+    .AddAInfrastructure(builder.Configuration)
     .AddApplication();
 
 builder.Services.AddHttpLogging(u => { u.CombineLogs = true; });

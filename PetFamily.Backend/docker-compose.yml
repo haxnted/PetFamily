@@ -20,5 +20,18 @@
     ports:
       - 5341:5341
       - 8081:80
+  
+  minio:
+    container_name: PetFamily.Minio
+    image: minio/minio
+    restart: always
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - minio_data:/data
+    command: server --console-address ":9001" /data
+    
 volumes:
   postgres-data:
+  minio_data:
