@@ -11,6 +11,6 @@ public class UnloadFileHandle(IFileProvider fileProvider)
         string fileName, CancellationToken token = default
     )
     {
-        return await fileProvider.Unload(fileName, token);
+        return await fileProvider.GetFileByName(fileName, token);
     }
 }

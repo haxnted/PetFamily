@@ -54,7 +54,7 @@ public class MinioProvider : IFileProvider
         }
     }
 
-    public async Task<Result<string, Error>> Unload(string fileName, CancellationToken token = default)
+    public async Task<Result<string, Error>> GetFileByName(string fileName, CancellationToken token = default)
     {
         var maxFileTimeAlive = 60 * 60 * 24;
         try
