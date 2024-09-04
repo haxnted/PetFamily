@@ -35,8 +35,9 @@ public class VolunteersRepository(ApplicationDbContext context) : IVolunteersRep
     public async Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber requestNumber,
         CancellationToken cancellationToken = default)
     {
-        var volunteer =
-            await context.Volunteers.FirstOrDefaultAsync(v => v.PhoneNumber == requestNumber, cancellationToken);
+        var volunteer = await context.Volunteers
+            .Include(v => v.Pets)
+            .FirstOrDefaultAsync(v => v.PhoneNumber == requestNumber, cancellationToken);
 
         if (volunteer == null)
             return Errors.General.NotFound();
@@ -47,6 +48,7 @@ public class VolunteersRepository(ApplicationDbContext context) : IVolunteersRep
     public async Task<Result<Volunteer, Error>> GetById(VolunteerId id, CancellationToken cancellationToken = default)
     {
         var volunteer = await context.Volunteers
+            .Include(v => v.Pets)
             .FirstOrDefaultAsync(v => v.Id == id, cancellationToken);
 
         if (volunteer == null)

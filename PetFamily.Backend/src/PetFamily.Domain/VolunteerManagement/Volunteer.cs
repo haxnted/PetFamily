@@ -1,4 +1,6 @@
-﻿using PetFamily.Domain.Interfaces;
+﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Interfaces;
+using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
 using PetFamily.Domain.Shared.ValueObjects;
 
@@ -26,7 +28,7 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
     }
 
     private bool _isDeleted = false;
-    private readonly List<Pet> _pets;
+    private List<Pet> _pets = [];
 
     public FullName FullName { get; private set; }
     public Description GeneralDescription { get; private set; }
@@ -42,6 +44,12 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
     public void UpdateRequisites(RequisiteList list) =>
         RequisiteList = list;
 
+    public UnitResult<Error> AddPet(Pet pet)
+    {
+        _pets ??= [];
+        _pets.Add(pet);
+        return Result.Success<Error>();
+    }
     public void Activate()
     {
         _isDeleted = false;
