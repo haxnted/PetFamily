@@ -46,7 +46,6 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 
     public UnitResult<Error> AddPet(Pet pet)
     {
-        _pets ??= [];
         _pets.Add(pet);
         return Result.Success<Error>();
     }
