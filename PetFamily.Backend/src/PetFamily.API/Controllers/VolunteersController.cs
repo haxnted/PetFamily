@@ -115,17 +115,17 @@ public class VolunteersController : ApplicationController
         return Ok(new { Message = id });
     }
 
-    [HttpPost("{id:guid}/pet-files")]
+    [HttpPost("{id:guid}/pet/photos")]
     public async Task<ActionResult> AddFilesToPet([FromForm] AddPetFilesRequest request,
-        [FromServices] IValidator<AddPetFilesCommand> validator,
-        [FromServices] AddPetFilesHandler handler,
+        [FromServices] IValidator<AddPhotosToPetCommand> validator,
+        [FromServices] AddPhotosToPetHandler handler,
         CancellationToken cancellationToken,
         [FromRoute] Guid id)
     {
         var processor = new FileProcessor();
         var fileContents = processor.Process(request.Files);
 
-        var addPetFilesCommand = new AddPetFilesCommand(id, request.PetId, fileContents, request.IdxMainFile);
+        var addPetFilesCommand = new AddPhotosToPetCommand(id, request.PetId, fileContents);
         var validateResult = await validator.ValidateAsync(addPetFilesCommand, cancellationToken);
         if (validateResult.IsValid == false)
             return validateResult.ToValidationErrorResponse();
@@ -137,28 +137,16 @@ public class VolunteersController : ApplicationController
         return Ok(result.Value);
     }
 
-    [HttpPost("{id:guid}/pet-general")]
+    [HttpPost("{id:guid}/pet/general")]
     public async Task<ActionResult> CreatePet([FromBody] AddPetRequest request,
         [FromServices] IValidator<AddPetCommand> validator,
         [FromServices] AddPetHandler handler,
         CancellationToken cancellationToken,
         [FromRoute] Guid id)
     {
-        
 
-        var addPetCommand = new AddPetCommand(id,
-            request.NickName,
-            request.GeneralDescription,
-            request.HealthDescription,
-            request.Address,
-            request.Weight,
-            request.Height,
-            request.PhoneNumber,
-            request.BirthDate,
-            request.IsCastrated,
-            request.IsVaccinated,
-            request.HelpStatus,
-            request.Requisites);
+
+        var addPetCommand = request.ToCommand(id);
 
         var validateResult = await validator.ValidateAsync(addPetCommand, cancellationToken);
         if (validateResult.IsValid == false)

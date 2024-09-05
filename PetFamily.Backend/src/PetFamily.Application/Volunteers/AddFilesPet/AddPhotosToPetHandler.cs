@@ -9,21 +9,21 @@ using PetFamily.Domain.VolunteerManagement;
 
 namespace PetFamily.Application.Volunteers.AddFilesPet;
 
-public class AddPetFilesHandler(
+public class AddPhotosToPetHandler(
     IUnitOfWork unitOfWork,
-    IVolunteersRepository repository,
+    IVolunteersRepository volunteersRepository,
     IFileProvider provider,
-    ILogger<AddPetFilesHandler> logger)
+    ILogger<AddPhotosToPetHandler> logger)
 {
-    public async Task<Result<Guid, Error>> Execute(AddPetFilesCommand command, CancellationToken token = default)
+    public async Task<Result<Guid, Error>> Execute(AddPhotosToPetCommand command, CancellationToken token = default)
     {
         var volunteerId = VolunteerId.Create(command.VolunteerId);
-        var volunteer = await repository.GetById(volunteerId, token);
+        var volunteer = await volunteersRepository.GetById(volunteerId, token);
         if (volunteer.IsFailure)
             return volunteer.Error;
 
         var petId = PetId.Create(command.PetId);
-        var pet = volunteer.Value.Pets.FirstOrDefault(p => p.Id == petId);
+        var pet = volunteer.Value.GetPetById(petId);
         if (pet == null)
             return Errors.General.NotFound(petId);
 
@@ -38,7 +38,7 @@ public class AddPetFilesHandler(
 
             var photosConvert = petPhotosConvert.ToList();
             var petPhotoList = photosConvert
-                .Select((file, idx) => PetPhoto.Create(file.ObjectName, idx == command.IdxMainImage ? true : false))
+                .Select(file => PetPhoto.Create(file.ObjectName, false))
                 .Select(file => file.Value);
 
             pet.UpdateFiles(new PetPhotoList(petPhotoList));
@@ -52,7 +52,7 @@ public class AddPetFilesHandler(
 
             logger.Log(
                 LogLevel.Information,
-                "Volunteer {VolunteerId} added files to pet {PetId}",
+                "Volunteer {VolunteerId} added photos to pet {PetId}",
                 command.VolunteerId,
                 command.PetId);
 
@@ -64,7 +64,7 @@ public class AddPetFilesHandler(
 
             logger.Log(LogLevel.Information, "Transaction failed. Executed command: {pet}", command);
             return Result.Failure<Guid, Error>(
-                Error.Failure("Failed.add.object", "Failed add pet to volunteer"));
+                Error.Failure("Failed.add.photos", "Failed add photos to pet"));
         }
     }
 }

@@ -20,7 +20,7 @@ public static class DependencyInjection
         collection.AddScoped<UpdateRequisitesHandler>();
         collection.AddScoped<DeleteVolunteerHandler>();
         collection.AddScoped<AddPetHandler>();
-        collection.AddScoped<AddPetFilesHandler>();
+        collection.AddScoped<AddPhotosToPetHandler>();
         collection.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
         return collection;
     }

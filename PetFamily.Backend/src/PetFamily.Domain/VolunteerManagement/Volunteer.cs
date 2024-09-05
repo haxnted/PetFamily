@@ -65,6 +65,9 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
             pet.Deactivate();
     }
 
+    public Pet? GetPetById(PetId petId) =>
+         _pets.FirstOrDefault(x => x.Id == petId);
+    
     public void UpdateMainInfo(FullName fullName,
         Description generalDescription,
         AgeExperience ageExperience,
