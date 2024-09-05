@@ -21,22 +21,22 @@ public static class DependencyInjection
         collection.AddMinio(configuration);
         return collection;
     }
-    
+
     private static IServiceCollection AddMinio(this IServiceCollection collection,
         IConfiguration configuration)
     {
         collection.Configure<MinioOptions>(configuration.GetSection(MinioOptions.MINIO));
-        
+
         collection.AddScoped<IFileProvider, MinioProvider>();
-        
+
         collection.AddMinio(options =>
         {
             var minioOptions = configuration.GetSection(MinioOptions.MINIO).Get<MinioOptions>()
                                ?? throw new ApplicationException("Minio options not found");
 
-            options.WithEndpoint(minioOptions.Endpoint);
-            options.WithCredentials(minioOptions.AccessKey, minioOptions.SecretKey);
-            options.WithSSL(minioOptions.UseSSL);
+            options.WithEndpoint(minioOptions.Endpoint)
+                .WithCredentials(minioOptions.AccessKey, minioOptions.SecretKey)
+                .WithSSL(minioOptions.UseSSL);
         });
         return collection;
     }

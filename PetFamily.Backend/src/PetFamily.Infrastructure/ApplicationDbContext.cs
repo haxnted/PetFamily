@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PetFamily.Domain.Species;
 using PetFamily.Domain.VolunteerManagement;
-using PetFamily.Infrastructure.Interceptors;
 
 namespace PetFamily.Infrastructure;
 
@@ -21,10 +20,10 @@ public class ApplicationDbContext(IConfiguration configuration) : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSnakeCaseNamingConvention();
-        optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
-        optionsBuilder.EnableSensitiveDataLogging();
-        optionsBuilder.UseNpgsql(configuration.GetConnectionString(DATABASE));
+        optionsBuilder.UseSnakeCaseNamingConvention()
+            .UseLoggerFactory(CreateLoggerFactory())
+            .EnableSensitiveDataLogging()
+            .UseNpgsql(configuration.GetConnectionString(DATABASE));
     }
 
     private ILoggerFactory CreateLoggerFactory()

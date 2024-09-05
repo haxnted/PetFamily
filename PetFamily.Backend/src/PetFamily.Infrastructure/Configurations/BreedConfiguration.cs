@@ -20,6 +20,7 @@ public class BreedConfiguration : IEntityTypeConfiguration<Breed>
             );
 
         builder.Property(b => b.Value)
+            .HasColumnName("breed")
             .IsRequired();
     }
 }

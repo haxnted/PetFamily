@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
 using PetFamily.Domain.VolunteerManagement;
+using PetFamily.Domain.VolunteerManagement.Entities;
 
 namespace PetFamily.Infrastructure.Configurations;
 
@@ -113,7 +114,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             vb.ToJson("requisites");
 
-            vb.OwnsMany(v => v.Requisites, vbr =>
+            vb.OwnsMany(v => v.Values, vbr =>
             {
                 vbr.Property(v => v.Name)
                     .IsRequired()
@@ -131,7 +132,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             pb.ToJson("pet_photos");
 
-            pb.OwnsMany(d => d.PetPhotos, db =>
+            pb.OwnsMany(d => d.Values, db =>
             {
                 db.Property(p => p.Path)
                     .IsRequired()
