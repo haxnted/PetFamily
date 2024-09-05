@@ -3,8 +3,10 @@ using PetFamily.Domain.Interfaces;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
 using PetFamily.Domain.Shared.ValueObjects;
+using PetFamily.Domain.VolunteerManagement.Enums;
+using PetFamily.Domain.VolunteerManagement.ValueObjects;
 
-namespace PetFamily.Domain.VolunteerManagement;
+namespace PetFamily.Domain.VolunteerManagement.Entities;
 
 public class Pet : Shared.Entity<PetId>, ISoftDeletable
 {
@@ -12,8 +14,6 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
 
     private bool _isDeleted = false;
     
-    public PetPhotoList PetPhotoList { get; private set; }
-    public RequisiteList RequisiteList { get; private set; }
     public NickName NickName { get; } = null!;
     public Description GeneralDescription { get; } = null!;
     public Description HealthInformation { get; } = null!;
@@ -27,6 +27,9 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
     public bool IsVaccinated { get; }
     public HelpStatusPet HelpStatus { get; }
     public DateTime DateCreated { get; }
+    
+    public ValueObjectList<PetPhoto> PetPhotoList { get; private set; }
+    public ValueObjectList<Requisite> RequisiteList { get; private set; }
 
     public Pet(PetId id,
         NickName nickName,
@@ -42,8 +45,8 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         bool isVaccinated,
         HelpStatusPet helpStatus,
         DateTime dateTime,
-        PetPhotoList petPhotoList,
-        RequisiteList requisiteList) : base(id)
+        ValueObjectList<PetPhoto> petPhotoList,
+        ValueObjectList<Requisite> requisiteList) : base(id)
     {
         PetPhotoList = petPhotoList;
         RequisiteList = requisiteList;
@@ -62,7 +65,7 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         DateCreated = dateTime;
     }
 
-    public UnitResult<Error> UpdateFiles(PetPhotoList list)
+    public UnitResult<Error> UpdateFiles(ValueObjectList<PetPhoto> list)
     {
         PetPhotoList = list;
         return Result.Success<Error>();
