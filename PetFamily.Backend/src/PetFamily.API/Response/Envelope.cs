@@ -1,22 +1,23 @@
-﻿namespace PetFamily.API.Response;
+﻿using PetFamily.Domain.Shared;
 
-public record ResponseError(string? ErrorCode, string? ErrorMessage, string? InvalidField);
+namespace PetFamily.API.Response;
+
 public record Envelope
 {
     public object? Result { get; }
-    public List<ResponseError> Errors { get; set; }
+    public ErrorList? Errors { get; init; }
     public DateTime TimeCreated { get; }
 
-    private Envelope(object? result, IEnumerable<ResponseError> errors)
+    private Envelope(object? result, ErrorList? errors)
     {
         Result = result;
-        Errors = errors.ToList();
+        Errors = errors;
         TimeCreated = DateTime.Now;
     }
 
     public static Envelope Ok(object? result = null) =>
-        new Envelope(result, []);
+        new(result, null);
 
-    public static Envelope Error(IEnumerable<ResponseError> errors) =>
-        new (null, errors);
+    public static Envelope Error(ErrorList errors) =>
+        new(null, errors);
 }
