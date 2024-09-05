@@ -48,7 +48,7 @@ namespace PetFamily.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    value = table.Column<string>(type: "text", nullable: false),
+                    breed = table.Column<string>(type: "text", nullable: false),
                     species_fk_id = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
