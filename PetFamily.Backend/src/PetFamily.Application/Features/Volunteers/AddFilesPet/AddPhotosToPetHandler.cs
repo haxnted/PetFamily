@@ -5,27 +5,28 @@ using PetFamily.Application.FileProvider;
 using PetFamily.Application.Providers;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
-using PetFamily.Domain.VolunteerManagement;
+using PetFamily.Domain.Shared.ValueObjects;
+using PetFamily.Domain.VolunteerManagement.ValueObjects;
 
-namespace PetFamily.Application.Volunteers.AddFilesPet;
+namespace PetFamily.Application.Features.Volunteers.AddFilesPet;
 
 public class AddPhotosToPetHandler(
     IUnitOfWork unitOfWork,
     IVolunteersRepository volunteersRepository,
-    IFileProvider provider,
+    IFileProvider fileProvider,
     ILogger<AddPhotosToPetHandler> logger)
 {
-    public async Task<Result<Guid, Error>> Execute(AddPhotosToPetCommand command, CancellationToken token = default)
+    public async Task<Result<Guid, ErrorList>> Execute(AddPhotosToPetCommand command, CancellationToken token = default)
     {
         var volunteerId = VolunteerId.Create(command.VolunteerId);
         var volunteer = await volunteersRepository.GetById(volunteerId, token);
         if (volunteer.IsFailure)
-            return volunteer.Error;
+            return volunteer.Error.ToErrorList();
 
         var petId = PetId.Create(command.PetId);
         var pet = volunteer.Value.GetPetById(petId);
         if (pet == null)
-            return Errors.General.NotFound(petId);
+            return Errors.General.NotFound(petId).ToErrorList();
 
         var transaction = await unitOfWork.BeginTransaction(token);
 
@@ -41,12 +42,12 @@ public class AddPhotosToPetHandler(
                 .Select(file => PetPhoto.Create(file.ObjectName, false))
                 .Select(file => file.Value);
 
-            pet.UpdateFiles(new PetPhotoList(petPhotoList));
+            pet.UpdateFiles(new ValueObjectList<PetPhoto>(petPhotoList));
             await unitOfWork.SaveChanges(token);
 
-            var resultUpload = await provider.UploadFiles(photosConvert, token);
+            var resultUpload = await fileProvider.UploadFiles(photosConvert, token);
             if (resultUpload.IsFailure)
-                return resultUpload.Error;
+                return resultUpload.Error.ToErrorList();
 
             transaction.Commit();
 
@@ -63,8 +64,7 @@ public class AddPhotosToPetHandler(
             transaction.Rollback();
 
             logger.Log(LogLevel.Information, "Transaction failed. Executed command: {pet}", command);
-            return Result.Failure<Guid, Error>(
-                Error.Failure("Failed.add.photos", "Failed add photos to pet"));
+            return Error.Failure("Failed.add.photos", "Failed add photos to pet").ToErrorList();
         }
     }
 }

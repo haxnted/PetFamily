@@ -1,8 +1,8 @@
 ﻿using PetFamily.Application.Dto;
 
-namespace PetFamily.Application.Volunteers.CreateVolunteer;
+namespace PetFamily.Application.Features.Volunteers.CreateVolunteer;
 
-public record CreateVolunteerRequest(
+public record CreateVolunteerCommand(
     FullNameDto FullName,
     string Description,
     int AgeExperience,

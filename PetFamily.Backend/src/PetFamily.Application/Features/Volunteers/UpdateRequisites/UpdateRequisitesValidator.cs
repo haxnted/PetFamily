@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using PetFamily.Application.Validation;
 using PetFamily.Domain.Shared;
-using PetFamily.Domain.VolunteerManagement;
+using PetFamily.Domain.VolunteerManagement.ValueObjects;
 
-namespace PetFamily.Application.Volunteers.UpdateRequisites;
+namespace PetFamily.Application.Features.Volunteers.UpdateRequisites;
 
-public class UpdateRequisitesValidator : AbstractValidator<UpdateRequisitesRequest>
+public class UpdateRequisitesValidator : AbstractValidator<UpdateRequisitesCommand>
 {
     public UpdateRequisitesValidator()
     {

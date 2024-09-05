@@ -2,9 +2,9 @@
 using PetFamily.Application.Validation;
 using PetFamily.Domain.Shared;
 
-namespace PetFamily.Application.Volunteers.DeleteVolunteer;
+namespace PetFamily.Application.Features.Volunteers.DeleteVolunteer;
 
-public class DeleteVolunteerValidator : AbstractValidator<DeleteVolunteerRequest>
+public class DeleteVolunteerValidator : AbstractValidator<DeleteVolunteerCommand>
 {
     public DeleteVolunteerValidator()
     {

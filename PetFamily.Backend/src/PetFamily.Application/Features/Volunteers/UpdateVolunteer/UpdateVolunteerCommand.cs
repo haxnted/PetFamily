@@ -1,9 +1,8 @@
 ﻿using PetFamily.Application.Dto;
-using PetFamily.Domain.Shared.ValueObjects;
 
-namespace PetFamily.Application.Volunteers.UpdateVolunteer;
+namespace PetFamily.Application.Features.Volunteers.UpdateVolunteer;
 
-public record UpdateVolunteerRequest(
+public record UpdateVolunteerCommand(
     Guid IdVolunteer,
     FullNameDto FullName,
     string Description,

@@ -2,7 +2,7 @@
 using PetFamily.Application.Validation;
 using PetFamily.Domain.Shared;
 
-namespace PetFamily.Application.Volunteers.AddFilesPet;
+namespace PetFamily.Application.Features.Volunteers.AddFilesPet;
 
 public class AddPhotosToPetValidator : AbstractValidator<AddPhotosToPetCommand>
 {
@@ -19,9 +19,5 @@ public class AddPhotosToPetValidator : AbstractValidator<AddPhotosToPetCommand>
         RuleForEach(p => p.Files)
             .NotEmpty()
             .WithError(Errors.General.ValueIsRequired("file"));
-
-        RuleFor(p => new { p.IdxMainImage, p.Files })
-            .Must(p => p.IdxMainImage < 0 || p.Files.Count() > p.IdxMainImage)
-            .WithError(Errors.General.ValueIsInvalid("IdxMainImage"));
     }
 }

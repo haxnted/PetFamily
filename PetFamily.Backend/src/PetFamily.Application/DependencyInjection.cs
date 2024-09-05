@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Volunteers.AddFilesPet;
-using PetFamily.Application.Volunteers.AddPet;
-using PetFamily.Application.Volunteers.CreateVolunteer;
-using PetFamily.Application.Volunteers.DeleteVolunteer;
-using PetFamily.Application.Volunteers.UpdateRequisites;
-using PetFamily.Application.Volunteers.UpdateSocialLinks;
-using PetFamily.Application.Volunteers.UpdateVolunteer;
+using PetFamily.Application.Features.Volunteers.AddFilesPet;
+using PetFamily.Application.Features.Volunteers.AddPet;
+using PetFamily.Application.Features.Volunteers.CreateVolunteer;
+using PetFamily.Application.Features.Volunteers.DeleteVolunteer;
+using PetFamily.Application.Features.Volunteers.UpdateRequisites;
+using PetFamily.Application.Features.Volunteers.UpdateSocialLinks;
+using PetFamily.Application.Features.Volunteers.UpdateVolunteer;
 
 namespace PetFamily.Application;
 
@@ -14,14 +14,18 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection collection)
     {
-        collection.AddScoped<CreateVolunteerHandler>();
-        collection.AddScoped<UpdateVolunteerHandler>();
-        collection.AddScoped<UpdateSocialLinksHandler>();
-        collection.AddScoped<UpdateRequisitesHandler>();
-        collection.AddScoped<DeleteVolunteerHandler>();
-        collection.AddScoped<AddPetHandler>();
-        collection.AddScoped<AddPhotosToPetHandler>();
-        collection.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
-        return collection;
+        return collection.AddHandlers()
+            .AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
+    }
+
+    private static IServiceCollection AddHandlers(this IServiceCollection collection)
+    {
+        return collection.AddScoped<CreateVolunteerHandler>()
+            .AddScoped<UpdateVolunteerHandler>()
+            .AddScoped<UpdateSocialLinksHandler>()
+            .AddScoped<UpdateRequisitesHandler>()
+            .AddScoped<DeleteVolunteerHandler>()
+            .AddScoped<AddPetHandler>()
+            .AddScoped<AddPhotosToPetHandler>();
     }
 }

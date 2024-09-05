@@ -4,7 +4,7 @@ using PetFamily.Domain.Shared.EntityIds;
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.VolunteerManagement;
 
-namespace PetFamily.Application.Volunteers;
+namespace PetFamily.Application.Features.Volunteers;
 
 public interface IVolunteersRepository
 {
