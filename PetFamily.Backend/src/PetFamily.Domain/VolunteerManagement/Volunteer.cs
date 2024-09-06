@@ -87,27 +87,37 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         PhoneNumber = number;
     }
 
-    public UnitResult<Error> ChangePetPosition(PetId id, int petPosition)
+    public UnitResult<Error> ChangePetPosition(PetId id, int newIdx)
     {
-        if (petPosition <= 0 || petPosition > Pets.Count)
-            return Errors.General.ValueIsInvalid("petPosition");
+        if (newIdx <= 0 || newIdx > Pets.Count)
+            return Errors.General.ValueIsInvalid("newIdx");
 
-        var firstPet = _pets.FirstOrDefault(p => p.Id == id);
-        if (firstPet is null)
+        var pet = _pets.FirstOrDefault(p => p.Id == id);
+        if (pet is null)
             return Errors.General.NotFound(id);
 
-        var secondPet = _pets.FirstOrDefault(p => p.SerialNumber == petPosition);
-        if (secondPet is null)
-            return Errors.General.NotFound();
+        if (pet.SerialNumber == newIdx)
+            return Result.Success<Error>();
 
-        if (firstPet.SerialNumber == petPosition)
-            return Error.Conflict(
-                "two.pets.with.same.position", 
-                "Two pets with same position", 
-                petPosition.ToString());
+        var oldIdx = pet.SerialNumber;
         
-        secondPet.ChangePosition(firstPet.SerialNumber);
-        firstPet.ChangePosition(petPosition);
+        if (newIdx < oldIdx)
+        {
+            var collection = _pets.Where(p => p.SerialNumber >= newIdx && p.SerialNumber < oldIdx);
+            foreach (var entity in collection)
+            {
+                entity.ChangePosition(entity.SerialNumber + 1);
+            }
+        }
+        else if (newIdx > oldIdx)
+        {
+            var collection = _pets.Where(p => p.SerialNumber > oldIdx && p.SerialNumber <= newIdx);
+            foreach (var entity in collection)
+            {
+                entity.ChangePosition(entity.SerialNumber - 1);
+            }
+        }
+        pet.ChangePosition(newIdx);
 
         return Result.Success<Error>();
     }
