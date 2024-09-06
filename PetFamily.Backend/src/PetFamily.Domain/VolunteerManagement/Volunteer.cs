@@ -41,7 +41,7 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
     public ValueObjectList<SocialLink> SocialLinkList { get; private set; }
     public ValueObjectList<Requisite> RequisiteList { get; private set; }
 
-    public void UpdateSocialLinks(ValueObjectList<SocialLink> list) => 
+    public void UpdateSocialLinks(ValueObjectList<SocialLink> list) =>
         SocialLinkList = list;
 
     public void UpdateRequisites(ValueObjectList<Requisite> list) =>
@@ -50,8 +50,13 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
     public UnitResult<Error> AddPet(Pet pet)
     {
         _pets.Add(pet);
+
+        int serialPosition = _pets.Count == 0 ? 1 : _pets.Count; 
+        pet.ChangePosition(serialPosition); 
+        
         return Result.Success<Error>();
     }
+
     public void Activate()
     {
         _isDeleted = false;
@@ -59,7 +64,7 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 
             pet.Activate();
     }
-    
+
     public void Deactivate()
     {
         _isDeleted = true;
@@ -68,9 +73,9 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
             pet.Deactivate();
     }
 
-    public Pet? GetPetById(PetId petId) =>
-         _pets.FirstOrDefault(x => x.Id == petId);
-    
+    public Pet? GetPetById(PetId petId) => 
+        _pets.FirstOrDefault(x => x.Id == petId);
+
     public void UpdateMainInfo(FullName fullName,
         Description generalDescription,
         AgeExperience ageExperience,
@@ -80,6 +85,31 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         GeneralDescription = generalDescription;
         AgeExperience = ageExperience;
         PhoneNumber = number;
+    }
+
+    public UnitResult<Error> ChangePetPosition(PetId id, int petPosition)
+    {
+        if (petPosition <= 0 || petPosition > Pets.Count)
+            return Errors.General.ValueIsInvalid("petPosition");
+
+        var firstPet = _pets.FirstOrDefault(p => p.Id == id);
+        if (firstPet is null)
+            return Errors.General.NotFound(id);
+
+        var secondPet = _pets.FirstOrDefault(p => p.SerialNumber == petPosition);
+        if (secondPet is null)
+            return Errors.General.NotFound();
+
+        if (firstPet.SerialNumber == petPosition)
+            return Error.Conflict(
+                "two.pets.with.same.position", 
+                "Two pets with same position", 
+                petPosition.ToString());
+        
+        secondPet.ChangePosition(firstPet.SerialNumber);
+        firstPet.ChangePosition(petPosition);
+
+        return Result.Success<Error>();
     }
 
     public int PetsAdoptedCount() =>

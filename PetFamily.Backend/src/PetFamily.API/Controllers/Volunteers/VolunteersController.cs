@@ -7,6 +7,7 @@ using PetFamily.Application.Features.Volunteers.AddFilesPet;
 using PetFamily.Application.Features.Volunteers.AddPet;
 using PetFamily.Application.Features.Volunteers.CreateVolunteer;
 using PetFamily.Application.Features.Volunteers.DeleteVolunteer;
+using PetFamily.Application.Features.Volunteers.UpdatePositionPet;
 using PetFamily.Application.Features.Volunteers.UpdateRequisites;
 using PetFamily.Application.Features.Volunteers.UpdateSocialLinks;
 using PetFamily.Application.Features.Volunteers.UpdateVolunteer;
@@ -109,6 +110,20 @@ public class VolunteersController : ApplicationController
         [FromBody] AddPetRequest request,
         [FromRoute] Guid id,
         [FromServices] AddPetHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var result = await handler.Execute(request.ToCommand(id), cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+
+    [HttpPatch("{id:guid}/pet/position")]
+    public async Task<ActionResult> UpdatePetPosition(
+        [FromBody] UpdatePetPositionRequest request,
+        [FromRoute] Guid id,
+        [FromServices] UpdatePetPositionHandler handler,
         CancellationToken cancellationToken)
     {
         var result = await handler.Execute(request.ToCommand(id), cancellationToken);
