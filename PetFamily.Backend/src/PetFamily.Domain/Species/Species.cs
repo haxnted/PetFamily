@@ -1,5 +1,6 @@
 ﻿using PetFamily.Domain.Shared.EntityIds;
-using PetFamily.Domain.VolunteerManagement;
+using PetFamily.Domain.Species.Entities;
+using PetFamily.Domain.VolunteerManagement.ValueObjects;
 
 namespace PetFamily.Domain.Species;
 

@@ -1,6 +1,4 @@
-﻿using PetFamily.API.Validation;
-using Serilog;
-using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+﻿using Serilog;
 
 namespace PetFamily.API;
 
@@ -12,10 +10,6 @@ public static class DependencyInjection
         collection.AddEndpointsApiExplorer();
         collection.AddSwaggerGen();
         collection.AddSerilog();
-        collection.AddFluentValidationAutoValidation(validation =>
-        {
-            validation.OverrideDefaultResultFactoryWith<CustomResultFactory>();
-        });
         return collection;
     }
 }

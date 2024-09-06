@@ -6,10 +6,7 @@ public record Description
 {
     public string Value { get; }
 
-    private Description(string value)
-    {
-        Value = value;
-    }
+    private Description(string value) => Value = value;
 
     public static Result<Description, Error> Create(string description)
     {

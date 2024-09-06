@@ -6,11 +6,8 @@ public record AgeExperience
 {
     public int Years { get; }
 
-    private AgeExperience(int years)
-    {
-        Years = years;
-    }
-
+    private AgeExperience(int years) => Years = years;
+    
     public static Result<AgeExperience, Error> Create(int years)
     {
         if (years < 0)

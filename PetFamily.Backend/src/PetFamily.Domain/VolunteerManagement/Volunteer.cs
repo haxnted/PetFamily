@@ -3,6 +3,9 @@ using PetFamily.Domain.Interfaces;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
 using PetFamily.Domain.Shared.ValueObjects;
+using PetFamily.Domain.VolunteerManagement.Entities;
+using PetFamily.Domain.VolunteerManagement.Enums;
+using PetFamily.Domain.VolunteerManagement.ValueObjects;
 
 namespace PetFamily.Domain.VolunteerManagement;
 
@@ -16,8 +19,8 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         Description generalDescription,
         AgeExperience ageExperience,
         PhoneNumber number,
-        SocialLinkList socialLinkList,
-        RequisiteList requisiteList) : base(id)
+        ValueObjectList<SocialLink> socialLinkList,
+        ValueObjectList<Requisite> requisiteList) : base(id)
     {
         FullName = fullName;
         GeneralDescription = generalDescription;
@@ -35,13 +38,13 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
     public AgeExperience AgeExperience { get; private set; }
     public PhoneNumber PhoneNumber { get; private set; }
     public IReadOnlyList<Pet> Pets => _pets;
-    public SocialLinkList SocialLinkList { get; private set; }
-    public RequisiteList RequisiteList { get; private set; }
+    public ValueObjectList<SocialLink> SocialLinkList { get; private set; }
+    public ValueObjectList<Requisite> RequisiteList { get; private set; }
 
-    public void UpdateSocialLinks(SocialLinkList list) => 
+    public void UpdateSocialLinks(ValueObjectList<SocialLink> list) => 
         SocialLinkList = list;
 
-    public void UpdateRequisites(RequisiteList list) =>
+    public void UpdateRequisites(ValueObjectList<Requisite> list) =>
         RequisiteList = list;
 
     public UnitResult<Error> AddPet(Pet pet)

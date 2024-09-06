@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using PetFamily.API.Response;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.API.Middlewares;
 
@@ -27,8 +28,8 @@ public class ExceptionMiddleware
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            var responseError = new ResponseError("server.internal_error", ex.Message, null);
-            var envelope = Envelope.Error([responseError]);
+            var error = Error.Failure("server.internal.error", ex.Message, null);
+            var envelope = Envelope.Error(error);
 
             await context.Response.WriteAsJsonAsync(envelope);
         }

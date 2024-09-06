@@ -62,7 +62,7 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         {
             vb.ToJson("social_links");
 
-            vb.OwnsMany(v => v.SocialLinks, vbs =>
+            vb.OwnsMany(v => v.Values, vbs =>
             {
                 vbs.Property(v => v.Name)
                     .IsRequired()
@@ -79,7 +79,7 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         {
             vb.ToJson("requisites");
 
-            vb.OwnsMany(v => v.Requisites, vbr =>
+            vb.OwnsMany(v => v.Values, vbr =>
             {
                 vbr.Property(v => v.Name)
                     .IsRequired()
