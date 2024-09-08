@@ -89,7 +89,7 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 
     public UnitResult<Error> ChangePetPosition(PetId id, SerialNumber newIdx)
     {
-        if (newIdx <= 0 || newIdx > Pets.Count)
+        if (newIdx > Pets.Count)
             return Errors.General.ValueIsInvalid("newIdx");
 
         var pet = _pets.FirstOrDefault(p => p.Id == id);
