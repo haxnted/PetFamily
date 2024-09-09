@@ -11,13 +11,27 @@ namespace PetFamily.Domain.UnitTests;
 public class PetTests
 {
     [Fact]
+    public void ChangePetPosition_ShouldReturnError_WhenVolunteerHaveOnePet()
+    {
+        // Arrange
+        var volunteer = CreateVolunteerWithPets(1);
+        
+        // Act
+        var result = volunteer.MovePet(volunteer.Pets[0].Id, 2);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Message.Should().Be("Insufficient number of pets to complete the operation");
+    }
+    
+    [Fact]
     public void ChangePetPosition_ShouldReturnError_WhenNewIdxIsOutOfRange()
     {
         // Arrange
         var volunteer = CreateVolunteerWithPets(3);
 
         // Act
-        var result = volunteer.ChangePetPosition(volunteer.Pets[0].Id, -1);
+        var result = volunteer.MovePet(volunteer.Pets[0].Id, -1);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -32,7 +46,7 @@ public class PetTests
         var nonExistentPetId = PetId.NewId();
 
         // Act
-        var result = volunteer.ChangePetPosition(nonExistentPetId, 2);
+        var result = volunteer.MovePet(nonExistentPetId, 2);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -48,7 +62,7 @@ public class PetTests
         var currentPos = pet.SerialNumber;
 
         // Act
-        var result = volunteer.ChangePetPosition(pet.Id, currentPos);
+        var result = volunteer.MovePet(pet.Id, currentPos);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -63,7 +77,7 @@ public class PetTests
         var pet = volunteer.Pets[2]; 
 
         // Act
-        var result = volunteer.ChangePetPosition(pet.Id, 1);
+        var result = volunteer.MovePet(pet.Id, 1);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -80,7 +94,7 @@ public class PetTests
         var pet = volunteer.Pets[0]; 
 
         // Act
-        var result = volunteer.ChangePetPosition(pet.Id, 3);
+        var result = volunteer.MovePet(pet.Id, 3);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -88,7 +102,40 @@ public class PetTests
         volunteer.Pets[1].SerialNumber.Should().Be(1);
         volunteer.Pets[2].SerialNumber.Should().Be(2);
     }
-    
+    [Fact]
+    public void ChangePetPosition_ShouldMovePetToFirstPosition()
+    {
+        // Arrange
+        var volunteer = CreateVolunteerWithPets(3);
+        var pet = volunteer.Pets[2]; 
+
+        // Act
+        var result = volunteer.MovePet(pet.Id, 1);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        pet.SerialNumber.Should().Be(1);
+        volunteer.Pets[1].SerialNumber.Should().Be(3);
+        volunteer.Pets[0].SerialNumber.Should().Be(2);
+    }
+
+    [Fact]
+    public void ChangePetPosition_ShouldMovePetToLastPosition()
+    {
+        // Arrange
+        var volunteer = CreateVolunteerWithPets(3);
+        var pet = volunteer.Pets[0]; // текущая позиция = 1
+
+        // Act
+        var result = volunteer.MovePet(pet.Id, 3);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        pet.SerialNumber.Should().Be(3);
+        volunteer.Pets[1].SerialNumber.Should().Be(1);
+        volunteer.Pets[2].SerialNumber.Should().Be(2);
+    }
+
     private Volunteer CreateVolunteerWithPets(int petCount)
     {
         var volunteer = new Volunteer(
@@ -126,5 +173,6 @@ public class PetTests
 
         return volunteer;
     }
+    
 }
 

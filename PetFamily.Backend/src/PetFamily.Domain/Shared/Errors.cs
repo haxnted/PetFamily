@@ -21,6 +21,13 @@ public static class Errors
             var label = name == null ? "" : " " + name + " ";
             return Error.Validation("length.is.invalid", $"invalid{label}length)");
         }
+
+        public static Error InsufficientItems(string? name = null)
+        {
+            var label = name ?? "items";
+            return Error.Validation("insufficient.items", $"Insufficient number of {label} to complete the operation");
+        }
+
     }
 
     public static class Model

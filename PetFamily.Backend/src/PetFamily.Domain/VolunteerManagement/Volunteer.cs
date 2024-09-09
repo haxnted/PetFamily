@@ -87,9 +87,12 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         PhoneNumber = number;
     }
 
-    public UnitResult<Error> ChangePetPosition(PetId id, SerialNumber newIdx)
+    public UnitResult<Error> MovePet(PetId id, SerialNumber newIdx)
     {
-        if (newIdx > Pets.Count)
+        if (_pets.Count == 1)
+            return Errors.General.InsufficientItems("pets");
+        
+        if (newIdx < 1 || newIdx > Pets.Count)
             return Errors.General.ValueIsInvalid("newIdx");
 
         var pet = _pets.FirstOrDefault(p => p.Id == id);

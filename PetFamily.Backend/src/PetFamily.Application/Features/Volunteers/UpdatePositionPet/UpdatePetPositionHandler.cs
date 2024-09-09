@@ -26,7 +26,7 @@ public class UpdatePetPositionHandler(
             return volunteer.Error.ToErrorList();
 
         var petId = PetId.Create(command.PetId);
-        var resultPetUpdate = volunteer.Value.ChangePetPosition(petId, command.Position);
+        var resultPetUpdate = volunteer.Value.MovePet(petId, command.Position);
         if (resultPetUpdate.IsFailure)
             return resultPetUpdate.Error.ToErrorList();
 
