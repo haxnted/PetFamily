@@ -81,9 +81,9 @@ public class PetTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        pet.SerialNumber.Should().Be(1);
         volunteer.Pets[0].SerialNumber.Should().Be(2);
         volunteer.Pets[1].SerialNumber.Should().Be(3);
+        volunteer.Pets[2].SerialNumber.Should().Be(1);
     }
 
     [Fact]
@@ -98,9 +98,9 @@ public class PetTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        pet.SerialNumber.Should().Be(3);
         volunteer.Pets[1].SerialNumber.Should().Be(1);
         volunteer.Pets[2].SerialNumber.Should().Be(2);
+        volunteer.Pets[0].SerialNumber.Should().Be(3);
     }
     [Fact]
     public void ChangePetPosition_ShouldMovePetToFirstPosition()
@@ -114,9 +114,9 @@ public class PetTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        pet.SerialNumber.Should().Be(1);
-        volunteer.Pets[1].SerialNumber.Should().Be(3);
         volunteer.Pets[0].SerialNumber.Should().Be(2);
+        volunteer.Pets[1].SerialNumber.Should().Be(3);
+        volunteer.Pets[2].SerialNumber.Should().Be(1);
     }
 
     [Fact]
@@ -131,7 +131,7 @@ public class PetTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        pet.SerialNumber.Should().Be(3);
+        volunteer.Pets[0].SerialNumber.Should().Be(3);
         volunteer.Pets[1].SerialNumber.Should().Be(1);
         volunteer.Pets[2].SerialNumber.Should().Be(2);
     }
