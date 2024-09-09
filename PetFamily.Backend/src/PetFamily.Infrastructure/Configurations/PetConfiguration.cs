@@ -144,9 +144,12 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             });
         });
 
-        builder.Property(p => p.SerialNumber)
-            .HasColumnName("serial_number")
-            .IsRequired();
+        builder.ComplexProperty(p => p.Position, pb =>
+        {
+            pb.Property(p => p.Value)
+                .HasColumnName("serial_number")
+                .IsRequired();
+        });
 
         builder.Property<bool>("_isDeleted")
             .UsePropertyAccessMode(PropertyAccessMode.Field)

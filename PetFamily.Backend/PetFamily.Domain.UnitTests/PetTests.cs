@@ -59,14 +59,14 @@ public class PetTests
         // Arrange
         var volunteer = CreateVolunteerWithPets(3);
         var pet = volunteer.Pets[0];
-        var currentPos = pet.SerialNumber;
+        var currentPos = pet.Position;
 
         // Act
         var result = volunteer.MovePet(pet.Id, currentPos);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        pet.SerialNumber.Should().Be(currentPos);
+        pet.Position.Should().Be(currentPos);
     }
 
     [Fact]
@@ -81,9 +81,9 @@ public class PetTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        volunteer.Pets[0].SerialNumber.Should().Be(2);
-        volunteer.Pets[1].SerialNumber.Should().Be(3);
-        volunteer.Pets[2].SerialNumber.Should().Be(1);
+        volunteer.Pets[0].Position.Value.Should().Be(2);
+        volunteer.Pets[1].Position.Value.Should().Be(3);
+        volunteer.Pets[2].Position.Value.Should().Be(1);
     }
 
     [Fact]
@@ -98,9 +98,9 @@ public class PetTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        volunteer.Pets[1].SerialNumber.Should().Be(1);
-        volunteer.Pets[2].SerialNumber.Should().Be(2);
-        volunteer.Pets[0].SerialNumber.Should().Be(3);
+        volunteer.Pets[1].Position.Value.Should().Be(1);
+        volunteer.Pets[2].Position.Value.Should().Be(2);
+        volunteer.Pets[0].Position.Value.Should().Be(3);
     }
     [Fact]
     public void ChangePetPosition_ShouldMovePetToFirstPosition()
@@ -114,9 +114,9 @@ public class PetTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        volunteer.Pets[0].SerialNumber.Should().Be(2);
-        volunteer.Pets[1].SerialNumber.Should().Be(3);
-        volunteer.Pets[2].SerialNumber.Should().Be(1);
+        volunteer.Pets[0].Position.Value.Should().Be(2);
+        volunteer.Pets[1].Position.Value.Should().Be(3);
+        volunteer.Pets[2].Position.Value.Should().Be(1);
     }
 
     [Fact]
@@ -131,9 +131,9 @@ public class PetTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        volunteer.Pets[0].SerialNumber.Should().Be(3);
-        volunteer.Pets[1].SerialNumber.Should().Be(1);
-        volunteer.Pets[2].SerialNumber.Should().Be(2);
+        volunteer.Pets[0].Position.Value.Should().Be(3);
+        volunteer.Pets[1].Position.Value.Should().Be(1);
+        volunteer.Pets[2].Position.Value.Should().Be(2);
     }
 
     private Volunteer CreateVolunteerWithPets(int petCount)
