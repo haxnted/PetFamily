@@ -91,10 +91,6 @@ namespace PetFamily.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("is_vaccinated");
 
-                    b.Property<int>("SerialNumber")
-                        .HasColumnType("integer")
-                        .HasColumnName("serial_number");
-
                     b.Property<Guid>("SpeciesId")
                         .HasColumnType("uuid")
                         .HasColumnName("species_id");
@@ -197,6 +193,15 @@ namespace PetFamily.Infrastructure.Migrations
                             b1.Property<double>("Weight")
                                 .HasColumnType("double precision")
                                 .HasColumnName("weight");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("Position", "PetFamily.Domain.VolunteerManagement.Entities.Pet.Position#Position", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<int>("Value")
+                                .HasColumnType("integer")
+                                .HasColumnName("serial_number");
                         });
 
                     b.HasKey("Id")

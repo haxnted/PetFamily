@@ -1,5 +1,5 @@
-﻿namespace PetFamily.Application.FileProvider;
+﻿using PetFamily.Domain.VolunteerManagement.ValueObjects;
 
-public record FileContent(
-    Stream Stream,
-    string ObjectName);
+namespace PetFamily.Application.FileProvider;
+
+public record FileContent(Stream Stream, FilePath File, string BucketName);

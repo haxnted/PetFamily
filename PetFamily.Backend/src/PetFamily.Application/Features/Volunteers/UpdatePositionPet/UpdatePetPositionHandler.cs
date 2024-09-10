@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Application.Extensions;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
+using PetFamily.Domain.VolunteerManagement.ValueObjects;
 
 namespace PetFamily.Application.Features.Volunteers.UpdatePositionPet;
 
@@ -26,7 +27,11 @@ public class UpdatePetPositionHandler(
             return volunteer.Error.ToErrorList();
 
         var petId = PetId.Create(command.PetId);
-        var resultPetUpdate = volunteer.Value.MovePet(petId, command.Position);
+        var position = Position.Create(command.Position);
+        if (position.IsFailure)
+            return position.Error.ToErrorList();
+        
+        var resultPetUpdate = volunteer.Value.MovePet(petId, position.Value);
         if (resultPetUpdate.IsFailure)
             return resultPetUpdate.Error.ToErrorList();
 

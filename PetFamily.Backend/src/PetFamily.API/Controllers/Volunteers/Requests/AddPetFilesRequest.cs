@@ -5,6 +5,6 @@ namespace PetFamily.API.Controllers.Volunteers.Requests;
 
 public record AddPetFilesRequest(Guid PetId, IFormFileCollection Files)
 {
-    public AddPhotosToPetCommand ToCommand(Guid VolunteerId, IEnumerable<FileContent> fileContents) =>
+    public AddPhotosToPetCommand ToCommand(Guid VolunteerId, IEnumerable<CreateFileCommand> fileContents) =>
         new(VolunteerId, PetId, fileContents);
 }

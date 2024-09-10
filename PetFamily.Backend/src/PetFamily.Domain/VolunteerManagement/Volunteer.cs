@@ -11,7 +11,9 @@ namespace PetFamily.Domain.VolunteerManagement;
 
 public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 {
-    private Volunteer(VolunteerId id) : base(id) { }
+    private Volunteer(VolunteerId id) : base(id)
+    {
+    }
 
     public Volunteer(
         VolunteerId id,
@@ -51,9 +53,9 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
     {
         _pets.Add(pet);
 
-        int serialPosition = _pets.Count == 0 ? 1 : _pets.Count; 
-        pet.ChangePosition(serialPosition); 
-        
+        int serialPosition = _pets.Count == 0 ? 1 : _pets.Count;
+        pet.ChangePosition(serialPosition);
+
         return Result.Success<Error>();
     }
 
@@ -73,7 +75,7 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
             pet.Deactivate();
     }
 
-    public Pet? GetPetById(PetId petId) => 
+    public Pet? GetPetById(PetId petId) =>
         _pets.FirstOrDefault(x => x.Id == petId);
 
     public void UpdateMainInfo(FullName fullName,
@@ -87,42 +89,48 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         PhoneNumber = number;
     }
 
-    public UnitResult<Error> MovePet(PetId id, SerialNumber newIdx)
+    public UnitResult<Error> MovePet(PetId id, Position newIdx)
     {
         if (_pets.Count == 1)
             return Errors.General.InsufficientItems("pets");
-        
-        if (newIdx < 1 || newIdx > Pets.Count)
+
+        if (newIdx.Value < 1 || newIdx.Value > Pets.Count)
             return Errors.General.ValueIsInvalid("newIdx");
 
         var pet = _pets.FirstOrDefault(p => p.Id == id);
         if (pet is null)
             return Errors.General.NotFound(id);
 
-        if (pet.SerialNumber == newIdx)
+        if (pet.Position == newIdx)
             return Result.Success<Error>();
 
-        var oldIdx = pet.SerialNumber;
-        
-        if (newIdx < oldIdx)
-        {
-            var collection = _pets.Where(p => p.SerialNumber >= newIdx && p.SerialNumber < oldIdx);
-            foreach (var entity in collection)
-            {
-                entity.ChangePosition(entity.SerialNumber + 1);
-            }
-        }
-        else if (newIdx > oldIdx)
-        {
-            var collection = _pets.Where(p => p.SerialNumber > oldIdx && p.SerialNumber <= newIdx);
-            foreach (var entity in collection)
-            {
-                entity.ChangePosition(entity.SerialNumber - 1);
-            }
-        }
-        pet.ChangePosition(newIdx);
+        var oldIdx = Position.Create(pet.Position.Value);
+        UpdatePositions(newIdx, oldIdx.Value);
+        pet.ChangePosition(newIdx.Value);
 
         return Result.Success<Error>();
+    }
+
+    private void UpdatePositions(Position newIdx, Position oldIdx)
+    {
+        if (newIdx.Value < oldIdx.Value)
+        {
+            var collection = _pets
+                .Where(p => p.Position.Value >= newIdx.Value && p.Position.Value < oldIdx.Value);
+            foreach (var entity in collection)
+            {
+                entity.ChangePosition(entity.Position.Value + 1);
+            }
+        }
+        else if (newIdx.Value > oldIdx.Value)
+        {
+            var collection = _pets
+                .Where(p => p.Position.Value > oldIdx.Value && p.Position.Value <= newIdx.Value);
+            foreach (var entity in collection)
+            {
+                entity.ChangePosition(entity.Position.Value - 1);
+            }
+        }
     }
 
     public int PetsAdoptedCount() =>

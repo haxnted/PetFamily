@@ -4,6 +4,7 @@ using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
 using PetFamily.Domain.VolunteerManagement;
 using PetFamily.Domain.VolunteerManagement.Entities;
+using PetFamily.Domain.VolunteerManagement.ValueObjects;
 
 namespace PetFamily.Infrastructure.Configurations;
 
@@ -135,6 +136,9 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             pb.OwnsMany(d => d.Values, db =>
             {
                 db.Property(p => p.Path)
+                    .HasConversion(
+                        path => path.Path,
+                        path => FilePath.Create(path).Value)
                     .IsRequired()
                     .HasColumnName("path");
 
@@ -144,9 +148,12 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             });
         });
 
-        builder.Property(p => p.SerialNumber)
-            .HasColumnName("serial_number")
-            .IsRequired();
+        builder.ComplexProperty(p => p.Position, pb =>
+        {
+            pb.Property(p => p.Value)
+                .HasColumnName("serial_number")
+                .IsRequired();
+        });
 
         builder.Property<bool>("_isDeleted")
             .UsePropertyAccessMode(PropertyAccessMode.Field)

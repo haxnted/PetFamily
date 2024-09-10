@@ -5,20 +5,26 @@ namespace PetFamily.Domain.VolunteerManagement.ValueObjects;
 
 public record PetPhoto
 {
-    public string Path { get; }
+    public FilePath Path { get; }
     public bool IsImageMain { get; }
 
-    private PetPhoto(string path, bool isImageMain)
+    private PetPhoto(FilePath path, bool isImageMain = false)
     {
         Path = path;
         IsImageMain = isImageMain;
     }
 
-    public static Result<PetPhoto, Error> Create(string path, bool isImageMain)
+    public static Result<PetPhoto, Error> Create(FilePath filePath, bool isImageMain = false)
     {
-        if (string.IsNullOrWhiteSpace(path))
-            return Errors.General.ValueIsInvalid("path cannot be empty");
-
-        return new PetPhoto(path, isImageMain);
+        if (string.IsNullOrWhiteSpace(filePath.Path))
+            return Errors.General.ValueIsInvalid("filePath");
+        
+        var extension = System.IO.Path.GetExtension(filePath.Path);
+        
+        if(Constants.SUPPORTED_IMAGES_EXTENSIONS.Contains(extension) == false)
+            return Errors.General.ValueIsInvalid("filePath-extension");
+        
+        return new PetPhoto(filePath, isImageMain);
     }
 }
+

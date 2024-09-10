@@ -27,7 +27,7 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
     public bool IsVaccinated { get; }
     public HelpStatusPet HelpStatus { get; }
     public DateTime DateCreated { get; }
-    public int SerialNumber { get; private set; }
+    public Position Position { get; private set; }
     public ValueObjectList<PetPhoto> PetPhotoList { get; private set; }
     public ValueObjectList<Requisite> RequisiteList { get; private set; }
 
@@ -65,11 +65,9 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         DateCreated = dateTime;
     }
 
-    public UnitResult<Error> ChangePosition(int position)
-    {
-        SerialNumber = position;
-        return Result.Success<Error>();
-    }
+    public void ChangePosition(int position) =>
+        Position = position;
+
     public UnitResult<Error> UpdateFiles(ValueObjectList<PetPhoto> list)
     {
         PetPhotoList = list;

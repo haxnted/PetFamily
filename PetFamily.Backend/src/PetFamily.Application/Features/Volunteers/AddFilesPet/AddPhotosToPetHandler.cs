@@ -1,8 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Database;
+using PetFamily.Application.Extensions;
 using PetFamily.Application.FileProvider;
-using PetFamily.Application.Providers;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
 using PetFamily.Domain.Shared.ValueObjects;
@@ -12,12 +13,19 @@ namespace PetFamily.Application.Features.Volunteers.AddFilesPet;
 
 public class AddPhotosToPetHandler(
     IUnitOfWork unitOfWork,
+    IValidator<AddPhotosToPetCommand> validator,
     IVolunteersRepository volunteersRepository,
     IFileProvider fileProvider,
     ILogger<AddPhotosToPetHandler> logger)
 {
+    private const string BUCKET_NANE = "files";
+
     public async Task<Result<Guid, ErrorList>> Execute(AddPhotosToPetCommand command, CancellationToken token = default)
     {
+        var validateResult = await validator.ValidateAsync(command, token);
+        if (!validateResult.IsValid)
+            return validateResult.ToList();
+        
         var volunteerId = VolunteerId.Create(command.VolunteerId);
         var volunteer = await volunteersRepository.GetById(volunteerId, token);
         if (volunteer.IsFailure)
@@ -32,14 +40,21 @@ public class AddPhotosToPetHandler(
 
         try
         {
-            var petPhotosConvert = from fileContent in command.Files
-                let extensionFile = Path.GetExtension(fileContent.ObjectName)
-                let uniquePath = Guid.NewGuid() + extensionFile
-                select new FileContent(fileContent.Stream, uniquePath);
+            var petPhotosConvert = new List<FileContent>();
+            foreach (var file in command.Files)
+            {
+                var extensionFile = Path.GetExtension(file.FileName);
+                var uniquePath = FilePath.Create(Guid.NewGuid().ToString(), extensionFile);
+                if (uniquePath.IsFailure)
+                    return uniquePath.Error.ToErrorList();
+
+                petPhotosConvert.Add(new FileContent(file.Content, uniquePath.Value, BUCKET_NANE));
+            }
 
             var photosConvert = petPhotosConvert.ToList();
+
             var petPhotoList = photosConvert
-                .Select(file => PetPhoto.Create(file.ObjectName, false))
+                .Select(file => PetPhoto.Create(file.File, false))
                 .Select(file => file.Value);
 
             pet.UpdateFiles(new ValueObjectList<PetPhoto>(petPhotoList));
@@ -63,7 +78,10 @@ public class AddPhotosToPetHandler(
         {
             transaction.Rollback();
 
-            logger.Log(LogLevel.Information, "Transaction failed. Executed command: {pet}", command);
+            logger.Log(
+                LogLevel.Information,
+                "Transaction failed. Executed command: {pet}, Exception: {Ex}",
+                command, ex);
             return Error.Failure("Failed.add.photos", "Failed add photos to pet").ToErrorList();
         }
     }

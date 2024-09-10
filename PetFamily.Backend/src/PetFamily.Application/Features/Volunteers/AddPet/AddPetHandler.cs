@@ -35,7 +35,7 @@ public class AddPetHandler(
             return result.Error.ToErrorList();
 
         logger.Log(LogLevel.Information, "Volunteer {VolunteerId} added pet {PetId}", volunteerId, pet.Id);
-        return command.VolunteerId;
+        return pet.Id.Id;
     }
 
     private Result<Pet> TryCreatePet(AddPetCommand command)
