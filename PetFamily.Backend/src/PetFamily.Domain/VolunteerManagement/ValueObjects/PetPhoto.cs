@@ -14,17 +14,17 @@ public record PetPhoto
         IsImageMain = isImageMain;
     }
 
-    public static Result<PetPhoto, Error> Create(FilePath path, bool isImageMain = false)
+    public static Result<PetPhoto, Error> Create(FilePath filePath, bool isImageMain = false)
     {
-        if (string.IsNullOrWhiteSpace(path.Value))
-            return Errors.General.ValueIsInvalid("path");
+        if (string.IsNullOrWhiteSpace(filePath.Path))
+            return Errors.General.ValueIsInvalid("filePath");
         
-        var extension = System.IO.Path.GetExtension(path.Value);
+        var extension = System.IO.Path.GetExtension(filePath.Path);
         
         if(Constants.SUPPORTED_IMAGES_EXTENSIONS.Contains(extension) == false)
-            return Errors.General.ValueIsInvalid("path-extension");
+            return Errors.General.ValueIsInvalid("filePath-extension");
         
-        return new PetPhoto(path, isImageMain);
+        return new PetPhoto(filePath, isImageMain);
     }
 }
 

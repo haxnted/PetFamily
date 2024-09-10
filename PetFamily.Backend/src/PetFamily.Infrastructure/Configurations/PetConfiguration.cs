@@ -4,6 +4,7 @@ using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
 using PetFamily.Domain.VolunteerManagement;
 using PetFamily.Domain.VolunteerManagement.Entities;
+using PetFamily.Domain.VolunteerManagement.ValueObjects;
 
 namespace PetFamily.Infrastructure.Configurations;
 
@@ -135,6 +136,9 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             pb.OwnsMany(d => d.Values, db =>
             {
                 db.Property(p => p.Path)
+                    .HasConversion(
+                        path => path.Path,
+                        path => FilePath.Create(path).Value)
                     .IsRequired()
                     .HasColumnName("path");
 

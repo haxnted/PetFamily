@@ -1,6 +1,6 @@
 ﻿namespace PetFamily.Infrastructure.Models;
 
-public record FIleContent(
+public record FileUploadContent(
     Stream Stream,
     string BucketName,
     string ObjectName);

@@ -1,17 +1,17 @@
-﻿using PetFamily.Application.FileProvider;
+﻿using PetFamily.Application.Features.Volunteers.AddFilesPet;
 
 namespace PetFamily.API.Processors;
 
 public class FileProcessor : IAsyncDisposable
 {
-    private readonly List<FileContent> _files = [];
+    private readonly List<CreateFileCommand> _files = [];
     
-    public List<FileContent> Process(IFormFileCollection files)
+    public List<CreateFileCommand> Process(IFormFileCollection files)
     {
         foreach (var file in files)
         {
             var stream = file.OpenReadStream();
-            var fileContent = new FileContent(stream, file.FileName);
+            var fileContent = new CreateFileCommand(stream, file.FileName);
             _files.Add(fileContent);
         }
 
@@ -22,7 +22,7 @@ public class FileProcessor : IAsyncDisposable
     {
         foreach (var file in _files)
         {
-            await file.Stream.DisposeAsync();
+            await file.Content.DisposeAsync();
         }
     }
 }
