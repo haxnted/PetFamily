@@ -80,7 +80,8 @@ public class AddPhotosToPetTest
         resultHandle.IsSuccess.Should().BeTrue();
         resultHandle.Value.Equals(volunteerId.Id).Should().BeTrue();
     }
-
+    
+    [Fact]
     public async Task Execute_With_Invalid_Command_Should_Return_Validation_Errors()
     {
         // arrange
@@ -91,11 +92,11 @@ public class AddPhotosToPetTest
         var petId = volunteer.Pets[0].Id;
 
         var command = new AddPhotosToPetCommand(volunteerId, petId, CreateAddPhotosToPetCommand());
-        
+
+        var errorValidate = Errors.General.ValueIsInvalid(nameof(command.Files)).Serialize();
         var validationFailures = new List<ValidationFailure>
         {
-            new ("VolunteerId", "Invalid Volunteer ID"),
-            new ("PetId", "Invalid Pet ID")
+            new (nameof(command.Files), errorValidate),
         };
         var validationResult = new ValidationResult(validationFailures);
 
@@ -121,8 +122,7 @@ public class AddPhotosToPetTest
 
         // assert
         result.IsFailure.Should().BeTrue();
-        result.Error.First().Should().Be("Invalid Volunteer ID");
-        result.Error.Last().Should().Be("Invalid Pet ID");
+        result.Error.First().InvalidField.Should().Be(nameof(command.Files));
     }
 
     [Fact]

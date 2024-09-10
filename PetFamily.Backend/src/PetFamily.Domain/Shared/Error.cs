@@ -37,7 +37,7 @@ public record Error
             throw new InvalidOperationException("invalid serialize format");
 
         if (Enum.TryParse<ErrorType>(parts[2], out var type) == false)
-            throw new InvalidOperationException("invalid serialize format");
+            throw new InvalidOperationException("invalid error type format");
 
         return new Error(parts[0], parts[1], type);
     }
