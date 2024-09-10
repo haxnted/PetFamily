@@ -84,6 +84,7 @@ namespace PetFamily.Infrastructure.Migrations
                     phone_number = table.Column<string>(type: "text", nullable: false),
                     height = table.Column<double>(type: "double precision", nullable: false),
                     weight = table.Column<double>(type: "double precision", nullable: false),
+                    serial_number = table.Column<int>(type: "integer", nullable: false),
                     pet_photos = table.Column<string>(type: "jsonb", nullable: false),
                     requisites = table.Column<string>(type: "jsonb", nullable: false)
                 },

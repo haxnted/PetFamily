@@ -13,7 +13,7 @@ using PetFamily.Infrastructure;
 namespace PetFamily.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240905202414_Initial")]
+    [Migration("20240910152212_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -196,6 +196,15 @@ namespace PetFamily.Infrastructure.Migrations
                             b1.Property<double>("Weight")
                                 .HasColumnType("double precision")
                                 .HasColumnName("weight");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("Position", "PetFamily.Domain.VolunteerManagement.Entities.Pet.Position#Position", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<int>("Value")
+                                .HasColumnType("integer")
+                                .HasColumnName("serial_number");
                         });
 
                     b.HasKey("Id")
