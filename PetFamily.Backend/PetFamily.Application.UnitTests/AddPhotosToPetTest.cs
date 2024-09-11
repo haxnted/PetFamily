@@ -21,6 +21,21 @@ namespace PetFamily.Application.UnitTests;
 
 public class AddPhotosToPetTest
 {
+    private readonly Mock<IVolunteersRepository> _volunteerRepositoryMock;
+    private readonly Mock<IValidator<AddPhotosToPetCommand>> _validatorMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<ILogger<AddPhotosToPetHandler>> _loggerMock;
+    private readonly Mock<IFileProvider> _fileProviderMock;
+    private readonly Mock<IDbTransaction> _dbTransactionMock;
+    public AddPhotosToPetTest()
+    {
+        _volunteerRepositoryMock = new Mock<IVolunteersRepository>();
+        _validatorMock = new Mock<IValidator<AddPhotosToPetCommand>>();
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _loggerMock = new Mock<ILogger<AddPhotosToPetHandler>>();
+        _fileProviderMock = new Mock<IFileProvider>();
+        _dbTransactionMock = new Mock<IDbTransaction>();
+    }
     [Fact]
     public async void Execute_Should_Upload_Files_To_Pet()
     {
@@ -38,40 +53,34 @@ public class AddPhotosToPetTest
         };
         var createFileCommand = fileContents.Select(f => new CreateFileCommand(f.Stream, f.File.Path));
         var command = new AddPhotosToPetCommand(volunteerId, petId, createFileCommand);
-
-        var validatorMock = new Mock<IValidator<AddPhotosToPetCommand>>();
-        validatorMock.Setup(v => v.ValidateAsync(command, ct))
+        
+        _validatorMock.Setup(v => v.ValidateAsync(command, ct))
             .ReturnsAsync(new ValidationResult());
 
-        var volunteerRepositoryMock = new Mock<IVolunteersRepository>();
-        volunteerRepositoryMock.Setup(v => v.Save(It.IsAny<Volunteer>(), ct))
+        _volunteerRepositoryMock.Setup(v => v.Save(It.IsAny<Volunteer>(), ct))
             .ReturnsAsync(Result.Success<Guid, Error>(volunteerId.Id));
 
-        volunteerRepositoryMock.Setup(v => v.GetById(volunteerId, ct))
+        _volunteerRepositoryMock.Setup(v => v.GetById(volunteerId, ct))
             .ReturnsAsync(Result.Success<Volunteer, Error>(volunteer));
-
-        var dbTransactionMock = new Mock<IDbTransaction>();
-        var unitOfWorkMock = new Mock<IUnitOfWork>();
-        unitOfWorkMock.Setup(u => u.SaveChanges(ct))
+        
+        _unitOfWorkMock.Setup(u => u.SaveChanges(ct))
             .Returns(Task.CompletedTask);
-        unitOfWorkMock.Setup(u => u.BeginTransaction(ct))
-            .ReturnsAsync(dbTransactionMock.Object);
+        _unitOfWorkMock.Setup(u => u.BeginTransaction(ct))
+            .ReturnsAsync(_dbTransactionMock.Object);
 
         var returnedFilePaths = fileContents
             .Select(f => f.File)
             .Select(f => f.Path).ToList();
-        var fileProviderMock = new Mock<IFileProvider>();
-        fileProviderMock.Setup(f => f.UploadFiles(It.IsAny<List<FileContent>>(), ct))
+
+        _fileProviderMock.Setup(f => f.UploadFiles(It.IsAny<List<FileContent>>(), ct))
             .ReturnsAsync(Result.Success<IEnumerable<string>, Error>(returnedFilePaths));
-
-        var loggerMock = new Mock<ILogger<AddPhotosToPetHandler>>();
-
+        
         var handler = new AddPhotosToPetHandler(
-            unitOfWorkMock.Object,
-            validatorMock.Object,
-            volunteerRepositoryMock.Object,
-            fileProviderMock.Object,
-            loggerMock.Object);
+            _unitOfWorkMock.Object,
+            _validatorMock.Object,
+            _volunteerRepositoryMock.Object,
+            _fileProviderMock.Object,
+            _loggerMock.Object);
 
         // act
         var resultHandle = await handler.Execute(command, ct);
@@ -99,22 +108,16 @@ public class AddPhotosToPetTest
             new (nameof(command.Files), errorValidate),
         };
         var validationResult = new ValidationResult(validationFailures);
-
-        var validatorMock = new Mock<IValidator<AddPhotosToPetCommand>>();
-        validatorMock.Setup(v => v.ValidateAsync(command, ct))
+        
+        _validatorMock.Setup(v => v.ValidateAsync(command, ct))
             .ReturnsAsync(validationResult);
-
-        var unitOfWorkMock = new Mock<IUnitOfWork>();
-        var volunteerRepositoryMock = new Mock<IVolunteersRepository>();
-        var fileProviderMock = new Mock<IFileProvider>();
-        var loggerMock = new Mock<ILogger<AddPhotosToPetHandler>>();
-
+        
         var handler = new AddPhotosToPetHandler(
-            unitOfWorkMock.Object,
-            validatorMock.Object,
-            volunteerRepositoryMock.Object,
-            fileProviderMock.Object,
-            loggerMock.Object
+            _unitOfWorkMock.Object,
+            _validatorMock.Object,
+            _volunteerRepositoryMock.Object,
+            _fileProviderMock.Object,
+            _loggerMock.Object
         );
 
         // act
@@ -136,24 +139,18 @@ public class AddPhotosToPetTest
 
         var command = new AddPhotosToPetCommand(volunteerId, petId, CreateAddPhotosToPetCommand());
         
-        var validatorMock = new Mock<IValidator<AddPhotosToPetCommand>>();
-        validatorMock.Setup(v => v.ValidateAsync(command, ct))
+        _validatorMock.Setup(v => v.ValidateAsync(command, ct))
             .ReturnsAsync(new ValidationResult());
-
-        var volunteerRepositoryMock = new Mock<IVolunteersRepository>();
-        volunteerRepositoryMock.Setup(v => v.GetById(volunteerId, ct))
+        
+        _volunteerRepositoryMock.Setup(v => v.GetById(volunteerId, ct))
             .ReturnsAsync(Result.Failure<Volunteer, Error>(Errors.General.NotFound(volunteerId.Id)));
 
-        var unitOfWorkMock = new Mock<IUnitOfWork>();
-        var fileProviderMock = new Mock<IFileProvider>();
-        var loggerMock = new Mock<ILogger<AddPhotosToPetHandler>>();
-
         var handler = new AddPhotosToPetHandler(
-            unitOfWorkMock.Object,
-            validatorMock.Object,
-            volunteerRepositoryMock.Object,
-            fileProviderMock.Object,
-            loggerMock.Object
+            _unitOfWorkMock.Object,
+            _validatorMock.Object,
+            _volunteerRepositoryMock.Object,
+            _fileProviderMock.Object,
+            _loggerMock.Object
         );
 
         // act
@@ -178,22 +175,17 @@ public class AddPhotosToPetTest
         var petId = volunteer.Pets[0].Id;
         
         var command = new AddPhotosToPetCommand(volunteerId, petId, CreateAddPhotosToPetCommand());
-
-        var validatorMock = new Mock<IValidator<AddPhotosToPetCommand>>();
-        validatorMock.Setup(v => v.ValidateAsync(command, ct))
-            .ReturnsAsync(new ValidationResult());
-
-        var volunteerRepositoryMock = new Mock<IVolunteersRepository>();
-        volunteerRepositoryMock.Setup(v => v.GetById(volunteerId, ct))
-            .ReturnsAsync(Result.Success<Volunteer, Error>(volunteer));
-
-        var unitOfWorkMock = new Mock<IUnitOfWork>();
-        var dbTransactionMock = new Mock<IDbTransaction>();
-        unitOfWorkMock.Setup(u => u.BeginTransaction(ct))
-            .ReturnsAsync(dbTransactionMock.Object);
         
-        var fileProviderMock = new Mock<IFileProvider>();
-        fileProviderMock.Setup(f => f.UploadFiles(It.IsAny<List<FileContent>>(), ct))
+        _validatorMock.Setup(v => v.ValidateAsync(command, ct))
+            .ReturnsAsync(new ValidationResult());
+        
+        _volunteerRepositoryMock.Setup(v => v.GetById(volunteerId, ct))
+            .ReturnsAsync(Result.Success<Volunteer, Error>(volunteer));
+        
+        _unitOfWorkMock.Setup(u => u.BeginTransaction(ct))
+            .ReturnsAsync(_dbTransactionMock.Object);
+        
+        _fileProviderMock.Setup(f => f.UploadFiles(It.IsAny<List<FileContent>>(), ct))
             .ReturnsAsync(Result.Failure<IEnumerable<string>, Error>(
                 Error.Failure("failed.add.photos", "Failed add photos to pet"))
             );
@@ -201,10 +193,10 @@ public class AddPhotosToPetTest
         var loggerMock = new Mock<ILogger<AddPhotosToPetHandler>>();
 
         var handler = new AddPhotosToPetHandler(
-            unitOfWorkMock.Object,
-            validatorMock.Object,
-            volunteerRepositoryMock.Object,
-            fileProviderMock.Object,
+            _unitOfWorkMock.Object,
+            _validatorMock.Object,
+            _volunteerRepositoryMock.Object,
+            _fileProviderMock.Object,
             loggerMock.Object
         );
 

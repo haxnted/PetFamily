@@ -2,8 +2,10 @@
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Moq;
+using PetFamily.Application.Database;
 using PetFamily.Application.Dto;
 using PetFamily.Application.Features.Volunteers;
 using PetFamily.Application.Features.Volunteers.AddPet;
@@ -19,6 +21,17 @@ namespace PetFamily.Application.UnitTests;
 
 public class AddPetTests
 {
+    private readonly Mock<IVolunteersRepository> _volunteerRepositoryMock;
+    private readonly Mock<IValidator<AddPetCommand>> _validatorMock;
+    private readonly Mock<ILogger<AddPetHandler>> _loggerMock;
+
+    public AddPetTests()
+    {
+        _volunteerRepositoryMock = new Mock<IVolunteersRepository>();
+        _validatorMock = new Mock<IValidator<AddPetCommand>>();
+        _loggerMock = new Mock<ILogger<AddPetHandler>>();
+    }
+
     [Fact]
     public async Task Execute_ShouldAddPet_WhenCommandIsValid()
     {
@@ -42,23 +55,19 @@ public class AddPetTests
             HelpStatusPet.FoundHome,
             new List<RequisiteDto>()
             {
-                new RequisiteDto("name", "Desc")       
+                new RequisiteDto("name", "Desc")
             });
 
-        var validatorMock = new Mock<IValidator<AddPetCommand>>();
-        validatorMock.Setup(v => v.ValidateAsync(command, ct))
+        _validatorMock.Setup(v => v.ValidateAsync(command, ct))
             .ReturnsAsync(new ValidationResult());
 
-        var volunteerRepositoryMock = new Mock<IVolunteersRepository>();
-        volunteerRepositoryMock.Setup(v => v.GetById(It.IsAny<VolunteerId>(), ct))
+        _volunteerRepositoryMock.Setup(v => v.GetById(It.IsAny<VolunteerId>(), ct))
             .ReturnsAsync(Result.Success<Volunteer, Error>(volunteer));
 
-        volunteerRepositoryMock.Setup(v => v.Save(It.IsAny<Volunteer>(), ct))
+        _volunteerRepositoryMock.Setup(v => v.Save(It.IsAny<Volunteer>(), ct))
             .ReturnsAsync(Result.Success<Guid, Error>(volunteer.Id.Id));
 
-        var loggerMock = new Mock<ILogger<AddPetHandler>>();
-
-        var handler = new AddPetHandler(volunteerRepositoryMock.Object, validatorMock.Object, loggerMock.Object);
+        var handler = new AddPetHandler(_volunteerRepositoryMock.Object, _validatorMock.Object, _loggerMock.Object);
 
         // act
         var result = await handler.Execute(command, ct);
@@ -74,9 +83,9 @@ public class AddPetTests
         // arrange
         var ct = new CancellationToken();
         var volunteer = CreateVolunteerWithPets(0);
-        
+
         var invalidNumber = "123";
-        
+
         var command = new AddPetCommand(
             volunteer.Id,
             "Dog",
@@ -92,25 +101,20 @@ public class AddPetTests
             HelpStatusPet.FoundHome,
             new List<RequisiteDto>()
             {
-                new RequisiteDto("name", "Desc")       
+                new RequisiteDto("name", "Desc")
             });
-
         
         var errorValidate = Errors.General.ValueIsInvalid("PhoneNumber").Serialize();
         var validationFailures = new List<ValidationFailure>
         {
-            new ("PhoneNumber", errorValidate),
+            new("PhoneNumber", errorValidate),
         };
         var validationResult = new ValidationResult(validationFailures);
         
-        var validatorMock = new Mock<IValidator<AddPetCommand>>();
-        validatorMock.Setup(v => v.ValidateAsync(command, ct))
+        _validatorMock.Setup(v => v.ValidateAsync(command, ct))
             .ReturnsAsync(validationResult);
-
-        var volunteerRepositoryMock = new Mock<IVolunteersRepository>();
-        var loggerMock = new Mock<ILogger<AddPetHandler>>();
-
-        var handler = new AddPetHandler(volunteerRepositoryMock.Object, validatorMock.Object, loggerMock.Object);
+        
+        var handler = new AddPetHandler(_volunteerRepositoryMock.Object, _validatorMock.Object, _loggerMock.Object);
 
         // act
         var result = await handler.Execute(command, ct);
@@ -141,23 +145,19 @@ public class AddPetTests
             HelpStatusPet.FoundHome,
             new List<RequisiteDto>()
             {
-                new RequisiteDto("name", "Desc")       
+                new RequisiteDto("name", "Desc")
             });
-
-        var validatorMock = new Mock<IValidator<AddPetCommand>>();
-        validatorMock.Setup(v => v.ValidateAsync(command, ct))
+        
+        _validatorMock.Setup(v => v.ValidateAsync(command, ct))
             .ReturnsAsync(new ValidationResult());
-
-        var volunteerRepositoryMock = new Mock<IVolunteersRepository>();
-        volunteerRepositoryMock.Setup(v => v.GetById(It.IsAny<VolunteerId>(), ct))
+        
+        _volunteerRepositoryMock.Setup(v => v.GetById(It.IsAny<VolunteerId>(), ct))
             .ReturnsAsync(Result.Success<Volunteer, Error>(volunteer));
 
-        volunteerRepositoryMock.Setup(v => v.Save(It.IsAny<Volunteer>(), ct))
+        _volunteerRepositoryMock.Setup(v => v.Save(It.IsAny<Volunteer>(), ct))
             .ReturnsAsync(Result.Failure<Guid, Error>(Error.Failure("save.error", "save error")));
 
-        var loggerMock = new Mock<ILogger<AddPetHandler>>();
-
-        var handler = new AddPetHandler(volunteerRepositoryMock.Object, validatorMock.Object, loggerMock.Object);
+        var handler = new AddPetHandler(_volunteerRepositoryMock.Object, _validatorMock.Object, _loggerMock.Object);
 
         // act
         var result = await handler.Execute(command, ct);
@@ -167,7 +167,7 @@ public class AddPetTests
         result.Error.First().Code.Should().Be("save.error");
         result.Error.First().Message.Should().Be("save error");
     }
-    
+
     private Volunteer CreateVolunteerWithPets(int petCount)
     {
         var volunteer = new Volunteer(
