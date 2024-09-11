@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Domain.UnitTests", "PetFamily.Domain.UnitTests\PetFamily.Domain.UnitTests.csproj", "{32A89B1C-E797-4903-9D47-A96A6C72945D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Application.UnitTests", "PetFamily.Application.UnitTests\PetFamily.Application.UnitTests.csproj", "{89E33020-E29B-4715-A29F-0ED593716EBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,5 +49,9 @@ Global
 		{32A89B1C-E797-4903-9D47-A96A6C72945D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32A89B1C-E797-4903-9D47-A96A6C72945D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32A89B1C-E797-4903-9D47-A96A6C72945D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89E33020-E29B-4715-A29F-0ED593716EBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89E33020-E29B-4715-A29F-0ED593716EBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89E33020-E29B-4715-A29F-0ED593716EBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89E33020-E29B-4715-A29F-0ED593716EBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
