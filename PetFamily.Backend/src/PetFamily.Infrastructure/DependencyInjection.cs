@@ -4,6 +4,9 @@ using Minio;
 using PetFamily.Application.Database;
 using PetFamily.Application.Features.Volunteers;
 using PetFamily.Application.FileProvider;
+using PetFamily.Application.Messaging;
+using PetFamily.Domain.VolunteerManagement.ValueObjects;
+using PetFamily.Infrastructure.MessageQueues;
 using PetFamily.Infrastructure.Options;
 using PetFamily.Infrastructure.Providers;
 using PetFamily.Infrastructure.Repositories;
@@ -19,6 +22,7 @@ public static class DependencyInjection
         collection.AddScoped<IVolunteersRepository, VolunteersRepository>();
         collection.AddScoped<IUnitOfWork, UnitOfWork>();
         collection.AddMinio(configuration);
+        collection.AddSingleton<IMessageQueue<IEnumerable<FilePath>>, InMemoryMessageQueues<IEnumerable<FilePath>>>();
         return collection;
     }
 
