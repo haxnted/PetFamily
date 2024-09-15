@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.FileProvider;
+using PetFamily.Application.Messaging;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
 using PetFamily.Domain.Shared.ValueObjects;
@@ -16,6 +17,7 @@ public class AddPhotosToPetHandler(
     IValidator<AddPhotosToPetCommand> validator,
     IVolunteersRepository volunteersRepository,
     IFileProvider fileProvider,
+    IMessageQueue<IEnumerable<FilePath>> messageQueue,
     ILogger<AddPhotosToPetHandler> logger)
 {
     private const string BUCKET_NANE = "files";
@@ -62,7 +64,11 @@ public class AddPhotosToPetHandler(
 
             var resultUpload = await fileProvider.UploadFiles(photosConvert, token);
             if (resultUpload.IsFailure)
+            {
+                await messageQueue.WriteAsync(photosConvert.Select(p => p.File), token);
+                
                 return resultUpload.Error.ToErrorList();
+            }
 
             transaction.Commit();
 
