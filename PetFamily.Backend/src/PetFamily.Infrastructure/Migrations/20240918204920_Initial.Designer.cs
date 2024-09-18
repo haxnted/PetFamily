@@ -6,14 +6,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using PetFamily.Infrastructure;
+using PetFamily.Infrastructure.DbContexts;
 
 #nullable disable
 
 namespace PetFamily.Infrastructure.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240910152212_Initial")]
+    [DbContext(typeof(WriteDbContext))]
+    [Migration("20240918204920_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -93,6 +93,16 @@ namespace PetFamily.Infrastructure.Migrations
                     b.Property<bool>("IsVaccinated")
                         .HasColumnType("boolean")
                         .HasColumnName("is_vaccinated");
+
+                    b.Property<string>("PetPhotoList")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("pet_photos");
+
+                    b.Property<string>("RequisiteList")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("requisites");
 
                     b.Property<Guid>("SpeciesId")
                         .HasColumnType("uuid")
@@ -222,6 +232,16 @@ namespace PetFamily.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<string>("RequisiteList")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("requisites");
+
+                    b.Property<string>("SocialLinkList")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("social_links");
+
                     b.Property<bool>("_isDeleted")
                         .HasColumnType("boolean")
                         .HasColumnName("is_deleted");
@@ -241,7 +261,6 @@ namespace PetFamily.Infrastructure.Migrations
 
                             b1.Property<string>("Name")
                                 .IsRequired()
-                                .ValueGeneratedOnUpdateSometimes()
                                 .HasMaxLength(50)
                                 .HasColumnType("character varying(50)")
                                 .HasColumnName("name");
@@ -301,220 +320,6 @@ namespace PetFamily.Infrastructure.Migrations
                         .HasForeignKey("volunteer_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("fk_pets_volunteers_volunteer_id");
-
-                    b.OwnsOne("PetFamily.Domain.Shared.ValueObjects.ValueObjectList<PetFamily.Domain.VolunteerManagement.ValueObjects.PetPhoto>", "PetPhotoList", b1 =>
-                        {
-                            b1.Property<Guid>("PetId")
-                                .HasColumnType("uuid");
-
-                            b1.HasKey("PetId");
-
-                            b1.ToTable("pets");
-
-                            b1.ToJson("pet_photos");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PetId")
-                                .HasConstraintName("fk_pets_pets_id");
-
-                            b1.OwnsMany("PetFamily.Domain.VolunteerManagement.ValueObjects.PetPhoto", "Values", b2 =>
-                                {
-                                    b2.Property<Guid>("ValueObjectListPetId")
-                                        .HasColumnType("uuid");
-
-                                    b2.Property<int>("Id")
-                                        .ValueGeneratedOnAdd()
-                                        .HasColumnType("integer");
-
-                                    b2.Property<bool>("IsImageMain")
-                                        .HasColumnType("boolean")
-                                        .HasColumnName("is_image_main");
-
-                                    b2.Property<string>("Path")
-                                        .IsRequired()
-                                        .HasColumnType("text")
-                                        .HasColumnName("path");
-
-                                    b2.HasKey("ValueObjectListPetId", "Id");
-
-                                    b2.ToTable("pets");
-
-                                    b2.ToJson("pet_photos");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("ValueObjectListPetId")
-                                        .HasConstraintName("fk_pets_pets_value_object_list_pet_id");
-                                });
-
-                            b1.Navigation("Values");
-                        });
-
-                    b.OwnsOne("PetFamily.Domain.VolunteerManagement.Entities.Pet.RequisiteList#ValueObjectList", "RequisiteList", b1 =>
-                        {
-                            b1.Property<Guid>("PetId")
-                                .HasColumnType("uuid");
-
-                            b1.HasKey("PetId")
-                                .HasName("pk_pets");
-
-                            b1.ToTable("pets");
-
-                            b1.ToJson("requisites");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PetId")
-                                .HasConstraintName("fk_pets_pets_pet_id");
-
-                            b1.OwnsMany("PetFamily.Domain.VolunteerManagement.ValueObjects.Requisite", "Values", b2 =>
-                                {
-                                    b2.Property<Guid>("ValueObjectListPetId")
-                                        .HasColumnType("uuid");
-
-                                    b2.Property<int>("Id")
-                                        .ValueGeneratedOnAdd()
-                                        .HasColumnType("integer");
-
-                                    b2.Property<string>("Description")
-                                        .IsRequired()
-                                        .HasMaxLength(2000)
-                                        .HasColumnType("character varying(2000)")
-                                        .HasColumnName("description");
-
-                                    b2.Property<string>("Name")
-                                        .IsRequired()
-                                        .HasMaxLength(50)
-                                        .HasColumnType("character varying(50)")
-                                        .HasColumnName("name");
-
-                                    b2.HasKey("ValueObjectListPetId", "Id");
-
-                                    b2.ToTable("pets");
-
-                                    b2.ToJson("requisites");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("ValueObjectListPetId")
-                                        .HasConstraintName("fk_pets_pets_value_object_list_pet_id");
-                                });
-
-                            b1.Navigation("Values");
-                        });
-
-                    b.Navigation("PetPhotoList")
-                        .IsRequired();
-
-                    b.Navigation("RequisiteList")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PetFamily.Domain.VolunteerManagement.Volunteer", b =>
-                {
-                    b.OwnsOne("PetFamily.Domain.Shared.ValueObjects.ValueObjectList<PetFamily.Domain.VolunteerManagement.ValueObjects.SocialLink>", "SocialLinkList", b1 =>
-                        {
-                            b1.Property<Guid>("VolunteerId")
-                                .HasColumnType("uuid");
-
-                            b1.HasKey("VolunteerId");
-
-                            b1.ToTable("volunteers");
-
-                            b1.ToJson("social_links");
-
-                            b1.WithOwner()
-                                .HasForeignKey("VolunteerId")
-                                .HasConstraintName("fk_volunteers_volunteers_id");
-
-                            b1.OwnsMany("PetFamily.Domain.VolunteerManagement.ValueObjects.SocialLink", "Values", b2 =>
-                                {
-                                    b2.Property<Guid>("ValueObjectListVolunteerId")
-                                        .HasColumnType("uuid");
-
-                                    b2.Property<int>("Id")
-                                        .ValueGeneratedOnAdd()
-                                        .HasColumnType("integer");
-
-                                    b2.Property<string>("Name")
-                                        .IsRequired()
-                                        .ValueGeneratedOnUpdateSometimes()
-                                        .HasMaxLength(50)
-                                        .HasColumnType("character varying(50)")
-                                        .HasColumnName("name");
-
-                                    b2.Property<string>("Url")
-                                        .IsRequired()
-                                        .HasColumnType("text")
-                                        .HasColumnName("url");
-
-                                    b2.HasKey("ValueObjectListVolunteerId", "Id");
-
-                                    b2.ToTable("volunteers");
-
-                                    b2.ToJson("social_links");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("ValueObjectListVolunteerId")
-                                        .HasConstraintName("fk_volunteers_volunteers_value_object_list_volunteer_id");
-                                });
-
-                            b1.Navigation("Values");
-                        });
-
-                    b.OwnsOne("PetFamily.Domain.Shared.ValueObjects.ValueObjectList<PetFamily.Domain.VolunteerManagement.ValueObjects.Requisite>", "RequisiteList", b1 =>
-                        {
-                            b1.Property<Guid>("VolunteerId")
-                                .HasColumnType("uuid");
-
-                            b1.HasKey("VolunteerId");
-
-                            b1.ToTable("volunteers");
-
-                            b1.ToJson("requisites");
-
-                            b1.WithOwner()
-                                .HasForeignKey("VolunteerId")
-                                .HasConstraintName("fk_volunteers_volunteers_id");
-
-                            b1.OwnsMany("PetFamily.Domain.VolunteerManagement.ValueObjects.Requisite", "Values", b2 =>
-                                {
-                                    b2.Property<Guid>("ValueObjectList<Requisite>VolunteerId")
-                                        .HasColumnType("uuid");
-
-                                    b2.Property<int>("Id")
-                                        .ValueGeneratedOnAdd()
-                                        .HasColumnType("integer");
-
-                                    b2.Property<string>("Description")
-                                        .IsRequired()
-                                        .HasMaxLength(2000)
-                                        .HasColumnType("character varying(2000)")
-                                        .HasColumnName("description");
-
-                                    b2.Property<string>("Name")
-                                        .IsRequired()
-                                        .ValueGeneratedOnUpdateSometimes()
-                                        .HasMaxLength(50)
-                                        .HasColumnType("character varying(50)")
-                                        .HasColumnName("name");
-
-                                    b2.HasKey("ValueObjectList<Requisite>VolunteerId", "Id");
-
-                                    b2.ToTable("volunteers");
-
-                                    b2.ToJson("requisites");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("ValueObjectList<Requisite>VolunteerId")
-                                        .HasConstraintName("fk_volunteers_volunteers_value_object_list_requisite_volunteer_id");
-                                });
-
-                            b1.Navigation("Values");
-                        });
-
-                    b.Navigation("RequisiteList")
-                        .IsRequired();
-
-                    b.Navigation("SocialLinkList")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PetFamily.Domain.Species.Species", b =>
