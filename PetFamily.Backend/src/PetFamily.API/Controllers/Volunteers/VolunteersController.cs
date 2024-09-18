@@ -3,14 +3,14 @@ using PetFamily.API.Controllers.Volunteers.Requests;
 using PetFamily.API.Extensions;
 using PetFamily.API.Processors;
 using PetFamily.Application.Dto;
-using PetFamily.Application.Features.Volunteers.AddFilesPet;
-using PetFamily.Application.Features.Volunteers.AddPet;
-using PetFamily.Application.Features.Volunteers.CreateVolunteer;
-using PetFamily.Application.Features.Volunteers.DeleteVolunteer;
-using PetFamily.Application.Features.Volunteers.UpdatePositionPet;
-using PetFamily.Application.Features.Volunteers.UpdateRequisites;
-using PetFamily.Application.Features.Volunteers.UpdateSocialLinks;
-using PetFamily.Application.Features.Volunteers.UpdateVolunteer;
+using PetFamily.Application.Features.VolunteerManagement.Commands.AddFilesPet;
+using PetFamily.Application.Features.VolunteerManagement.Commands.AddPet;
+using PetFamily.Application.Features.VolunteerManagement.Commands.CreateVolunteer;
+using PetFamily.Application.Features.VolunteerManagement.Commands.DeleteVolunteer;
+using PetFamily.Application.Features.VolunteerManagement.Commands.UpdatePositionPet;
+using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateRequisites;
+using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateSocialLinks;
+using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateVolunteer;
 
 namespace PetFamily.API.Controllers.Volunteers;
 
