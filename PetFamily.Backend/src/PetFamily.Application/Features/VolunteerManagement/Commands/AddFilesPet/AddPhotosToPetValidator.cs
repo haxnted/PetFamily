@@ -38,7 +38,7 @@ public class PetPhotoValidator : AbstractValidator<CreateFileCommand>
             .Must(name =>
             {
                 var fileExtension = Path.GetExtension(name);
-                return Constants.SUPPORTED_IMAGES_EXTENSIONS.Contains(name) != false;
+                return Constants.SUPPORTED_IMAGES_EXTENSIONS.Contains(fileExtension) != false;
             })
             .WithError(Errors.General.ValueIsInvalid("FileType"));
     }

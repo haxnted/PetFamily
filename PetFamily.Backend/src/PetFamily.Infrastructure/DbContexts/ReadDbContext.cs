@@ -1,23 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using PetFamily.Domain.Species;
-using PetFamily.Domain.VolunteerManagement;
+using PetFamily.Application.Dto;
 
 namespace PetFamily.Infrastructure.DbContexts;
 
-public class WriteDbContext(IConfiguration configuration) : DbContext
+public class ReadDbContext(IConfiguration configuration) : DbContext
 {
     private const string DATABASE = "ApplicationDbContext";
     
-    public DbSet<Volunteer> Volunteers { get; set; }
-    public DbSet<Species> Species { get; set; }
+    public DbSet<VolunteerDto> Volunteers => Set<VolunteerDto>();
+    public DbSet<PetDto> Pets => Set<PetDto>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(
             typeof(WriteDbContext).Assembly,
-            type => type.FullName?.Contains("Configurations.Write") ?? false);
+            type => type.FullName?.Contains("Configurations.Read") ?? false);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -25,7 +24,8 @@ public class WriteDbContext(IConfiguration configuration) : DbContext
         optionsBuilder.UseSnakeCaseNamingConvention()
             .UseLoggerFactory(CreateLoggerFactory())
             .EnableSensitiveDataLogging()
-            .UseNpgsql(configuration.GetConnectionString(DATABASE));
+            .UseNpgsql(configuration.GetConnectionString(DATABASE))
+            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
     }
 
     private ILoggerFactory CreateLoggerFactory()

@@ -2,10 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
 using PetFamily.Application.Database;
-using PetFamily.Application.Features.Volunteers;
+using PetFamily.Application.Features.VolunteerManagement;
 using PetFamily.Application.FileProvider;
 using PetFamily.Application.Messaging;
 using PetFamily.Domain.VolunteerManagement.ValueObjects;
+using PetFamily.Infrastructure.DbContexts;
 using PetFamily.Infrastructure.MessageQueues;
 using PetFamily.Infrastructure.Options;
 using PetFamily.Infrastructure.Providers;
@@ -18,7 +19,9 @@ public static class DependencyInjection
     public static IServiceCollection AddAInfrastructure(this IServiceCollection collection,
         IConfiguration configuration)
     {
-        collection.AddScoped<ApplicationDbContext>();
+        collection.AddScoped<WriteDbContext>();
+        collection.AddScoped<ReadDbContext>();
+
         collection.AddScoped<IVolunteersRepository, VolunteersRepository>();
         collection.AddScoped<IUnitOfWork, UnitOfWork>();
         collection.AddMinio(configuration);

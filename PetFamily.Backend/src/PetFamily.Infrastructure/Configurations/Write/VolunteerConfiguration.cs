@@ -1,10 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PetFamily.Application.Dto;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
+using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.VolunteerManagement;
+using PetFamily.Domain.VolunteerManagement.ValueObjects;
+using PetFamily.Infrastructure.Extensions;
 
-namespace PetFamily.Infrastructure.Configurations;
+namespace PetFamily.Infrastructure.Configurations.Write;
 
 public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
 {
@@ -58,40 +64,17 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                 .IsRequired();
         });
 
-        builder.OwnsOne(v => v.SocialLinkList, vb =>
-        {
-            vb.ToJson("social_links");
+        builder.Property(v => v.SocialLinkList)
+            .HasValueObjectsJsonConversion(
+                input => new SocialLinkDto(input.Name, input.Url),
+                output => SocialLink.Create(output.Name, output.Url).Value)
+            .HasColumnName("social_links");
 
-            vb.OwnsMany(v => v.Values, vbs =>
-            {
-                vbs.Property(v => v.Name)
-                    .IsRequired()
-                    .HasColumnName("name")
-                    .HasMaxLength(Constants.MIN_TEXT_LENGTH);
-
-                vbs.Property(v => v.Url)
-                    .IsRequired()
-                    .HasColumnName("url");
-            });
-        });
-
-        builder.OwnsOne(v => v.RequisiteList, vb =>
-        {
-            vb.ToJson("requisites");
-
-            vb.OwnsMany(v => v.Values, vbr =>
-            {
-                vbr.Property(v => v.Name)
-                    .IsRequired()
-                    .HasColumnName("name")
-                    .HasMaxLength(Constants.MIN_TEXT_LENGTH);
-
-                vbr.Property(v => v.Description)
-                    .IsRequired()
-                    .HasColumnName("description")
-                    .HasMaxLength(Constants.EXTRA_TEXT_LENGTH);
-            });
-        });
+        builder.Property(v => v.RequisiteList)
+            .HasValueObjectsJsonConversion(
+                input => new RequisiteDto(input.Name, input.Description),
+                output => Requisite.Create(output.Name, output.Description).Value)
+            .HasColumnName("requisites");
 
         builder.Property<bool>("_isDeleted")
             .UsePropertyAccessMode(PropertyAccessMode.Field)
