@@ -20,7 +20,7 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         collection.AddScoped<WriteDbContext>();
-        collection.AddScoped<ReadDbContext>();
+        collection.AddScoped<IReadDbContext, ReadDbContext>();
 
         collection.AddScoped<IVolunteersRepository, VolunteersRepository>();
         collection.AddScoped<IUnitOfWork, UnitOfWork>();

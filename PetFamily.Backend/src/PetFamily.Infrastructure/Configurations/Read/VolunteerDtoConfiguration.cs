@@ -33,29 +33,6 @@ public class VolunteerDtoConfiguration : IEntityTypeConfiguration<VolunteerDto>
                 .HasColumnName("patronymic");
         });
         
-        builder.ComplexProperty(p => p.Address, pb =>
-        {
-            pb.Property(p => p.Street)
-                .IsRequired()
-                .HasMaxLength(Constants.MIN_TEXT_LENGTH)
-                .HasColumnName("street");
-
-            pb.Property(p => p.City)
-                .IsRequired()
-                .HasMaxLength(Constants.MIN_TEXT_LENGTH)
-                .HasColumnName("city");
-
-            pb.Property(p => p.State)
-                .IsRequired()
-                .HasMaxLength(Constants.MIN_TEXT_LENGTH)
-                .HasColumnName("state");
-
-            pb.Property(p => p.ZipCode)
-                .IsRequired(false)
-                .HasMaxLength(Constants.MIN_TEXT_LENGTH)
-                .HasColumnName("zipcode");
-        });
-        
         builder.Property(p => p.Requisites)
             .HasConversion(
                 values => JsonSerializer.Serialize(string.Empty, JsonSerializerOptions.Default),

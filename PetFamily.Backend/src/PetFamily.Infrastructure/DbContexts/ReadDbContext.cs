@@ -1,21 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Database;
 using PetFamily.Application.Dto;
 
 namespace PetFamily.Infrastructure.DbContexts;
 
-public class ReadDbContext(IConfiguration configuration) : DbContext
+public class ReadDbContext(IConfiguration configuration) : DbContext, IReadDbContext
 {
     private const string DATABASE = "ApplicationDbContext";
-    
-    public DbSet<VolunteerDto> Volunteers => Set<VolunteerDto>();
-    public DbSet<PetDto> Pets => Set<PetDto>();
+
+    public DbSet<VolunteerDto> Volunteers { get; set; }
+    public DbSet<PetDto> Pets { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(
-            typeof(WriteDbContext).Assembly,
+            typeof(ReadDbContext).Assembly,
             type => type.FullName?.Contains("Configurations.Read") ?? false);
     }
 

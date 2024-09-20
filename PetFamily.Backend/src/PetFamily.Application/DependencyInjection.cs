@@ -8,6 +8,7 @@ using PetFamily.Application.Features.VolunteerManagement.Commands.UpdatePosition
 using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateRequisites;
 using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateSocialLinks;
 using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateVolunteer;
+using PetFamily.Application.Features.VolunteerManagement.Queries.GetVolunteersWithPagination;
 
 namespace PetFamily.Application;
 
@@ -22,6 +23,7 @@ public static class DependencyInjection
     private static IServiceCollection AddHandlers(this IServiceCollection collection)
     {
         return collection.AddScoped<CreateVolunteerHandler>()
+            .AddScoped<GetVolunteersWithPaginationHandler>()
             .AddScoped<UpdatePetPositionHandler>()
             .AddScoped<UpdateVolunteerHandler>()
             .AddScoped<UpdateSocialLinksHandler>()

@@ -4,7 +4,6 @@ public class VolunteerDto
 {
     public Guid Id { get; init; }
     public FullNameDto FullName { get; init; } = default!;
-    public AddressDto Address { get; init; } = default!;
     public string GeneralDescription { get; init; } = string.Empty;
     public int AgeExperience { get; init; }
     public string PhoneNumber { get; init; } = string.Empty;
