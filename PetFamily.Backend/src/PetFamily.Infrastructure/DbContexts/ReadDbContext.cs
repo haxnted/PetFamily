@@ -8,7 +8,7 @@ namespace PetFamily.Infrastructure.DbContexts;
 
 public class ReadDbContext(IConfiguration configuration) : DbContext, IReadDbContext
 {
-    private const string DATABASE = "ApplicationDbContext";
+    private const string DATABASE = "PetFamilyDatabase";
 
     public IQueryable<VolunteerDto> Volunteers => Set<VolunteerDto>();
     public IQueryable<PetDto> Pets  => Set<PetDto>();

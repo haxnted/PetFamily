@@ -6,8 +6,6 @@ namespace PetFamily.Application.Features.VolunteerManagement.Queries.GetVoluntee
 
 public class GetVolunteersWithPaginationValidator : AbstractValidator<GetVolunteersWithPaginationQuery>
 {
-    private readonly string[] validSortBy = new[] { "name", "surname", "age", "id" };
-
     public GetVolunteersWithPaginationValidator()
     {
         RuleFor(v => v.Page)

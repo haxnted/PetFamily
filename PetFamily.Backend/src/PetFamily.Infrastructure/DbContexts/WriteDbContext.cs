@@ -8,7 +8,7 @@ namespace PetFamily.Infrastructure.DbContexts;
 
 public class WriteDbContext(IConfiguration configuration) : DbContext
 {
-    private const string DATABASE = "ApplicationDbContext";
+    private const string DATABASE = "PetFamilyDatabase";
     
     public DbSet<Volunteer> Volunteers { get; set; }
     public DbSet<Species> Species { get; set; }
