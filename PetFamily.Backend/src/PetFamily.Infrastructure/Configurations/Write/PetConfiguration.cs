@@ -95,6 +95,10 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .IsRequired();
         });
 
+        builder.Property(p => p.HelpStatus)
+            .HasColumnName("help_status")
+            .IsRequired();
+        
         builder.Property(p => p.BirthDate)
             .HasColumnName("birth_date")
             .IsRequired();

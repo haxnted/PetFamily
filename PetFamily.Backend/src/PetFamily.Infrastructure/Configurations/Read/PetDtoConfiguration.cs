@@ -35,15 +35,20 @@ public class PetDtoConfiguration : IEntityTypeConfiguration<PetDto>
                 .HasColumnName("zipcode");
         });
 
+        builder.Property(p => p.Position)
+            .HasColumnName("serial_number");
+        
         builder.Property(p => p.Requisites)
             .HasConversion(
                 values => JsonSerializer.Serialize(string.Empty, JsonSerializerOptions.Default),
-                json => JsonSerializer.Deserialize<IEnumerable<RequisiteDto>>(json, JsonSerializerOptions.Default)!);
+                json => JsonSerializer.Deserialize<IEnumerable<RequisiteDto>>(json, JsonSerializerOptions.Default)!)
+            .HasColumnName("requisites");
 
         builder.Property(p => p.Photos)
             .HasConversion(
                 values => JsonSerializer.Serialize(string.Empty, JsonSerializerOptions.Default),
-                json => JsonSerializer.Deserialize<IEnumerable<PetPhotoDto>>(json, JsonSerializerOptions.Default)!);
+                json => JsonSerializer.Deserialize<IEnumerable<PetPhotoDto>>(json, JsonSerializerOptions.Default)!)
+            .HasColumnName("pet_photos");
 
         builder.HasKey(p => p.Id);
     }
