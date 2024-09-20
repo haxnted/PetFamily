@@ -40,8 +40,8 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
     public AgeExperience AgeExperience { get; private set; }
     public PhoneNumber PhoneNumber { get; private set; }
     public IReadOnlyList<Pet> Pets => _pets;
-    public ValueObjectList<SocialLink> SocialLinkList { get; private set; }
-    public ValueObjectList<Requisite> RequisiteList { get; private set; }
+    public IReadOnlyList<SocialLink> SocialLinkList { get; private set; }
+    public IReadOnlyList<Requisite> RequisiteList { get; private set; }
 
     public void UpdateSocialLinks(ValueObjectList<SocialLink> list) =>
         SocialLinkList = list;

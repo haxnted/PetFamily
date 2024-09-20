@@ -1,10 +1,11 @@
 ﻿using System.Data;
 using Microsoft.EntityFrameworkCore.Storage;
 using PetFamily.Application.Database;
+using PetFamily.Infrastructure.DbContexts;
 
 namespace PetFamily.Infrastructure;
 
-public class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
+public class UnitOfWork(WriteDbContext context) : IUnitOfWork
 {
     public async Task<IDbTransaction> BeginTransaction(CancellationToken token = default)
     {

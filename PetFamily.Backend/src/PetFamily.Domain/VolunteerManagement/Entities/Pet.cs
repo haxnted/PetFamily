@@ -28,8 +28,8 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
     public HelpStatusPet HelpStatus { get; }
     public DateTime DateCreated { get; }
     public Position Position { get; private set; }
-    public ValueObjectList<PetPhoto> PetPhotoList { get; private set; }
-    public ValueObjectList<Requisite> RequisiteList { get; private set; }
+    public IReadOnlyList<PetPhoto> PetPhotoList { get; private set; }
+    public IReadOnlyList<Requisite> RequisiteList { get; private set; }
 
     public Pet(PetId id,
         NickName nickName,

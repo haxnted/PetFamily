@@ -1,14 +1,15 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
-using PetFamily.Application.Features.Volunteers;
+using PetFamily.Application.Features.VolunteerManagement;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.VolunteerManagement;
+using PetFamily.Infrastructure.DbContexts;
 
 namespace PetFamily.Infrastructure.Repositories;
 
-public class VolunteersRepository(ApplicationDbContext context) : IVolunteersRepository
+public class VolunteersRepository(WriteDbContext context) : IVolunteersRepository
 {
     public async Task<Guid> Add(Volunteer volunteer, CancellationToken cancellationToken = default)
     {

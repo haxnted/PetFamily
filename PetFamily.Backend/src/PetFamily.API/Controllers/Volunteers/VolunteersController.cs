@@ -3,14 +3,15 @@ using PetFamily.API.Controllers.Volunteers.Requests;
 using PetFamily.API.Extensions;
 using PetFamily.API.Processors;
 using PetFamily.Application.Dto;
-using PetFamily.Application.Features.Volunteers.AddFilesPet;
-using PetFamily.Application.Features.Volunteers.AddPet;
-using PetFamily.Application.Features.Volunteers.CreateVolunteer;
-using PetFamily.Application.Features.Volunteers.DeleteVolunteer;
-using PetFamily.Application.Features.Volunteers.UpdatePositionPet;
-using PetFamily.Application.Features.Volunteers.UpdateRequisites;
-using PetFamily.Application.Features.Volunteers.UpdateSocialLinks;
-using PetFamily.Application.Features.Volunteers.UpdateVolunteer;
+using PetFamily.Application.Features.VolunteerManagement.Commands.AddFilesPet;
+using PetFamily.Application.Features.VolunteerManagement.Commands.AddPet;
+using PetFamily.Application.Features.VolunteerManagement.Commands.CreateVolunteer;
+using PetFamily.Application.Features.VolunteerManagement.Commands.DeleteVolunteer;
+using PetFamily.Application.Features.VolunteerManagement.Commands.UpdatePositionPet;
+using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateRequisites;
+using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateSocialLinks;
+using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateVolunteer;
+using PetFamily.Application.Features.VolunteerManagement.Queries.GetVolunteersWithPagination;
 
 namespace PetFamily.API.Controllers.Volunteers;
 
@@ -127,6 +128,20 @@ public class VolunteersController : ApplicationController
         CancellationToken cancellationToken)
     {
         var result = await handler.Execute(request.ToCommand(id), cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+
+        return Ok(result.Value);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult> GetVolunteersWithPagination(
+        [FromQuery] GetVolunteersWithPaginationRequest request,
+        [FromServices] GetVolunteersWithPaginationHandler handler,
+        CancellationToken token)
+    {
+        var result = await handler.Execute(request.ToQuery(), token);
         if (result.IsFailure)
             return result.Error.ToResponse();
 
