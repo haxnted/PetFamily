@@ -1,4 +1,5 @@
-﻿using PetFamily.Application.Dto;
+﻿using PetFamily.Application.Abstractions;
+using PetFamily.Application.Dto;
 using PetFamily.Domain.VolunteerManagement.Enums;
 
 namespace PetFamily.Application.Features.VolunteerManagement.Commands.AddPet;
@@ -16,4 +17,4 @@ public record AddPetCommand(
     bool IsCastrated,
     bool IsVaccinated,
     HelpStatusPet HelpStatus,
-    IEnumerable<RequisiteDto> Requisites);
+    IEnumerable<RequisiteDto> Requisites) : ICommand;

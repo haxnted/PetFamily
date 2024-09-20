@@ -10,8 +10,8 @@ public class ReadDbContext(IConfiguration configuration) : DbContext, IReadDbCon
 {
     private const string DATABASE = "ApplicationDbContext";
 
-    public DbSet<VolunteerDto> Volunteers { get; set; }
-    public DbSet<PetDto> Pets { get; set; }
+    public IQueryable<VolunteerDto> Volunteers => Set<VolunteerDto>();
+    public IQueryable<PetDto> Pets  => Set<PetDto>();
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

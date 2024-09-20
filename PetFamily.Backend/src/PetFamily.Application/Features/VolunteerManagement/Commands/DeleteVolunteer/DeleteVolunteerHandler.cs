@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Extensions;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
@@ -10,7 +11,7 @@ namespace PetFamily.Application.Features.VolunteerManagement.Commands.DeleteVolu
 public class DeleteVolunteerHandler(
     IVolunteersRepository volunteersRepository,
     IValidator<DeleteVolunteerCommand> validator,
-    ILogger<DeleteVolunteerHandler> logger)
+    ILogger<DeleteVolunteerHandler> logger) : ICommandHandler<Guid, DeleteVolunteerCommand>
 {
     public async Task<Result<Guid, ErrorList>> Execute(DeleteVolunteerCommand command,
         CancellationToken cancellationToken = default)

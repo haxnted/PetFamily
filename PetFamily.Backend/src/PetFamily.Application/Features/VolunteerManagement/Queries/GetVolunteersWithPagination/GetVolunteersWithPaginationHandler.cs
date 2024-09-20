@@ -2,6 +2,7 @@
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Dto;
 using PetFamily.Application.Extensions;
@@ -14,6 +15,7 @@ public class GetVolunteersWithPaginationHandler(
     IReadDbContext readDbContext,
     IValidator<GetVolunteersWithPaginationQuery> validator,
     ILogger<GetVolunteersWithPaginationHandler> logger)
+    : IQueryHandler<PagedList<VolunteerDto>, GetVolunteersWithPaginationQuery>
 {
     public async Task<Result<PagedList<VolunteerDto>, ErrorList>> Execute(
         GetVolunteersWithPaginationQuery query,
@@ -24,7 +26,7 @@ public class GetVolunteersWithPaginationHandler(
         if (validationResult.IsValid == false)
             return validationResult.ToList();
 
-        var volunteersQuery = readDbContext.Volunteers.AsQueryable();
+        var volunteersQuery = readDbContext.Volunteers;
 
         var keySelector = SortByProperty(query.SortBy);
 

@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Extensions;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
@@ -13,7 +14,7 @@ namespace PetFamily.Application.Features.VolunteerManagement.Commands.AddPet;
 public class AddPetHandler(
     IVolunteersRepository volunteersRepository,
     IValidator<AddPetCommand> validator,
-    ILogger<AddPetHandler> logger)
+    ILogger<AddPetHandler> logger) : ICommandHandler<Guid, AddPetCommand>
 {
     public async Task<Result<Guid, ErrorList>> Execute(AddPetCommand command,
         CancellationToken token = default)

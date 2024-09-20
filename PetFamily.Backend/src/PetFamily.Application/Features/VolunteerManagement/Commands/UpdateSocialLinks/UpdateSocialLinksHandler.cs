@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Extensions;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
@@ -12,7 +13,7 @@ namespace PetFamily.Application.Features.VolunteerManagement.Commands.UpdateSoci
 public class UpdateSocialLinksHandler(
     IVolunteersRepository repository, 
     IValidator<UpdateSocialLinksCommand> validator,
-    ILogger<UpdateSocialLinksHandler> logger)
+    ILogger<UpdateSocialLinksHandler> logger) : ICommandHandler<Guid, UpdateSocialLinksCommand>
 {
     public async Task<Result<Guid, ErrorList>> Execute(UpdateSocialLinksCommand command,
         CancellationToken token = default)

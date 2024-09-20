@@ -1,14 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Features.VolunteerManagement.Commands.AddFilesPet;
-using PetFamily.Application.Features.VolunteerManagement.Commands.AddPet;
-using PetFamily.Application.Features.VolunteerManagement.Commands.CreateVolunteer;
-using PetFamily.Application.Features.VolunteerManagement.Commands.DeleteVolunteer;
-using PetFamily.Application.Features.VolunteerManagement.Commands.UpdatePositionPet;
-using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateRequisites;
-using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateSocialLinks;
-using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateVolunteer;
-using PetFamily.Application.Features.VolunteerManagement.Queries.GetVolunteersWithPagination;
+using PetFamily.Application.Abstractions;
 
 namespace PetFamily.Application;
 
@@ -22,14 +14,18 @@ public static class DependencyInjection
 
     private static IServiceCollection AddHandlers(this IServiceCollection collection)
     {
-        return collection.AddScoped<CreateVolunteerHandler>()
-            .AddScoped<GetVolunteersWithPaginationHandler>()
-            .AddScoped<UpdatePetPositionHandler>()
-            .AddScoped<UpdateVolunteerHandler>()
-            .AddScoped<UpdateSocialLinksHandler>()
-            .AddScoped<UpdateRequisitesHandler>()
-            .AddScoped<DeleteVolunteerHandler>()
-            .AddScoped<AddPetHandler>()
-            .AddScoped<AddPhotosToPetHandler>();
+        collection.Scan(scan => scan.FromAssemblies(typeof(DependencyInjection).Assembly)
+            .AddClasses(classes => classes
+                .AssignableToAny(typeof(ICommandHandler<,>), typeof(ICommandHandler<>)))
+            .AsSelfWithInterfaces()
+            .WithScopedLifetime());
+
+        collection.Scan(scan => scan.FromAssemblies(typeof(DependencyInjection).Assembly)
+            .AddClasses(classes => classes
+                .AssignableTo(typeof(IQueryHandler<,>)))
+            .AsSelfWithInterfaces()
+            .WithScopedLifetime());
+
+        return collection;
     }
 }

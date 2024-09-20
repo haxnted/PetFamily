@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.FileProvider;
@@ -12,13 +13,15 @@ using PetFamily.Domain.VolunteerManagement.ValueObjects;
 
 namespace PetFamily.Application.Features.VolunteerManagement.Commands.AddFilesPet;
 
+
+
 public class AddPhotosToPetHandler(
     IUnitOfWork unitOfWork,
     IValidator<AddPhotosToPetCommand> validator,
     IVolunteersRepository volunteersRepository,
     IFileProvider fileProvider,
     IMessageQueue<IEnumerable<FilePath>> messageQueue,
-    ILogger<AddPhotosToPetHandler> logger)
+    ILogger<AddPhotosToPetHandler> logger) : ICommandHandler<Guid, AddPhotosToPetCommand>
 {
     private const string BUCKET_NANE = "files";
 
