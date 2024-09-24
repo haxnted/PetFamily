@@ -14,14 +14,14 @@ public class UpdateVolunteerHandler(
     IValidator<UpdateVolunteerCommand> validator,
     ILogger<UpdateVolunteerHandler> logger) : ICommandHandler<Guid, UpdateVolunteerCommand>
 {
-    public async Task<Result<Guid, ErrorList>> Execute(UpdateVolunteerCommand command, CancellationToken token = default)
+    public async Task<Result<Guid, ErrorList>> Execute(UpdateVolunteerCommand command, CancellationToken cancellationToken = default)
     {
-        var validationResult = await validator.ValidateAsync(command, token);
+        var validationResult = await validator.ValidateAsync(command, cancellationToken);
         if (!validationResult.IsValid)
             return validationResult.ToList();
         
         var volunteerId = VolunteerId.Create(command.IdVolunteer);
-        var volunteer = await volunteersRepository.GetById(volunteerId, token);
+        var volunteer = await volunteersRepository.GetById(volunteerId, cancellationToken);
         if (volunteer.IsFailure)
             return volunteer.Error.ToErrorList();
 
@@ -35,7 +35,7 @@ public class UpdateVolunteerHandler(
 
         volunteer.Value.UpdateMainInfo(fullName, description, ageExperience, phoneNumber);
         
-        var resultUpdate = await volunteersRepository.Save(volunteer.Value, token);
+        var resultUpdate = await volunteersRepository.Save(volunteer.Value, cancellationToken);
         if (resultUpdate.IsFailure) 
             return resultUpdate.Error.ToErrorList();
         

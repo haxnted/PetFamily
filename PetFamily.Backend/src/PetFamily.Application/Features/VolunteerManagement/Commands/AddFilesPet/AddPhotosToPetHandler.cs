@@ -25,14 +25,14 @@ public class AddPhotosToPetHandler(
 {
     private const string BUCKET_NANE = "files";
 
-    public async Task<Result<Guid, ErrorList>> Execute(AddPhotosToPetCommand command, CancellationToken token = default)
+    public async Task<Result<Guid, ErrorList>> Execute(AddPhotosToPetCommand command, CancellationToken cancellationToken = default)
     {
-        var validateResult = await validator.ValidateAsync(command, token);
+        var validateResult = await validator.ValidateAsync(command, cancellationToken);
         if (!validateResult.IsValid)
             return validateResult.ToList();
         
         var volunteerId = VolunteerId.Create(command.VolunteerId);
-        var volunteer = await volunteersRepository.GetById(volunteerId, token);
+        var volunteer = await volunteersRepository.GetById(volunteerId, cancellationToken);
         if (volunteer.IsFailure)
             return volunteer.Error.ToErrorList();
 
@@ -41,7 +41,7 @@ public class AddPhotosToPetHandler(
         if (pet == null)
             return Errors.General.NotFound(petId).ToErrorList();
 
-        var transaction = await unitOfWork.BeginTransaction(token);
+        var transaction = await unitOfWork.BeginTransaction(cancellationToken);
 
         try
         {
@@ -63,12 +63,12 @@ public class AddPhotosToPetHandler(
                 .Select(file => file.Value);
 
             pet.UpdateFiles(new ValueObjectList<PetPhoto>(petPhotoList));
-            await unitOfWork.SaveChanges(token);
+            await unitOfWork.SaveChanges(cancellationToken);
 
-            var resultUpload = await fileProvider.UploadFiles(photosConvert, token);
+            var resultUpload = await fileProvider.UploadFiles(photosConvert, cancellationToken);
             if (resultUpload.IsFailure)
             {
-                await messageQueue.WriteAsync(photosConvert.Select(p => p.File), token);
+                await messageQueue.WriteAsync(photosConvert.Select(p => p.File), cancellationToken);
                 
                 return resultUpload.Error.ToErrorList();
             }

@@ -16,14 +16,14 @@ public class UpdateSocialLinksHandler(
     ILogger<UpdateSocialLinksHandler> logger) : ICommandHandler<Guid, UpdateSocialLinksCommand>
 {
     public async Task<Result<Guid, ErrorList>> Execute(UpdateSocialLinksCommand command,
-        CancellationToken token = default)
+        CancellationToken cancellationToken = default)
     {
-        var validationResult = await validator.ValidateAsync(command, token);
+        var validationResult = await validator.ValidateAsync(command, cancellationToken);
         if (!validationResult.IsValid)
             return validationResult.ToList();
         
         var volunteerId = VolunteerId.Create(command.Id);
-        var volunteer = await repository.GetById(volunteerId, token);
+        var volunteer = await repository.GetById(volunteerId, cancellationToken);
         if (volunteer.IsFailure)
             return volunteer.Error.ToErrorList();
 
@@ -33,7 +33,7 @@ public class UpdateSocialLinksHandler(
 
         volunteer.Value.UpdateSocialLinks(new ValueObjectList<SocialLink>(socialLinks));
         
-        var resultUpdate = await repository.Save(volunteer.Value, token);
+        var resultUpdate = await repository.Save(volunteer.Value, cancellationToken);
         if (resultUpdate.IsFailure)
             return resultUpdate.Error.ToErrorList();
 

@@ -17,15 +17,15 @@ public class CreateVolunteerHandler(
     ILogger<CreateVolunteerHandler> logger) : ICommandHandler<Guid, CreateVolunteerCommand>
 {
     public async Task<Result<Guid, ErrorList>> Execute(
-        CreateVolunteerCommand command, CancellationToken token = default)
+        CreateVolunteerCommand command, CancellationToken cancellationToken = default)
     {
-        var validationResult = await validator.ValidateAsync(command, token);
+        var validationResult = await validator.ValidateAsync(command, cancellationToken);
         if (!validationResult.IsValid)
             return validationResult.ToList();
 
         var phoneNumber = PhoneNumber.Create(command.Number);
 
-        var volunteer = await volunteersRepository.GetByPhoneNumber(phoneNumber.Value, token);
+        var volunteer = await volunteersRepository.GetByPhoneNumber(phoneNumber.Value, cancellationToken);
 
         if (volunteer.IsSuccess)
             return Errors.Model.AlreadyExist("Volunteer").ToErrorList();
@@ -59,6 +59,6 @@ public class CreateVolunteerHandler(
 
         logger.Log(LogLevel.Information, "Created new volunteer: {VolunteerId}", volunteerId);
 
-        return await volunteersRepository.Add(volunteerResult, token);
+        return await volunteersRepository.Add(volunteerResult, cancellationToken);
     }
 }
