@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
 using PetFamily.Application.Database;
+using PetFamily.Application.Features.Species;
 using PetFamily.Application.Features.VolunteerManagement;
 using PetFamily.Application.FileProvider;
 using PetFamily.Application.Messaging;
@@ -23,6 +24,8 @@ public static class DependencyInjection
         collection.AddScoped<IReadDbContext, ReadDbContext>();
 
         collection.AddScoped<IVolunteersRepository, VolunteersRepository>();
+        collection.AddScoped<ISpeciesRepository, SpeciesRepository>();
+        
         collection.AddScoped<IUnitOfWork, UnitOfWork>();
         collection.AddMinio(configuration);
         collection.AddSingleton<IMessageQueue<IEnumerable<FilePath>>, InMemoryMessageQueues<IEnumerable<FilePath>>>();

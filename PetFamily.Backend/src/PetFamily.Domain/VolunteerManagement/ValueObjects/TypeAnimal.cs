@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Text.RegularExpressions;
+using CSharpFunctionalExtensions;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.VolunteerManagement.ValueObjects;
@@ -14,6 +15,9 @@ public record TypeAnimal
         if (string.IsNullOrWhiteSpace(value))
             return Errors.General.ValueIsInvalid(value);
         
-        return new TypeAnimal(value);
+        if (!Regex.IsMatch(value, @"^[а-яА-ЯёЁ]+$"))
+            return Errors.General.ValueIsInvalid("TypeAnimal");
+        
+        return new TypeAnimal(value.ToLower());
     }
 }

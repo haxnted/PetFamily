@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetFamily.Infrastructure.DbContexts;
@@ -12,9 +13,11 @@ using PetFamily.Infrastructure.DbContexts;
 namespace PetFamily.Infrastructure.Migrations
 {
     [DbContext(typeof(WriteDbContext))]
-    partial class WriteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240924131555_SpeciesNewConfigurate")]
+    partial class SpeciesNewConfigurate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,19 +32,19 @@ namespace PetFamily.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid>("SpeciesId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("species_fk_id");
-
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("breed");
 
+                    b.Property<Guid?>("species_fk_id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("species_fk_id");
+
                     b.HasKey("Id")
                         .HasName("pk_breeds");
 
-                    b.HasIndex("SpeciesId")
+                    b.HasIndex("species_fk_id")
                         .HasDatabaseName("ix_breeds_species_fk_id");
 
                     b.ToTable("breeds", (string)null);
@@ -310,9 +313,8 @@ namespace PetFamily.Infrastructure.Migrations
                 {
                     b.HasOne("PetFamily.Domain.Species.Species", null)
                         .WithMany("Breeds")
-                        .HasForeignKey("SpeciesId")
+                        .HasForeignKey("species_fk_id")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("fk_breeds_species_species_fk_id");
                 });
 
