@@ -13,6 +13,8 @@ public record AddPetRequest(
     double Height,
     string PhoneNumber,
     DateTime BirthDate,
+    Guid SpeciesId,
+    Guid BreedId,
     bool IsCastrated,
     bool IsVaccinated,
     HelpStatusPet HelpStatus,
@@ -20,18 +22,20 @@ public record AddPetRequest(
 {
     public AddPetCommand ToCommand(Guid Volunteer)
     {
-        return new AddPetCommand(Volunteer, 
-            NickName, 
-            GeneralDescription, 
-            HealthDescription, 
-            Address, 
-            Weight, 
+        return new AddPetCommand(Volunteer,
+            NickName,
+            GeneralDescription,
+            HealthDescription,
+            Address,
+            Weight,
             Height,
-            PhoneNumber, 
-            BirthDate, 
-            IsCastrated, 
-            IsVaccinated, 
-            HelpStatus, 
+            PhoneNumber,
+            BirthDate,
+            SpeciesId,
+            BreedId,
+            IsCastrated,
+            IsVaccinated,
+            HelpStatus,
             Requisites);
     }
 }

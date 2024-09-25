@@ -14,6 +14,8 @@ public record AddPetCommand(
     double Height,
     string PhoneNumber,
     DateTime BirthDate,
+    Guid SpeciesId,
+    Guid BreedId,
     bool IsCastrated,
     bool IsVaccinated,
     HelpStatusPet HelpStatus,

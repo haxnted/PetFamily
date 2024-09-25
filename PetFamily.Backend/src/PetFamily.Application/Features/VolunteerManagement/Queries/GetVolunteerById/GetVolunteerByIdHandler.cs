@@ -16,12 +16,12 @@ public class GetVolunteerByIdHandler(
 {
     public async Task<Result<VolunteerDto, ErrorList>> Execute(
         GetVolunteerByIdCommand command,
-        CancellationToken token = default)
+        CancellationToken cancellationToken = default)
     {
         var volunteerId = VolunteerId.Create(command.Id);
 
         var volunteerDto = await context.Volunteers
-            .FirstOrDefaultAsync(v => v.Id == volunteerId, token);
+            .FirstOrDefaultAsync(v => v.Id == volunteerId, cancellationToken);
 
         if (volunteerDto is null)
             return Errors.General.NotFound(volunteerId).ToErrorList();

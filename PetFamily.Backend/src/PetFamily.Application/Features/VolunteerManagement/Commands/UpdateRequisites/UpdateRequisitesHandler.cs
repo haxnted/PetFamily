@@ -16,14 +16,14 @@ public class UpdateRequisitesHandler(
     ILogger<UpdateRequisitesHandler> logger) : ICommandHandler<Guid, UpdateRequisitesCommand>
 {
     public async Task<Result<Guid, ErrorList>> Execute(UpdateRequisitesCommand request,
-        CancellationToken token = default)
+        CancellationToken cancellationToken = default)
     {
-        var validationResult = await validator.ValidateAsync(request, token);
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)
             return validationResult.ToList();
         
         var volunteerId = VolunteerId.Create(request.Id);
-        var volunteer = await volunteersRepository.GetById(volunteerId, token);
+        var volunteer = await volunteersRepository.GetById(volunteerId, cancellationToken);
         if (volunteer.IsFailure)
             return volunteer.Error.ToErrorList();
 
@@ -33,7 +33,7 @@ public class UpdateRequisitesHandler(
 
         volunteer.Value.UpdateRequisites(new ValueObjectList<Requisite>(requisites));
 
-        var resultUpdate = await volunteersRepository.Save(volunteer.Value, token);
+        var resultUpdate = await volunteersRepository.Save(volunteer.Value, cancellationToken);
         if (resultUpdate.IsFailure)
             return resultUpdate.Error.ToErrorList();
 
