@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstractions;
+using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
@@ -9,6 +10,8 @@ using PetFamily.Domain.Shared.EntityIds;
 namespace PetFamily.Application.Features.Species.Commands.DeleteBreed;
 
 public class DeleteBreedHandler(
+    IUnitOfWork unitOfWork,
+    IReadDbContext readDbContext,
     ISpeciesRepository speciesRepository,
     ILogger<DeleteBreedHandler> logger,
     IValidator<DeleteBreedCommand> validator) : ICommandHandler<Guid, DeleteBreedCommand>
@@ -23,6 +26,10 @@ public class DeleteBreedHandler(
         var speciesId = SpeciesId.Create(command.SpeciesId);
         var breedId = BreedId.Create(command.BreedId);
 
+        var isBreedUsed = readDbContext.Pets.FirstOrDefault(p => p.BreedId == breedId.Id);
+        if (isBreedUsed is not null)
+            return Errors.General.AlreadyUsed(breedId.Id).ToErrorList();
+
         var species = await speciesRepository.GetSpeciesById(speciesId, cancellationToken);
         if (species.IsFailure)
             return species.Error.ToErrorList();
@@ -32,7 +39,9 @@ public class DeleteBreedHandler(
             return Errors.General.NotFound(command.BreedId).ToErrorList();
 
         species.Value.RemoveBreed(breed);
+
         await speciesRepository.Save(species.Value, cancellationToken);
+        await unitOfWork.SaveChanges(cancellationToken);
 
         logger.Log(LogLevel.Information, "Breed deleted successfully {Breed}.", breed);
 

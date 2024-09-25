@@ -15,8 +15,6 @@ public class SpeciesRepository(
     public async Task<Result<Guid, Error>> Add(Species species, CancellationToken cancellationToken = default)
     {
         await context.Species.AddAsync(species, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
-
         return species.Id.Id;
     }
 
@@ -54,8 +52,6 @@ public class SpeciesRepository(
     public async Task<Result<Guid, Error>> Delete(Species species, CancellationToken cancellationToken = default)
     {
         context.Species.Remove(species);
-        await context.SaveChangesAsync(cancellationToken);
-
         return species.Id.Id;
     }
 }

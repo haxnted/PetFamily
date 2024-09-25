@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstractions;
+using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
@@ -11,6 +12,7 @@ namespace PetFamily.Application.Features.Species.Commands.AddBreedToSpecies;
 
 public class AddBreedToSpeciesHandler(
     ISpeciesRepository speciesRepository,
+    IUnitOfWork unitOfWork,
     ILogger<AddBreedToSpeciesHandler> logger,
     IValidator<AddBreedToSpeciesCommand> validator) : ICommandHandler<Guid, AddBreedToSpeciesCommand>
 {
@@ -20,7 +22,7 @@ public class AddBreedToSpeciesHandler(
         var validationResult = await validator.ValidateAsync(command, cancellationToken);
         if (validationResult.IsValid == false)
             return validationResult.ToList();
-
+        
         var speciesId = SpeciesId.Create(command.SpeciesId);
         var breedId = BreedId.NewId();
         var breed = Breed.Create(breedId, command.Breed).Value;
@@ -38,6 +40,7 @@ public class AddBreedToSpeciesHandler(
             return resultAddBreed.Error.ToErrorList();
 
         await speciesRepository.Save(species.Value, cancellationToken);
+        await unitOfWork.SaveChanges(cancellationToken);
 
         logger.Log(LogLevel.Information, "Breed {breed} added successfully to species: {Species}.", breed,
             species.Value);

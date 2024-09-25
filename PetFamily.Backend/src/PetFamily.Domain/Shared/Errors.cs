@@ -4,6 +4,11 @@ public static class Errors
 {
     public static class General
     {
+        public static Error AlreadyUsed(Guid? id = null)
+        {
+            var Id = id == null ? "Id" : $"{id}";
+            return Error.Conflict("value.already.used", $"{Id} is already used. Operation impossible");
+        }
         public static Error ValueIsInvalid(string? name = null)
         {
             var label = name ?? "value";
