@@ -18,12 +18,13 @@ public class RemoveFilesFromPetHandler(
     IValidator<RemoveFilesFromPetCommand> validator,
     IVolunteersRepository volunteersRepository,
     IFileProvider fileProvider,
-    IMessageQueue<IEnumerable<FilePath>> messageQueue,
     ILogger<AddPhotosToPetHandler> logger)
     : ICommandHandler<Guid, RemoveFilesFromPetCommand>
 {
     private const string BUCKET_NAME = "files";
-    public async Task<Result<Guid, ErrorList>> Execute(RemoveFilesFromPetCommand command, CancellationToken cancellationToken = default)
+
+    public async Task<Result<Guid, ErrorList>> Execute(RemoveFilesFromPetCommand command,
+        CancellationToken cancellationToken = default)
     {
         var validateResult = await validator.ValidateAsync(command, cancellationToken);
         if (!validateResult.IsValid)
@@ -45,34 +46,28 @@ public class RemoveFilesFromPetHandler(
 
             if (pet.PetPhotoList.Count == 0)
                 return command.PetId;
-            
+
             var petPhotos = pet.PetPhotoList.ToList();
             pet.ClearPhotos();
             await unitOfWork.SaveChanges(cancellationToken);
 
-            var files = new List<FilePath>();
             foreach (var petPhoto in petPhotos)
             {
                 var filePathPhoto = await fileProvider.GetFileByName(petPhoto.Path, BUCKET_NAME, cancellationToken);
                 if (filePathPhoto.IsSuccess)
-                    files.Add(petPhoto.Path);
+                    await fileProvider.Delete(petPhoto.Path, BUCKET_NAME, cancellationToken);
             }
-
-            await messageQueue.WriteAsync(files, cancellationToken);
-
-            transaction.Commit();
-            logger.Log(LogLevel.Information, "Successful remove medias from pet. Files: {files}", files);
             
-            return command.PetId;
+            transaction.Commit();
+            logger.Log(LogLevel.Information, "Successful remove medias from pet. Files: {files}", petPhotos);
 
+            return command.PetId;
         }
         catch (Exception ex)
         {
             transaction.Rollback();
-            logger.Log(LogLevel.Critical,"Failed remove files from pet. Exception: {ex}", ex);
+            logger.Log(LogLevel.Critical, "Failed remove files from pet. Exception: {ex}", ex);
             return Error.Failure("remove.pet.files", "Failed remove media from pet").ToErrorList();
         }
-
-
     }
 }
