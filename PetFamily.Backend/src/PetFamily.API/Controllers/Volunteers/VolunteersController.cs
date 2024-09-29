@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PetFamily.API.Controllers.Volunteers.Requests;
 using PetFamily.API.Extensions;
 using PetFamily.API.Processors;
 using PetFamily.Application.Dto;
@@ -7,12 +6,15 @@ using PetFamily.Application.Features.VolunteerManagement.Commands.AddFilesPet;
 using PetFamily.Application.Features.VolunteerManagement.Commands.AddPet;
 using PetFamily.Application.Features.VolunteerManagement.Commands.CreateVolunteer;
 using PetFamily.Application.Features.VolunteerManagement.Commands.DeleteVolunteer;
+using PetFamily.Application.Features.VolunteerManagement.Commands.RemoveFilesFromPet;
+using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateGeneralPetInfo;
 using PetFamily.Application.Features.VolunteerManagement.Commands.UpdatePositionPet;
 using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateRequisites;
 using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateSocialLinks;
 using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateVolunteer;
 using PetFamily.Application.Features.VolunteerManagement.Queries.GetVolunteerById;
 using PetFamily.Application.Features.VolunteerManagement.Queries.GetVolunteersWithPagination;
+using PetFamily.Domain.VolunteerManagement;
 
 namespace PetFamily.API.Controllers.Volunteers;
 
@@ -107,6 +109,36 @@ public class VolunteersController : ApplicationController
         return Ok(result.Value);
     }
 
+    [HttpDelete("{volunteerId:guid}/pet/photos")]
+    public async Task<ActionResult> RemoveFilesFromPet(
+        [FromRoute] Guid volunteerId,
+        [FromForm] RemoveFilesFromPetRequest request,
+        [FromServices] RemoveFilesFromPetHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await handler.Execute(request.ToCommand(volunteerId), cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+    
+    [HttpPatch("{id:guid}/pet/general")]
+    public async Task<ActionResult> UpdateGeneralInfoPet(
+        [FromBody] UpdateGeneralPetInfoRequest request,
+        [FromRoute] Guid id,
+        [FromServices] UpdateGeneralPetInfoHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var result = await handler.Execute(request.ToCommand(id), cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+    
+    
     [HttpPost("{id:guid}/pet/general")]
     public async Task<ActionResult> CreatePet(
         [FromBody] AddPetRequest request,
