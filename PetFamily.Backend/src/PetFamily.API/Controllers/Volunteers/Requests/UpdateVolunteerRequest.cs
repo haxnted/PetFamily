@@ -1,7 +1,7 @@
 ﻿using PetFamily.Application.Dto;
 using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateVolunteer;
 
-namespace PetFamily.API.Controllers.Volunteers.Requests;
+namespace PetFamily.API.Controllers.Volunteers;
 
 public record UpdateVolunteerRequest(
     FullNameDto FullName,

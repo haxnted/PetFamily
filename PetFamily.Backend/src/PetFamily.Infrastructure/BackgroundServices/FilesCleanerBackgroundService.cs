@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.FileProvider;
@@ -13,8 +12,8 @@ public class FilesCleanerBackgroundService : BackgroundService
     private const string BUCKET_NAME = "files";
     private readonly ILogger<FilesCleanerBackgroundService> _logger;
     private readonly IMessageQueue<IEnumerable<FilePath>> _messageQueue;
-    private readonly IFileProvider _fileProvider;
-    
+    private readonly IServiceScopeFactory _scopeFactory;
+
     public FilesCleanerBackgroundService(
         ILogger<FilesCleanerBackgroundService> logger,
         IMessageQueue<IEnumerable<FilePath>> messageQueue,
@@ -22,22 +21,23 @@ public class FilesCleanerBackgroundService : BackgroundService
     {
         _logger = logger;
         _messageQueue = messageQueue;
-
-        using var scope = scopeFactory.CreateScope();
-        _fileProvider = scope.ServiceProvider.GetRequiredService<IFileProvider>();
+        _scopeFactory = scopeFactory;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (stoppingToken.IsCancellationRequested != false)
+        await using var scope = _scopeFactory.CreateAsyncScope();
+        var fileProvider = scope.ServiceProvider.GetRequiredService<IFileProvider>();
+
+        while (!stoppingToken.IsCancellationRequested)
         {
             var files = await _messageQueue.ReadAsync(stoppingToken);
-            
+
             foreach (var file in files)
             {
-                await _fileProvider.Delete(file.Path, BUCKET_NAME, stoppingToken);
-            } 
-            
+                await fileProvider.Delete(file.Path, BUCKET_NAME, stoppingToken);
+            }
+
             _logger.Log(LogLevel.Information, "Executed FilesCleanerBackground Service");
         }
     }

@@ -7,6 +7,7 @@ using PetFamily.Application.Features.VolunteerManagement;
 using PetFamily.Application.FileProvider;
 using PetFamily.Application.Messaging;
 using PetFamily.Domain.VolunteerManagement.ValueObjects;
+using PetFamily.Infrastructure.BackgroundServices;
 using PetFamily.Infrastructure.DbContexts;
 using PetFamily.Infrastructure.MessageQueues;
 using PetFamily.Infrastructure.Options;
@@ -29,6 +30,7 @@ public static class DependencyInjection
         collection.AddScoped<IUnitOfWork, UnitOfWork>();
         collection.AddMinio(configuration);
         collection.AddSingleton<IMessageQueue<IEnumerable<FilePath>>, InMemoryMessageQueues<IEnumerable<FilePath>>>();
+        collection.AddHostedService<FilesCleanerBackgroundService>();
         return collection;
     }
 
