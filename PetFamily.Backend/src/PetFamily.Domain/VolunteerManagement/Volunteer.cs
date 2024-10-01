@@ -58,7 +58,10 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 
         return Result.Success<Error>();
     }
-
+    
+    public void HardRemovePet(Pet pet) =>
+        _pets.Remove(pet);
+    
     public void Activate()
     {
         _isDeleted = false;

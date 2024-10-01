@@ -7,6 +7,8 @@ using PetFamily.Application.Features.VolunteerManagement.Commands.AddPet;
 using PetFamily.Application.Features.VolunteerManagement.Commands.CreateVolunteer;
 using PetFamily.Application.Features.VolunteerManagement.Commands.DeleteVolunteer;
 using PetFamily.Application.Features.VolunteerManagement.Commands.RemoveFilesFromPet;
+using PetFamily.Application.Features.VolunteerManagement.Commands.RemoveHardPetById;
+using PetFamily.Application.Features.VolunteerManagement.Commands.RemoveSoftPetById;
 using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateGeneralPetInfo;
 using PetFamily.Application.Features.VolunteerManagement.Commands.UpdatePositionPet;
 using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateRequisites;
@@ -14,7 +16,6 @@ using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateSocialLi
 using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateVolunteer;
 using PetFamily.Application.Features.VolunteerManagement.Queries.GetVolunteerById;
 using PetFamily.Application.Features.VolunteerManagement.Queries.GetVolunteersWithPagination;
-using PetFamily.Domain.VolunteerManagement;
 
 namespace PetFamily.API.Controllers.Volunteers;
 
@@ -114,6 +115,36 @@ public class VolunteersController : ApplicationController
         [FromRoute] Guid volunteerId,
         [FromForm] RemoveFilesFromPetRequest request,
         [FromServices] RemoveFilesFromPetHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await handler.Execute(request.ToCommand(volunteerId), cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+    
+    [HttpDelete("{volunteerId:guid}/pet/hard")]
+    public async Task<ActionResult> RemoveFilesFromPet(
+        [FromRoute] Guid volunteerId,
+        [FromForm] RemoveHardPetByIdRequest request,
+        [FromServices] RemoveHardPetByIdHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await handler.Execute(request.ToCommand(volunteerId), cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+    
+    [HttpDelete("{volunteerId:guid}/pet/soft")]
+    public async Task<ActionResult> RemoveFilesFromPet(
+        [FromRoute] Guid volunteerId,
+        [FromForm] RemoveHardPetByIdRequest request,
+        [FromServices] RemoveSoftPetByIdHandler handler,
         CancellationToken cancellationToken
     )
     {
