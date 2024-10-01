@@ -12,6 +12,8 @@ using PetFamily.Application.Features.VolunteerManagement.Commands.UpdatePosition
 using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateRequisites;
 using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateSocialLinks;
 using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateVolunteer;
+using PetFamily.Application.Features.VolunteerManagement.Queries;
+using PetFamily.Application.Features.VolunteerManagement.Queries.GetAllPetsWithPagination;
 using PetFamily.Application.Features.VolunteerManagement.Queries.GetVolunteerById;
 using PetFamily.Application.Features.VolunteerManagement.Queries.GetVolunteersWithPagination;
 using PetFamily.Domain.VolunteerManagement;
@@ -123,7 +125,7 @@ public class VolunteersController : ApplicationController
 
         return Ok(result.Value);
     }
-    
+
     [HttpPatch("{id:guid}/pet/general")]
     public async Task<ActionResult> UpdateGeneralInfoPet(
         [FromBody] UpdateGeneralPetInfoRequest request,
@@ -137,8 +139,8 @@ public class VolunteersController : ApplicationController
 
         return Ok(result.Value);
     }
-    
-    
+
+
     [HttpPost("{id:guid}/pet/general")]
     public async Task<ActionResult> CreatePet(
         [FromBody] AddPetRequest request,
@@ -172,6 +174,19 @@ public class VolunteersController : ApplicationController
     public async Task<ActionResult> GetVolunteersWithPagination(
         [FromQuery] GetVolunteersWithPaginationRequest request,
         [FromServices] GetVolunteersWithPaginationHandler handler,
+        CancellationToken token)
+    {
+        var result = await handler.Execute(request.ToQuery(), token);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+
+    [HttpGet("pets")]
+    public async Task<ActionResult> GetAllPetsWithPagination(
+        [FromQuery] GetAllPetsWithPaginationRequest request,
+        [FromServices] GetAllPetsWithPaginationHandler handler,
         CancellationToken token)
     {
         var result = await handler.Execute(request.ToQuery(), token);
