@@ -19,6 +19,7 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
     public Description HealthInformation { get; } = null!;
     public BreedId BreedId { get; } = null!;
     public Guid SpeciesId { get; } = Guid.Empty;
+    public VolunteerId VolunteerId { get; } = null!;
     public Address Address { get; }
     public PetPhysicalAttributes PhysicalAttributes { get; } = null!;
     public PhoneNumber PhoneNumber { get; } = null!;
