@@ -1,10 +1,10 @@
 ﻿using PetFamily.Application.Dto;
-using PetFamily.Application.Features.VolunteerManagement.Commands.AddPet;
+using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateGeneralPetInfo;
 using PetFamily.Domain.VolunteerManagement.Enums;
 
 namespace PetFamily.API.Controllers.Volunteers;
 
-public record AddPetRequest(
+public record UpdateGeneralPetInfoRequest(
     string NickName,
     string GeneralDescription,
     string HealthDescription,
@@ -20,9 +20,9 @@ public record AddPetRequest(
     HelpStatusPet HelpStatus,
     IEnumerable<RequisiteDto> Requisites)
 {
-    public AddPetCommand ToCommand(Guid Volunteer)
+    public UpdateGeneralPetInfoCommand ToCommand(Guid Volunteer)
     {
-        return new AddPetCommand(Volunteer,
+        return new UpdateGeneralPetInfoCommand(Volunteer,
             NickName,
             GeneralDescription,
             HealthDescription,

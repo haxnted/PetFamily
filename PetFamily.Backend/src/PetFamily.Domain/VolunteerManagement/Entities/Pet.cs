@@ -65,6 +65,9 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         DateCreated = dateTime;
     }
 
+    public void ClearPhotos() =>
+        PetPhotoList = new ValueObjectList<PetPhoto>([]);
+    
     public void ChangePosition(int position) =>
         Position = position;
 

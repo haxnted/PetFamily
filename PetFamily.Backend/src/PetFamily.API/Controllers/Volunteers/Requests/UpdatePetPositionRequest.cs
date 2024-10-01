@@ -1,6 +1,6 @@
 ﻿using PetFamily.Application.Features.VolunteerManagement.Commands.UpdatePositionPet;
 
-namespace PetFamily.API.Controllers.Volunteers.Requests;
+namespace PetFamily.API.Controllers.Volunteers;
 
 public record UpdatePetPositionRequest(Guid PetId, int Position)
 {
