@@ -5,10 +5,8 @@ using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.FileProvider;
-using PetFamily.Application.Messaging;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
-using PetFamily.Domain.VolunteerManagement.ValueObjects;
 
 namespace PetFamily.Application.Features.VolunteerManagement.Commands.RemoveHardPetById;
 
@@ -17,7 +15,6 @@ public class RemoveHardPetByIdHandler(
     IFileProvider fileProvider,
     IVolunteersRepository volunteersRepository,
     IValidator<RemoveHardPetByIdCommand> validator,
-    IMessageQueue<IEnumerable<FilePath>> messageQueue,
     ILogger<RemoveHardPetByIdCommand> logger
 ) : ICommandHandler<Guid, RemoveHardPetByIdCommand>
 {
@@ -44,17 +41,17 @@ public class RemoveHardPetByIdHandler(
         volunteer.Value.HardRemovePet(pet);
 
         await unitOfWork.SaveChanges(cancellationToken);
-        
-        var filePaths = new List<FilePath>();
+
         foreach (var path in petMediaPaths)
         {
             var file = await fileProvider.GetFileByName(path, BUCKET_NAME, cancellationToken);
             if (file.IsSuccess)
-                filePaths.Add(path);
+            {
+                await fileProvider.Delete(path, BUCKET_NAME, cancellationToken);
+            }
         }
 
-        await messageQueue.WriteAsync(filePaths, cancellationToken);
-    
+
         logger.Log(LogLevel.Information, "Pet {pet} was removed", pet);
 
         return command.PetId;
