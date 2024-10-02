@@ -1,7 +1,7 @@
 ﻿using PetFamily.Application.Features.VolunteerManagement.Queries.GetAllPetsWithPagination;
 using PetFamily.Domain.VolunteerManagement.Enums;
 
-namespace PetFamily.API.Controllers.Volunteers;
+namespace PetFamily.API.Controllers.Pets.Requests;
 
 public record GetAllPetsWithPaginationRequest(
     int Page,

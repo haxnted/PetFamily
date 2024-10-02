@@ -182,19 +182,7 @@ public class VolunteersController : ApplicationController
 
         return Ok(result.Value);
     }
-
-    [HttpGet("pets")]
-    public async Task<ActionResult> GetAllPetsWithPagination(
-        [FromQuery] GetAllPetsWithPaginationRequest request,
-        [FromServices] GetAllPetsWithPaginationHandler handler,
-        CancellationToken token)
-    {
-        var result = await handler.Execute(request.ToQuery(), token);
-        if (result.IsFailure)
-            return result.Error.ToResponse();
-
-        return Ok(result.Value);
-    }
+    
 
     [HttpGet("{id:guid}")]
     public async Task<ActionResult> GetVolunteerById(
