@@ -12,6 +12,7 @@ using PetFamily.Domain.VolunteerManagement.ValueObjects;
 namespace PetFamily.Application.Features.VolunteerManagement.Commands.UpdatePetPhotoMain;
 
 public class UpdatePetPhotoMainHandler(
+    IUnitOfWork unitOfWork,
     IVolunteersRepository volunteersRepository,
     IValidator<UpdatePetPhotoMainCommand> validator,
     ILogger<UpdatePetPhotoMainHandler> logger) : ICommandHandler<Guid, UpdatePetPhotoMainCommand>
@@ -47,7 +48,8 @@ public class UpdatePetPhotoMainHandler(
         pet.UpdateFiles(new ValueObjectList<PetPhoto>(newPetPhotoList));
 
         await volunteersRepository.Save(volunteer.Value, cancellationToken);
-
+        await unitOfWork.SaveChanges(cancellationToken);
+        
         logger.Log(LogLevel.Information,
             "Updated PetPhotoLost in Pet {petId}. Current main file - {file}",
             command.PetId,

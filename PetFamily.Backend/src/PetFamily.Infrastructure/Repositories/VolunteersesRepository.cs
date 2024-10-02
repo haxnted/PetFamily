@@ -23,7 +23,6 @@ public class VolunteersRepository(WriteDbContext context) : IVolunteersRepositor
         CancellationToken cancellationToken = default)
     {
         context.Volunteers.Attach(volunteer);
-        await context.SaveChangesAsync(cancellationToken);
         return volunteer.Id.Id;
     }
 
