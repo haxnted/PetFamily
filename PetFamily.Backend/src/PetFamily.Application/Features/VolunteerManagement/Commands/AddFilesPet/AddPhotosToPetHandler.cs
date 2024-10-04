@@ -13,8 +13,6 @@ using PetFamily.Domain.VolunteerManagement.ValueObjects;
 
 namespace PetFamily.Application.Features.VolunteerManagement.Commands.AddFilesPet;
 
-
-
 public class AddPhotosToPetHandler(
     IUnitOfWork unitOfWork,
     IValidator<AddPhotosToPetCommand> validator,
@@ -23,14 +21,13 @@ public class AddPhotosToPetHandler(
     IMessageQueue<IEnumerable<FilePath>> messageQueue,
     ILogger<AddPhotosToPetHandler> logger) : ICommandHandler<Guid, AddPhotosToPetCommand>
 {
-    private const string BUCKET_NANE = "files";
-
-    public async Task<Result<Guid, ErrorList>> Execute(AddPhotosToPetCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result<Guid, ErrorList>> Execute(AddPhotosToPetCommand command,
+        CancellationToken cancellationToken = default)
     {
         var validateResult = await validator.ValidateAsync(command, cancellationToken);
         if (!validateResult.IsValid)
             return validateResult.ToList();
-        
+
         var volunteerId = VolunteerId.Create(command.VolunteerId);
         var volunteer = await volunteersRepository.GetById(volunteerId, cancellationToken);
         if (volunteer.IsFailure)
@@ -53,7 +50,9 @@ public class AddPhotosToPetHandler(
                 if (uniquePath.IsFailure)
                     return uniquePath.Error.ToErrorList();
 
-                petPhotosConvert.Add(new FileContent(file.Content, uniquePath.Value, BUCKET_NANE));
+                petPhotosConvert.Add(new FileContent(file.Content,
+                    uniquePath.Value,
+                    Constants.BUCKET_NAME_FOR_PET_IMAGES));
             }
 
             var photosConvert = petPhotosConvert.ToList();
@@ -69,7 +68,7 @@ public class AddPhotosToPetHandler(
             if (resultUpload.IsFailure)
             {
                 await messageQueue.WriteAsync(photosConvert.Select(p => p.File), cancellationToken);
-                
+
                 return resultUpload.Error.ToErrorList();
             }
 
@@ -81,7 +80,7 @@ public class AddPhotosToPetHandler(
                 command.VolunteerId,
                 command.PetId);
 
-            return command.VolunteerId;
+            return command.PetId;
         }
         catch (Exception ex)
         {
