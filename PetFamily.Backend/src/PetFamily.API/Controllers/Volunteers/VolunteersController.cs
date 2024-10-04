@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PetFamily.API.Controllers.Pets.Requests;
 using PetFamily.API.Extensions;
 using PetFamily.API.Processors;
 using PetFamily.Application.Dto;
@@ -8,6 +9,7 @@ using PetFamily.Application.Features.VolunteerManagement.Commands.CreateVoluntee
 using PetFamily.Application.Features.VolunteerManagement.Commands.DeleteVolunteer;
 using PetFamily.Application.Features.VolunteerManagement.Commands.RemoveFilesFromPet;
 using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateGeneralPetInfo;
+using PetFamily.Application.Features.VolunteerManagement.Commands.UpdatePetPhotoMain;
 using PetFamily.Application.Features.VolunteerManagement.Commands.UpdatePositionPet;
 using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateRequisites;
 using PetFamily.Application.Features.VolunteerManagement.Commands.UpdateSocialLinks;
@@ -169,7 +171,20 @@ public class VolunteersController : ApplicationController
 
         return Ok(result.Value);
     }
+    
+    [HttpPatch("{volunteerId:guid}/pet/main-file")]
+    public async Task<ActionResult> UpdatePetPhotoMain(
+        [FromRoute] Guid volunteerId,
+        [FromBody] UpdatePetPhotoMainRequest request,
+        [FromServices] UpdatePetPhotoMainHandler handler,
+        CancellationToken token)
+    {
+        var result = await handler.Execute(request.ToCommand(volunteerId), token);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
 
+        return Ok(result.Value);
+    }
     [HttpGet]
     public async Task<ActionResult> GetVolunteersWithPagination(
         [FromQuery] GetVolunteersWithPaginationRequest request,
