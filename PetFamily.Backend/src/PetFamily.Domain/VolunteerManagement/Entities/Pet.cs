@@ -14,20 +14,20 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
 
     private bool _isDeleted = false;
     
-    public NickName NickName { get; } = null!;
-    public Description GeneralDescription { get; } = null!;
-    public Description HealthInformation { get; } = null!;
-    public BreedId BreedId { get; } = null!;
-    public Guid SpeciesId { get; } = Guid.Empty;
-    public VolunteerId VolunteerId { get; } = null!;
-    public Address Address { get; }
-    public PetPhysicalAttributes PhysicalAttributes { get; } = null!;
-    public PhoneNumber PhoneNumber { get; } = null!;
-    public DateTime BirthDate { get; }
-    public bool IsCastrated { get; }
-    public bool IsVaccinated { get; }
-    public HelpStatusPet HelpStatus { get; }
-    public DateTime DateCreated { get; }
+    public NickName NickName { get; private set; } = null!;
+    public Description GeneralDescription { get; private set;} = null!;
+    public Description HealthInformation { get; private set;} = null!;
+    public BreedId BreedId { get; private set;} = null!;
+    public Guid SpeciesId { get; private set;} = Guid.Empty;
+    public VolunteerId VolunteerId { get; private set;} = null!;
+    public Address Address { get; private set;}
+    public PetPhysicalAttributes PhysicalAttributes { get; private set;} = null!;
+    public PhoneNumber PhoneNumber { get; private set;} = null!;
+    public DateTime BirthDate { get; private set;}
+    public bool IsCastrated { get; private set;}
+    public bool IsVaccinated { get; private set;}
+    public HelpStatusPet HelpStatus { get; private set;}
+    public DateTime DateCreated { get; private set;}
     public Position Position { get; private set; }
     public IReadOnlyList<PetPhoto> PetPhotoList { get; private set; }
     public IReadOnlyList<Requisite> RequisiteList { get; private set; }
@@ -46,8 +46,8 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         bool isVaccinated,
         HelpStatusPet helpStatus,
         DateTime dateTime,
-        ValueObjectList<PetPhoto> petPhotoList,
-        ValueObjectList<Requisite> requisiteList) : base(id)
+        IReadOnlyList<PetPhoto> petPhotoList,
+        IReadOnlyList<Requisite> requisiteList) : base(id)
     {
         PetPhotoList = petPhotoList;
         RequisiteList = requisiteList;
@@ -66,17 +66,45 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         DateCreated = dateTime;
     }
 
+    public UnitResult<Error> Update(
+        Description generalDescription,
+        Description healthInformation,
+        Address address,
+        PetPhysicalAttributes attributes,
+        PhoneNumber number,
+        bool isCastrated,
+        bool isVaccinated,
+        HelpStatusPet helpStatus,
+        IReadOnlyList<Requisite> requisiteList
+        )
+    {
+        if (_isDeleted)
+            return Error.Failure(
+                "failed.update.pet", 
+                "Unable to perform surgery because the animal is hidden");
+
+        GeneralDescription = generalDescription;
+        HealthInformation = healthInformation;
+        Address = address;
+        PhysicalAttributes = attributes;
+        PhoneNumber = number;
+        IsCastrated = isCastrated;
+        IsVaccinated = isVaccinated;
+        HelpStatus = helpStatus;
+        RequisiteList = requisiteList;
+        
+        return Result.Success<Error>();
+    }
+
     public void ClearPhotos() =>
-        PetPhotoList = new ValueObjectList<PetPhoto>([]);
+        PetPhotoList = [];
     
     public void ChangePosition(int position) =>
         Position = position;
 
-    public UnitResult<Error> UpdateFiles(ValueObjectList<PetPhoto> list)
-    {
+    public void UpdateFiles(IReadOnlyList<PetPhoto> list) =>
         PetPhotoList = list;
-        return Result.Success<Error>();
-    }
+    
     public void Activate()
     {
         _isDeleted = false;
