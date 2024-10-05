@@ -23,4 +23,5 @@ public class PetDto
     public DateTime DateCreated { get; init; }
     public IEnumerable<RequisiteDto> Requisites { get; init; } = default!;
     public IEnumerable<PetPhotoDto> Photos { get; init; } = default!;
+    public bool IsDeleted { get; init; }
 }

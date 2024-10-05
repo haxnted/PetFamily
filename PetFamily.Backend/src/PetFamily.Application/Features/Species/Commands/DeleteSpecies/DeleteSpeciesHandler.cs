@@ -33,7 +33,7 @@ public class DeleteSpeciesHandler(
         if (species.IsFailure)
             return species.Error.ToErrorList();
 
-        await speciesRepository.Delete(species.Value, cancellationToken);
+        speciesRepository.Delete(species.Value, cancellationToken);
         await unitOfWork.SaveChanges(cancellationToken);
 
         logger.Log(LogLevel.Information, "Species deleted successfully {Species}.", species.Value);

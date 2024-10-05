@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstractions;
+using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
@@ -10,6 +11,7 @@ using PetFamily.Domain.Shared.ValueObjects;
 namespace PetFamily.Application.Features.VolunteerManagement.Commands.UpdateVolunteer;
 
 public class UpdateVolunteerHandler(
+    IUnitOfWork unitOfWork,
     IVolunteersRepository volunteersRepository, 
     IValidator<UpdateVolunteerCommand> validator,
     ILogger<UpdateVolunteerHandler> logger) : ICommandHandler<Guid, UpdateVolunteerCommand>
@@ -35,12 +37,11 @@ public class UpdateVolunteerHandler(
 
         volunteer.Value.UpdateMainInfo(fullName, description, ageExperience, phoneNumber);
         
-        var resultUpdate = await volunteersRepository.Save(volunteer.Value, cancellationToken);
-        if (resultUpdate.IsFailure) 
-            return resultUpdate.Error.ToErrorList();
+        await volunteersRepository.Save(volunteer.Value, cancellationToken);
+        await unitOfWork.SaveChanges(cancellationToken);
         
         logger.LogDebug("Volunteer {volunteerId} was full updated", volunteerId);
 
-        return resultUpdate.Value;
+        return volunteer.Value.Id.Id;
     }
 }

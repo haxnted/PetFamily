@@ -18,8 +18,6 @@ public class RemoveHardPetByIdHandler(
     ILogger<RemoveHardPetByIdCommand> logger
 ) : ICommandHandler<Guid, RemoveHardPetByIdCommand>
 {
-    private const string BUCKET_NAME = "files";
-
     public async Task<Result<Guid, ErrorList>> Execute(RemoveHardPetByIdCommand command,
         CancellationToken cancellationToken = default)
     {
@@ -44,10 +42,13 @@ public class RemoveHardPetByIdHandler(
 
         foreach (var path in petMediaPaths)
         {
-            var file = await fileProvider.GetFileByName(path, BUCKET_NAME, cancellationToken);
+            var file = await fileProvider.GetFileByName(path, 
+                Constants.BUCKET_NAME_FOR_PET_IMAGES,
+                cancellationToken);
+            
             if (file.IsSuccess)
             {
-                await fileProvider.Delete(path, BUCKET_NAME, cancellationToken);
+                await fileProvider.Delete(path, Constants.BUCKET_NAME_FOR_PET_IMAGES, cancellationToken);
             }
         }
 
