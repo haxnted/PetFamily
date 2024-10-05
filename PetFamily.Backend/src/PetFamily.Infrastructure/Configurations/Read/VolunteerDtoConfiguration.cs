@@ -41,5 +41,8 @@ public class VolunteerDtoConfiguration : IEntityTypeConfiguration<VolunteerDto>
         builder.HasMany(v => v.Pets)
             .WithOne()
             .HasForeignKey(p => p.VolunteerId);
+        
+        builder.Property(p => p.IsDeleted)
+            .HasColumnName("is_deleted");
     }
 }

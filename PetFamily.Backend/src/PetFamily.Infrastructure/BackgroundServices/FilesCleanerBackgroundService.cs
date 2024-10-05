@@ -3,13 +3,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.FileProvider;
 using PetFamily.Application.Messaging;
+using PetFamily.Domain.Shared;
 using PetFamily.Domain.VolunteerManagement.ValueObjects;
 
 namespace PetFamily.Infrastructure.BackgroundServices;
 
 public class FilesCleanerBackgroundService : BackgroundService
 {
-    private const string BUCKET_NAME = "files";
     private readonly ILogger<FilesCleanerBackgroundService> _logger;
     private readonly IMessageQueue<IEnumerable<FilePath>> _messageQueue;
     private readonly IServiceScopeFactory _scopeFactory;
@@ -35,7 +35,7 @@ public class FilesCleanerBackgroundService : BackgroundService
 
             foreach (var file in files)
             {
-                await fileProvider.Delete(file.Path, BUCKET_NAME, stoppingToken);
+                await fileProvider.Delete(file.Path, Constants.BUCKET_NAME_FOR_PET_IMAGES, stoppingToken);
             }
 
             _logger.Log(LogLevel.Information, "Executed FilesCleanerBackground Service");

@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Database;
 using PetFamily.Application.Dto;
-using PetFamily.Domain.Species.Entities;
 
 namespace PetFamily.Infrastructure.DbContexts;
 
@@ -14,7 +13,6 @@ public class ReadDbContext(IConfiguration configuration) : DbContext, IReadDbCon
     public IQueryable<VolunteerDto> Volunteers => Set<VolunteerDto>();
     public IQueryable<PetDto> Pets  => Set<PetDto>();
     public IQueryable<SpeciesDto> Species => Set<SpeciesDto>();
-    
     public IQueryable<BreedDto> Breeds => Set<BreedDto>();
 
 
@@ -23,6 +21,9 @@ public class ReadDbContext(IConfiguration configuration) : DbContext, IReadDbCon
         modelBuilder.ApplyConfigurationsFromAssembly(
             typeof(ReadDbContext).Assembly,
             type => type.FullName?.Contains("Configurations.Read") ?? false);
+        
+        modelBuilder.Entity<VolunteerDto>().HasQueryFilter(v => !v.IsDeleted);
+        modelBuilder.Entity<PetDto>().HasQueryFilter(v => !v.IsDeleted);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -38,8 +39,7 @@ public class ReadDbContext(IConfiguration configuration) : DbContext, IReadDbCon
     {
         return LoggerFactory.Create(builder =>
         {
-            builder
-                .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information)
+            builder.AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information)
                 .AddConsole();
         });
     }

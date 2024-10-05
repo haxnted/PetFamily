@@ -12,10 +12,9 @@ namespace PetFamily.Infrastructure.Repositories;
 public class SpeciesRepository(
     WriteDbContext context) : ISpeciesRepository
 {
-    public async Task<Result<Guid, Error>> Add(Species species, CancellationToken cancellationToken = default)
+    public async Task Add(Species species, CancellationToken cancellationToken = default)
     {
         await context.Species.AddAsync(species, cancellationToken);
-        return species.Id.Id;
     }
 
     public async Task<Result<Species, Error>> GetSpeciesById(SpeciesId id,
@@ -41,17 +40,14 @@ public class SpeciesRepository(
         return species;
     }
 
-    public async Task<Result<Guid, Error>> Save(Species species, CancellationToken cancellationToken = default)
+    public async Task Save(Species species, CancellationToken cancellationToken = default)
     {
         context.Species.Attach(species);
         await context.SaveChangesAsync(cancellationToken);
-
-        return species.Id.Id;
     }
 
-    public async Task<Result<Guid, Error>> Delete(Species species, CancellationToken cancellationToken = default)
+    public void Delete(Species species, CancellationToken cancellationToken = default)
     {
         context.Species.Remove(species);
-        return species.Id.Id;
     }
 }
