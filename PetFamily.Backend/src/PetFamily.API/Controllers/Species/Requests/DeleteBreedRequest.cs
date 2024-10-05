@@ -1,6 +1,6 @@
 ﻿using PetFamily.Application.Features.Species.Commands.DeleteBreed;
 
-namespace PetFamily.API.Controllers.SpeciesController.Requests;
+namespace PetFamily.API.Controllers.Species.Requests;
 
 public record DeleteBreedRequest(Guid BreedId)
 {
