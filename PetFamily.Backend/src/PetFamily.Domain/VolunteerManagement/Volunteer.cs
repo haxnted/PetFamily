@@ -11,9 +11,7 @@ namespace PetFamily.Domain.VolunteerManagement;
 
 public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 {
-    private Volunteer(VolunteerId id) : base(id)
-    {
-    }
+    private Volunteer(VolunteerId id) : base(id) { }
 
     public Volunteer(
         VolunteerId id,
@@ -21,15 +19,15 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         Description generalDescription,
         AgeExperience ageExperience,
         PhoneNumber number,
-        ValueObjectList<SocialLink> socialLinkList,
-        ValueObjectList<Requisite> requisiteList) : base(id)
+        List<SocialLink> socialLinkList,
+        List<Requisite> requisiteList) : base(id)
     {
         FullName = fullName;
         GeneralDescription = generalDescription;
         AgeExperience = ageExperience;
         PhoneNumber = number;
-        SocialLinkList = socialLinkList;
-        RequisiteList = requisiteList;
+        SocialLinkList = socialLinkList.AsReadOnly();
+        RequisiteList = requisiteList.AsReadOnly();
     }
 
     private bool _isDeleted = false;
@@ -43,20 +41,17 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
     public IReadOnlyList<SocialLink> SocialLinkList { get; private set; }
     public IReadOnlyList<Requisite> RequisiteList { get; private set; }
 
-    public void UpdateSocialLinks(ValueObjectList<SocialLink> list) =>
+    public void UpdateSocialLinks(IReadOnlyList<SocialLink> list) =>
         SocialLinkList = list;
 
-    public void UpdateRequisites(ValueObjectList<Requisite> list) =>
+    public void UpdateRequisites(IReadOnlyList<Requisite> list) =>
         RequisiteList = list;
 
-    public UnitResult<Error> AddPet(Pet pet)
+    public void AddPet(Pet pet)
     {
         _pets.Add(pet);
-
-        int serialPosition = _pets.Count == 0 ? 1 : _pets.Count;
-        pet.ChangePosition(serialPosition);
-
-        return Result.Success<Error>();
+        pet.ChangePosition(_pets.Count == 0 ? 1 : _pets.Count);
+        
     }
     
     public void HardRemovePet(Pet pet) =>
@@ -116,23 +111,13 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 
     private void UpdatePositions(Position newIdx, Position oldIdx)
     {
-        if (newIdx.Value < oldIdx.Value)
+        var collection = newIdx.Value < oldIdx.Value ?
+            _pets.Where(p => p.Position.Value >= newIdx.Value && p.Position.Value < oldIdx.Value):
+            _pets.Where(p => p.Position.Value > oldIdx.Value && p.Position.Value <= newIdx.Value);
+        
+        foreach (var entity in collection)
         {
-            var collection = _pets
-                .Where(p => p.Position.Value >= newIdx.Value && p.Position.Value < oldIdx.Value);
-            foreach (var entity in collection)
-            {
-                entity.ChangePosition(entity.Position.Value + 1);
-            }
-        }
-        else if (newIdx.Value > oldIdx.Value)
-        {
-            var collection = _pets
-                .Where(p => p.Position.Value > oldIdx.Value && p.Position.Value <= newIdx.Value);
-            foreach (var entity in collection)
-            {
-                entity.ChangePosition(entity.Position.Value - 1);
-            }
+            entity.ChangePosition(newIdx.Value < oldIdx.Value ? entity.Position.Value + 1 : entity.Position.Value - 1);
         }
     }
 

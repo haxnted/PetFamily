@@ -46,11 +46,11 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         bool isVaccinated,
         HelpStatusPet helpStatus,
         DateTime dateTime,
-        IReadOnlyList<PetPhoto> petPhotoList,
-        IReadOnlyList<Requisite> requisiteList) : base(id)
+        List<PetPhoto> petPhotoList,
+        List<Requisite> requisiteList) : base(id)
     {
-        PetPhotoList = petPhotoList;
-        RequisiteList = requisiteList;
+        PetPhotoList = petPhotoList.AsReadOnly();
+        RequisiteList = requisiteList.AsReadOnly();
         NickName = nickName;
         GeneralDescription = generalDescription;
         HealthInformation = healthInformation;
@@ -102,8 +102,8 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
     public void ChangePosition(int position) =>
         Position = position;
 
-    public void UpdateFiles(IReadOnlyList<PetPhoto> list) =>
-        PetPhotoList = list;
+    public void UpdateFiles(List<PetPhoto> list) =>
+        PetPhotoList = list.AsReadOnly();
     
     public void Activate()
     {
