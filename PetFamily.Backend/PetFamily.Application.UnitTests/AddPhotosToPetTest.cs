@@ -50,9 +50,9 @@ public class AddPhotosToPetTest
 
         _validatorMock.Setup(v => v.ValidateAsync(command, ct))
             .ReturnsAsync(new ValidationResult());
-
+        
         _volunteerRepositoryMock.Setup(v => v.Save(It.IsAny<Volunteer>(), ct))
-            .ReturnsAsync(Result.Success<Guid, Error>(volunteerId.Id));
+            .Returns(Task.CompletedTask);
 
         _volunteerRepositoryMock.Setup(v => v.GetById(volunteerId, ct))
             .ReturnsAsync(Result.Success<Volunteer, Error>(volunteer));
@@ -255,8 +255,8 @@ public class AddPhotosToPetTest
             Description.Create("General Description").Value,
             AgeExperience.Create(5).Value,
             PhoneNumber.Create("7234567890").Value,
-            new ValueObjectList<SocialLink>(new List<SocialLink>()),
-            new ValueObjectList<Requisite>(new List<Requisite>())
+            [],
+            []
         );
 
         for (int i = 0; i < petCount; i++)
@@ -276,8 +276,8 @@ public class AddPhotosToPetTest
                 true,
                 HelpStatusPet.LookingForHome,
                 DateTime.Now,
-                new ValueObjectList<PetPhoto>(new List<PetPhoto>()),
-                new ValueObjectList<Requisite>(new List<Requisite>())
+                [],
+                []
             );
             volunteer.AddPet(pet);
         }

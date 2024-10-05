@@ -1,6 +1,6 @@
 ﻿using PetFamily.Application.Features.Species.Queries.GetBreedsBySpecial;
 
-namespace PetFamily.API.Controllers.SpeciesController.Requests;
+namespace PetFamily.API.Controllers.Species.Requests;
 
 public record GetBreedsBySpecialRequest(Guid SpecialId, string? SortDirection)
 {

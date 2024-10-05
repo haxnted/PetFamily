@@ -23,7 +23,7 @@ public class PetsController : ApplicationController
     
     [HttpGet("{petId:guid}")]
     public async Task<ActionResult> GetPetById(
-        [FromQuery] Guid petId,
+        [FromRoute] Guid petId,
         [FromServices] GetPetByIdHandler handler,
         CancellationToken token)
     {

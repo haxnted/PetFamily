@@ -6,16 +6,13 @@ namespace PetFamily.Application.Features.VolunteerManagement.Commands.UpdateGene
 
 public record UpdateGeneralPetInfoCommand(
     Guid VolunteerId,
-    string NickName,
+    Guid PetId,
     string GeneralDescription,
     string HealthDescription,
     AddressDto Address,
     double Weight,
     double Height,
     string PhoneNumber,
-    DateTime BirthDate,
-    Guid SpeciesId,
-    Guid BreedId,
     bool IsCastrated,
     bool IsVaccinated,
     HelpStatusPet HelpStatus,

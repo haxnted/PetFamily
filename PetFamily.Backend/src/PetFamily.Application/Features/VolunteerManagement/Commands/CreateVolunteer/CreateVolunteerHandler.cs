@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstractions;
+using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
@@ -12,6 +13,7 @@ using PetFamily.Domain.VolunteerManagement.ValueObjects;
 namespace PetFamily.Application.Features.VolunteerManagement.Commands.CreateVolunteer;
 
 public class CreateVolunteerHandler(
+    IUnitOfWork unitOfWork,
     IVolunteersRepository volunteersRepository,
     IValidator<CreateVolunteerCommand> validator,
     ILogger<CreateVolunteerHandler> logger) : ICommandHandler<Guid, CreateVolunteerCommand>
@@ -54,11 +56,14 @@ public class CreateVolunteerHandler(
             description.Value,
             ageExperience.Value,
             phoneNumber.Value,
-            new ValueObjectList<SocialLink>(socialLinks),
-            new ValueObjectList<Requisite>(requisites));
+            new List<SocialLink>(socialLinks),
+            new List<Requisite>(requisites));
 
         logger.Log(LogLevel.Information, "Created new volunteer: {VolunteerId}", volunteerId);
 
-        return await volunteersRepository.Add(volunteerResult, cancellationToken);
+        await volunteersRepository.Add(volunteerResult, cancellationToken);
+        await unitOfWork.SaveChanges(cancellationToken);
+        
+        return volunteerId.Id;
     }
 }

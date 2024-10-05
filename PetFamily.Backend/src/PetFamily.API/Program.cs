@@ -4,30 +4,20 @@ using PetFamily.API.Middlewares;
 using PetFamily.Application;
 using PetFamily.Infrastructure;
 using Serilog;
-using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Seq(
-        builder.Configuration.GetConnectionString("Seq") ??
-        throw new ArgumentNullException("Argument cannot be null")
-    )
-    .MinimumLevel.Override("Microsoft.AspNetCore.Hosting", LogEventLevel.Warning)
-    .MinimumLevel.Override("Microsoft.AspNetCore.Mvc", LogEventLevel.Warning)
-    .MinimumLevel.Override("Microsoft.AspNetCore.Routing", LogEventLevel.Warning)
-    .CreateLogger();
+builder.AddConfigureLogging();
 
 builder.Services
     .AddApi()
     .AddAInfrastructure(builder.Configuration)
-    .AddApplication();
+    .AddApplication()
+    .AddHttpLogging(u => { u.CombineLogs = true; });
 
-builder.Services.AddHttpLogging(u => { u.CombineLogs = true; });
 var app = builder.Build();
 
 app.UseExceptionMiddleware();
-
 
 if (app.Environment.IsDevelopment())
 {

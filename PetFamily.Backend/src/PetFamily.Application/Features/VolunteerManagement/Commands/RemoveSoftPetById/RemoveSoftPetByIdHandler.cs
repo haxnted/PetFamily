@@ -13,12 +13,12 @@ namespace PetFamily.Application.Features.VolunteerManagement.Commands.RemoveSoft
 public class RemoveSoftPetByIdHandler(
     IUnitOfWork unitOfWork,
     IVolunteersRepository volunteersRepository,
-    IValidator<RemoveHardPetByIdCommand> validator,
+    IValidator<RemoveSoftPetByIdCommand> validator,
     ILogger<RemoveHardPetByIdCommand> logger
-) : ICommandHandler<Guid, RemoveHardPetByIdCommand>
+) : ICommandHandler<Guid, RemoveSoftPetByIdCommand>
 
 {
-    public async Task<Result<Guid, ErrorList>> Execute(RemoveHardPetByIdCommand command,
+    public async Task<Result<Guid, ErrorList>> Execute(RemoveSoftPetByIdCommand command,
         CancellationToken cancellationToken = default)
     {
         var validationResult = await validator.ValidateAsync(command, cancellationToken);

@@ -51,5 +51,8 @@ public class PetDtoConfiguration : IEntityTypeConfiguration<PetDto>
             .HasColumnName("pet_photos");
 
         builder.HasKey(p => p.Id);
+        
+        builder.Property(p => p.IsDeleted)
+            .HasColumnName("is_deleted");
     }
 }

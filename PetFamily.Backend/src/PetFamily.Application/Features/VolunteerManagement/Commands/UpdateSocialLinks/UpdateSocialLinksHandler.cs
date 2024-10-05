@@ -2,15 +2,16 @@
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstractions;
+using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
-using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.VolunteerManagement.ValueObjects;
 
 namespace PetFamily.Application.Features.VolunteerManagement.Commands.UpdateSocialLinks;
 
 public class UpdateSocialLinksHandler(
+    IUnitOfWork unitOfWork,
     IVolunteersRepository repository, 
     IValidator<UpdateSocialLinksCommand> validator,
     ILogger<UpdateSocialLinksHandler> logger) : ICommandHandler<Guid, UpdateSocialLinksCommand>
@@ -29,16 +30,16 @@ public class UpdateSocialLinksHandler(
 
         var socialLinks = command.SocialLinks
             .Select(x => SocialLink.Create(x.Name, x.Url))
-            .Select(x => x.Value);
+            .Select(x => x.Value)
+            .ToList();
 
-        volunteer.Value.UpdateSocialLinks(new ValueObjectList<SocialLink>(socialLinks));
+        volunteer.Value.UpdateSocialLinks(new List<SocialLink>(socialLinks));
         
-        var resultUpdate = await repository.Save(volunteer.Value, cancellationToken);
-        if (resultUpdate.IsFailure)
-            return resultUpdate.Error.ToErrorList();
+        await repository.Save(volunteer.Value, cancellationToken);
+        await unitOfWork.SaveChanges(cancellationToken);
 
         logger.Log(LogLevel.Information, "Volunteer {volunteerId} was updated social links", volunteerId);
 
-        return resultUpdate.Value;
+        return volunteer.Value.Id.Id;
     }
 }

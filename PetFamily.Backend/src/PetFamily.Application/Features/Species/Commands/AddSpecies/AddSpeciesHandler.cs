@@ -31,10 +31,7 @@ public class AddSpeciesHandler(
 
         var species = new Domain.Species.Species(speciesId, typeAnimal, []);
 
-        var isSpeciesAdded = await speciesRepository.Add(species, cancellationToken);
-        if (isSpeciesAdded.IsFailure)
-            return isSpeciesExists.Error.ToErrorList();
-        
+        await speciesRepository.Add(species, cancellationToken);
         await unitOfWork.SaveChanges(cancellationToken);
         
         logger.Log(LogLevel.Information, "Species added successfully {Species}.", species);

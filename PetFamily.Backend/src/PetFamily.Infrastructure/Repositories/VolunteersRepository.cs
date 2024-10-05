@@ -11,27 +11,18 @@ namespace PetFamily.Infrastructure.Repositories;
 
 public class VolunteersRepository(WriteDbContext context) : IVolunteersRepository
 {
-    public async Task<Guid> Add(Volunteer volunteer, CancellationToken cancellationToken = default)
+    public async Task Add(Volunteer volunteer, CancellationToken cancellationToken = default)
     {
         await context.Volunteers.AddAsync(volunteer, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
-
-        return volunteer.Id;
     }
 
-    public async Task<Result<Guid, Error>> Save(Volunteer volunteer,
+    public async Task Save(Volunteer volunteer,
         CancellationToken cancellationToken = default)
     {
         context.Volunteers.Attach(volunteer);
-        return volunteer.Id.Id;
-    }
-
-    public async Task<Result<Guid, Error>> Delete(Volunteer volunteer, CancellationToken cancellationToken = default)
-    {
         await context.SaveChangesAsync(cancellationToken);
-        return volunteer.Id.Id;
     }
-
+    
     public async Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber requestNumber,
         CancellationToken cancellationToken = default)
     {

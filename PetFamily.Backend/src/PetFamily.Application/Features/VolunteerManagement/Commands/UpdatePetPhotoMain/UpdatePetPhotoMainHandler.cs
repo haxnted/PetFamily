@@ -45,7 +45,7 @@ public class UpdatePetPhotoMainHandler(
                 ? PetPhoto.Create(petPhoto.Path).Value
                 : PetPhoto.Create(petPhoto.Path, true).Value);
         }
-        pet.UpdateFiles(new ValueObjectList<PetPhoto>(newPetPhotoList));
+        pet.UpdateFiles([..newPetPhotoList]);
 
         await volunteersRepository.Save(volunteer.Value, cancellationToken);
         await unitOfWork.SaveChanges(cancellationToken);

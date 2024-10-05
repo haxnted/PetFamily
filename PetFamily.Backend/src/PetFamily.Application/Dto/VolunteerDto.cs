@@ -9,4 +9,5 @@ public class VolunteerDto
     public string PhoneNumber { get; init; } = string.Empty;
     public IEnumerable<PetDto> Pets { get; init; } = default!;
     public IEnumerable<RequisiteDto> Requisites { get; init; } = default!;
+    public bool IsDeleted { get; init; }
 }

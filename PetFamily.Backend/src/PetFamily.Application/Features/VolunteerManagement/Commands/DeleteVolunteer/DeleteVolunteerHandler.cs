@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstractions;
+using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.EntityIds;
@@ -9,6 +10,7 @@ using PetFamily.Domain.Shared.EntityIds;
 namespace PetFamily.Application.Features.VolunteerManagement.Commands.DeleteVolunteer;
 
 public class DeleteVolunteerHandler(
+    IUnitOfWork unitOfWork,
     IVolunteersRepository volunteersRepository,
     IValidator<DeleteVolunteerCommand> validator,
     ILogger<DeleteVolunteerHandler> logger) : ICommandHandler<Guid, DeleteVolunteerCommand>
@@ -26,12 +28,9 @@ public class DeleteVolunteerHandler(
             return volunteer.Error.ToErrorList();
 
         volunteer.Value.Deactivate();
+        await unitOfWork.SaveChanges(cancellationToken);
 
-        var result = await volunteersRepository.Delete(volunteer.Value, cancellationToken);
-        if (result.IsFailure)
-            return volunteer.Error.ToErrorList();
-
-        logger.Log(LogLevel.Information, "Volunteer deleted with Id {volunteerId}", volunteerId);
+        logger.Log(LogLevel.Information, "Volunteer has been deactivated with Id {volunteerId}", volunteerId);
 
         return volunteer.Value.Id.Id;
     }

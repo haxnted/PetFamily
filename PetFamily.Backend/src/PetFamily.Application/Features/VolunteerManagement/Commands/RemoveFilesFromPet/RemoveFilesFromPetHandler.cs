@@ -21,8 +21,6 @@ public class RemoveFilesFromPetHandler(
     ILogger<AddPhotosToPetHandler> logger)
     : ICommandHandler<Guid, RemoveFilesFromPetCommand>
 {
-    private const string BUCKET_NAME = "files";
-
     public async Task<Result<Guid, ErrorList>> Execute(RemoveFilesFromPetCommand command,
         CancellationToken cancellationToken = default)
     {
@@ -53,11 +51,14 @@ public class RemoveFilesFromPetHandler(
 
             foreach (var petPhoto in petPhotos)
             {
-                var filePathPhoto = await fileProvider.GetFileByName(petPhoto.Path, BUCKET_NAME, cancellationToken);
+                var filePathPhoto = await fileProvider.GetFileByName(petPhoto.Path,
+                    Constants.BUCKET_NAME_FOR_PET_IMAGES, cancellationToken);
                 if (filePathPhoto.IsSuccess)
-                    await fileProvider.Delete(petPhoto.Path, BUCKET_NAME, cancellationToken);
+                    await fileProvider.Delete(petPhoto.Path,
+                        Constants.BUCKET_NAME_FOR_PET_IMAGES,
+                        cancellationToken);
             }
-            
+
             transaction.Commit();
             logger.Log(LogLevel.Information, "Successful remove medias from pet. Files: {files}", petPhotos);
 

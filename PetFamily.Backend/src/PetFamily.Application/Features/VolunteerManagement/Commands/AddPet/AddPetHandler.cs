@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstractions;
+using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.Features.Species;
 using PetFamily.Domain.Shared;
@@ -13,6 +14,7 @@ using PetFamily.Domain.VolunteerManagement.ValueObjects;
 namespace PetFamily.Application.Features.VolunteerManagement.Commands.AddPet;
 
 public class AddPetHandler(
+    IUnitOfWork unitOfWork,
     IVolunteersRepository volunteersRepository,
     ISpeciesRepository speciesRepository,
     IValidator<AddPetCommand> validator,
@@ -42,10 +44,9 @@ public class AddPetHandler(
         var pet = TryCreatePet(command).Value;
         volunteer.Value.AddPet(pet);
 
-        var result = await volunteersRepository.Save(volunteer.Value, cancellationToken);
-        if (result.IsFailure)
-            return result.Error.ToErrorList();
-
+        await volunteersRepository.Save(volunteer.Value, cancellationToken);
+        await unitOfWork.SaveChanges(cancellationToken);
+        
         logger.Log(LogLevel.Information, "Volunteer {VolunteerId} added pet {PetId}", volunteerId, pet.Id);
         return pet.Id.Id;
     }
@@ -88,8 +89,8 @@ public class AddPetHandler(
             command.IsVaccinated,
             command.HelpStatus,
             petTimeCreated,
-            new ValueObjectList<PetPhoto>([]),
-            new ValueObjectList<Requisite>(convertRequisites)
+            new List<PetPhoto>([]),
+            new List<Requisite>(convertRequisites)
         );
     }
 }
