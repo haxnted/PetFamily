@@ -123,7 +123,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
 
         builder.Property(v => v.PetPhotoList)
             .HasValueObjectsJsonConversion(
-                input => new PetPhotoDto() { Path = input.Path },
+                input => new PetPhotoDto() { Path = input.Path, IsPhotoMain = input.IsImageMain},
                 output => PetPhoto.Create(FilePath.Create(output.Path).Value, output.IsPhotoMain).Value)
             .HasColumnName("pet_photos");
         
