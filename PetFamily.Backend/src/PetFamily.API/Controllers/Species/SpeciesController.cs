@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PetFamily.API.Controllers.Species.Requests;
 using PetFamily.API.Controllers.SpeciesController.Requests;
 using PetFamily.API.Extensions;
 using PetFamily.Application.Features.Species.Commands.AddBreedToSpecies;
@@ -7,7 +8,6 @@ using PetFamily.Application.Features.Species.Commands.DeleteBreed;
 using PetFamily.Application.Features.Species.Commands.DeleteSpecies;
 using PetFamily.Application.Features.Species.Queries.GetAllSpeciesWithPagination;
 using PetFamily.Application.Features.Species.Queries.GetBreedsBySpecial;
-using PetFamily.Domain.Species;
 
 namespace PetFamily.API.Controllers.SpeciesController;
 

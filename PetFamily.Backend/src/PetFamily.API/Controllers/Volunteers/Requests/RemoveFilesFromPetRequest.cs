@@ -2,8 +2,8 @@
 
 namespace PetFamily.API.Controllers.Volunteers;
 
-public record RemoveFilesFromPetRequest(Guid PetId)
+public record RemoveFilesFromPetRequest
 {
-    public RemoveFilesFromPetCommand ToCommand(Guid VolunteerId) =>
+    public RemoveFilesFromPetCommand ToCommand(Guid VolunteerId, Guid PetId) =>
         new(VolunteerId, PetId);
 }
