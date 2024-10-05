@@ -54,7 +54,7 @@ public class AddPhotosToPetHandler(
             pet.UpdateFiles(petPhotoList);
             await unitOfWork.SaveChanges(cancellationToken);
 
-            await DeleteFilesIsPetHasPhotos(oldPetPhotos, cancellationToken);
+            await DeletePetPhotosIfExist(oldPetPhotos, cancellationToken);
             
             var resultUpload = await fileProvider.UploadFiles(photosConvert.Value, cancellationToken);
             if (resultUpload.IsFailure)
@@ -86,7 +86,7 @@ public class AddPhotosToPetHandler(
         }
     }
 
-    public async Task DeleteFilesIsPetHasPhotos(IReadOnlyList<PetPhoto> petPhotoList, CancellationToken cancellationToken = default)
+    public async Task DeletePetPhotosIfExist(IReadOnlyList<PetPhoto> petPhotoList, CancellationToken cancellationToken = default)
     {
         if (petPhotoList.Count == 0)
             return;
