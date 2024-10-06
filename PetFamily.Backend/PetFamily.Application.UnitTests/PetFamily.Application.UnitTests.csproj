@@ -23,9 +23,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\PetFamily.Application\PetFamily.Application.csproj" />
-      <ProjectReference Include="..\src\PetFamily.Domain\PetFamily.Domain.csproj" />
-      <ProjectReference Include="..\src\PetFamily.Infrastructure\PetFamily.Infrastructure.csproj" />
+      <ProjectReference Include="..\src\PetFamily.VolunteerManagement.Application\PetFamily.VolunteerManagement.Application.csproj" />
+      <ProjectReference Include="..\src\PetFamily.VolunteerManagement.Domain\PetFamily.VolunteerManagement.Domain.csproj" />
+      <ProjectReference Include="..\src\PetFamily.VolunteerManagement.Infrastructure\PetFamily.VolunteerManagement.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

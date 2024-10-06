@@ -1,10 +1,10 @@
 using FluentAssertions;
-using PetFamily.Domain.Shared.EntityIds;
-using PetFamily.Domain.Shared.ValueObjects;
-using PetFamily.Domain.VolunteerManagement;
-using PetFamily.Domain.VolunteerManagement.Entities;
-using PetFamily.Domain.VolunteerManagement.Enums;
-using PetFamily.Domain.VolunteerManagement.ValueObjects;
+using PetFamily.SharedKernel.EntityIds;
+using PetFamily.SharedKernel.ValueObjects;
+using PetFamily.VolunteerManagement.Domain;
+using PetFamily.VolunteerManagement.Domain.Entities;
+using PetFamily.VolunteerManagement.Domain.Enums;
+using PetFamily.VolunteerManagement.Domain.ValueObjects;
 
 namespace PetFamily.Domain.UnitTests;
 
@@ -144,8 +144,8 @@ public class PetTests
             Description.Create("General Description").Value,
             AgeExperience.Create(5).Value,
             PhoneNumber.Create("7234567890").Value,
-            new ValueObjectList<SocialLink>(new List<SocialLink>()),
-            new ValueObjectList<Requisite>(new List<Requisite>())
+            [],
+            []
         );
 
         for (int i = 0; i < petCount; i++)
@@ -165,8 +165,8 @@ public class PetTests
                 true,
                 HelpStatusPet.LookingForHome,
                 DateTime.Now,
-                new ValueObjectList<PetPhoto>(new List<PetPhoto>()),
-                new ValueObjectList<Requisite>(new List<Requisite>())
+                [],
+                []
             );
             volunteer.AddPet(pet);
         }

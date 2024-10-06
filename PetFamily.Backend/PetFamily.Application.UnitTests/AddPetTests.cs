@@ -1,36 +1,31 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Data;
+using CSharpFunctionalExtensions;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Moq;
-using PetFamily.Application.Database;
-using PetFamily.Application.Dto;
-using PetFamily.Application.Features.VolunteerManagement;
-using PetFamily.Application.Features.VolunteerManagement.Commands.AddPet;
-using PetFamily.Domain.Shared;
-using PetFamily.Domain.Shared.EntityIds;
-using PetFamily.Domain.Shared.ValueObjects;
-using PetFamily.Domain.VolunteerManagement;
-using PetFamily.Domain.VolunteerManagement.Entities;
-using PetFamily.Domain.VolunteerManagement.Enums;
-using PetFamily.Domain.VolunteerManagement.ValueObjects;
+using PetFamily.Core.Dto;
+using PetFamily.SharedKernel;
+using PetFamily.SharedKernel.EntityIds;
+using PetFamily.SharedKernel.ValueObjects;
+using PetFamily.Species.Contracts;
+using PetFamily.VolunteerManagement.Application;
+using PetFamily.VolunteerManagement.Application.Commands.AddPet;
+using PetFamily.VolunteerManagement.Domain;
+using PetFamily.VolunteerManagement.Domain.Entities;
+using PetFamily.VolunteerManagement.Domain.Enums;
+using PetFamily.VolunteerManagement.Domain.ValueObjects;
 
 namespace PetFamily.Application.UnitTests;
 
 public class AddPetTests
 {
-    private readonly Mock<IVolunteersRepository> _volunteerRepositoryMock;
-    private readonly Mock<IValidator<AddPetCommand>> _validatorMock;
-    private readonly Mock<ILogger<AddPetHandler>> _loggerMock;
-
-    public AddPetTests()
-    {
-        _volunteerRepositoryMock = new Mock<IVolunteersRepository>();
-        _validatorMock = new Mock<IValidator<AddPetCommand>>();
-        _loggerMock = new Mock<ILogger<AddPetHandler>>();
-    }
+    private readonly Mock<ISpeciesContract> _speciesContractMock = new();
+    private readonly Mock<IVolunteerUnitOfWork> _volunteerUnitOfWorkMock = new();
+    private readonly Mock<IVolunteersRepository> _volunteerRepositoryMock = new();
+    private readonly Mock<IValidator<AddPetCommand>> _validatorMock = new();
+    private readonly Mock<ILogger<AddPetHandler>> _loggerMock = new();
 
     [Fact]
     public async Task Execute_ShouldAddPet_WhenCommandIsValid()
@@ -40,8 +35,7 @@ public class AddPetTests
         var volunteer = CreateVolunteerWithPets(0);
 
 
-        var command = new AddPetCommand(
-            volunteer.Id,
+        var command = new AddPetCommand(volunteer.Id,
             "Dog",
             "desc",
             "healthdesc",
@@ -50,13 +44,23 @@ public class AddPetTests
             5,
             "79494442255",
             DateTime.Now.ToUniversalTime(),
+            Guid.NewGuid(),
+            Guid.NewGuid(),
             false,
             false,
             HelpStatusPet.FoundHome,
-            new List<RequisiteDto>()
-            {
-                new RequisiteDto("name", "Desc")
-            });
+            new List<RequisiteDto> { new("name", "Desc") });
+
+        var speciesDto = CreateSpeciesWithBreeds();
+
+        _volunteerUnitOfWorkMock.Setup(v => v.BeginTransaction(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<IDbTransaction>());
+
+        _speciesContractMock.Setup(s => s.GetSpeciesById(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Result.Success<SpeciesDto, Error>(speciesDto));
+        
+        _volunteerUnitOfWorkMock.Setup(v => v.SaveChanges(It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
 
         _validatorMock.Setup(v => v.ValidateAsync(command, ct))
             .ReturnsAsync(new ValidationResult());
@@ -65,9 +69,11 @@ public class AddPetTests
             .ReturnsAsync(Result.Success<Volunteer, Error>(volunteer));
 
         _volunteerRepositoryMock.Setup(v => v.Save(It.IsAny<Volunteer>(), ct))
-            .ReturnsAsync(Result.Success<Guid, Error>(volunteer.Id.Id));
-
-        var handler = new AddPetHandler(_volunteerRepositoryMock.Object, _validatorMock.Object, _loggerMock.Object);
+            .Returns(Task.CompletedTask);
+        
+        var handler = new AddPetHandler(_volunteerUnitOfWorkMock.Object, _volunteerRepositoryMock.Object,
+            _speciesContractMock.Object,
+            _validatorMock.Object, _loggerMock.Object);
 
         // act
         var result = await handler.Execute(command, ct);
@@ -86,35 +92,38 @@ public class AddPetTests
 
         var invalidNumber = "123";
 
-        var command = new AddPetCommand(
-            volunteer.Id,
+        var command = new AddPetCommand(volunteer.Id,
             "Dog",
             "desc",
             "healthdesc",
             new AddressDto("street", "city", "state", "zip"),
             5,
             5,
-            invalidNumber,
+            "79494442255",
             DateTime.Now.ToUniversalTime(),
+            Guid.NewGuid(),
+            Guid.NewGuid(),
             false,
             false,
             HelpStatusPet.FoundHome,
-            new List<RequisiteDto>()
-            {
-                new RequisiteDto("name", "Desc")
-            });
-        
+            new List<RequisiteDto> { new("name", "Desc") });
+
         var errorValidate = Errors.General.ValueIsInvalid("PhoneNumber").Serialize();
-        var validationFailures = new List<ValidationFailure>
-        {
-            new("PhoneNumber", errorValidate),
-        };
+        var validationFailures = new List<ValidationFailure> { new("PhoneNumber", errorValidate), };
         var validationResult = new ValidationResult(validationFailures);
-        
+        var speciesDto = CreateSpeciesWithBreeds();
         _validatorMock.Setup(v => v.ValidateAsync(command, ct))
             .ReturnsAsync(validationResult);
+
+        _volunteerUnitOfWorkMock.Setup(v => v.BeginTransaction(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<IDbTransaction>());
+
+        _speciesContractMock.Setup(s => s.GetSpeciesById(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Result.Success<SpeciesDto, Error>(speciesDto));
         
-        var handler = new AddPetHandler(_volunteerRepositoryMock.Object, _validatorMock.Object, _loggerMock.Object);
+        var handler = new AddPetHandler(_volunteerUnitOfWorkMock.Object, _volunteerRepositoryMock.Object,
+            _speciesContractMock.Object,
+            _validatorMock.Object, _loggerMock.Object);
 
         // act
         var result = await handler.Execute(command, ct);
@@ -130,8 +139,8 @@ public class AddPetTests
         // arrange
         var ct = new CancellationToken();
         var volunteer = CreateVolunteerWithPets(0);
-        var command = new AddPetCommand(
-            volunteer.Id,
+
+        var command = new AddPetCommand(volunteer.Id,
             "Dog",
             "desc",
             "healthdesc",
@@ -140,24 +149,32 @@ public class AddPetTests
             5,
             "79494442255",
             DateTime.Now.ToUniversalTime(),
+            Guid.NewGuid(),
+            Guid.NewGuid(),
             false,
             false,
             HelpStatusPet.FoundHome,
-            new List<RequisiteDto>()
-            {
-                new RequisiteDto("name", "Desc")
-            });
+            new List<RequisiteDto> { new("name", "Desc") });
+
+        var speciesDto = CreateSpeciesWithBreeds();
+        
+        _speciesContractMock.Setup(s => s.GetSpeciesById(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Result.Success<SpeciesDto, Error>(speciesDto));
+        _volunteerUnitOfWorkMock.Setup(v => v.BeginTransaction(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<IDbTransaction>());
         
         _validatorMock.Setup(v => v.ValidateAsync(command, ct))
             .ReturnsAsync(new ValidationResult());
-        
+
         _volunteerRepositoryMock.Setup(v => v.GetById(It.IsAny<VolunteerId>(), ct))
             .ReturnsAsync(Result.Success<Volunteer, Error>(volunteer));
 
         _volunteerRepositoryMock.Setup(v => v.Save(It.IsAny<Volunteer>(), ct))
-            .ReturnsAsync(Result.Failure<Guid, Error>(Error.Failure("save.error", "save error")));
+            .Returns(Task.CompletedTask);
 
-        var handler = new AddPetHandler(_volunteerRepositoryMock.Object, _validatorMock.Object, _loggerMock.Object);
+        var handler = new AddPetHandler(_volunteerUnitOfWorkMock.Object, _volunteerRepositoryMock.Object,
+            _speciesContractMock.Object,
+            _validatorMock.Object, _loggerMock.Object);
 
         // act
         var result = await handler.Execute(command, ct);
@@ -170,20 +187,17 @@ public class AddPetTests
 
     private Volunteer CreateVolunteerWithPets(int petCount)
     {
-        var volunteer = new Volunteer(
-            VolunteerId.NewId(),
+        var volunteer = new Volunteer(VolunteerId.NewId(),
             FullName.Create("John", "Doe", "sdfsfws").Value,
             Description.Create("General Description").Value,
             AgeExperience.Create(5).Value,
             PhoneNumber.Create("7234567890").Value,
-            new ValueObjectList<SocialLink>(new List<SocialLink>()),
-            new ValueObjectList<Requisite>(new List<Requisite>())
-        );
+            [],
+            []);
 
         for (int i = 0; i < petCount; i++)
         {
-            var pet = new Pet(
-                PetId.NewId(),
+            var pet = new Pet(PetId.NewId(),
                 NickName.Create($"Pet {i + 1}").Value,
                 Description.Create("General Description").Value,
                 Description.Create("Health Information").Value,
@@ -197,12 +211,20 @@ public class AddPetTests
                 true,
                 HelpStatusPet.LookingForHome,
                 DateTime.Now,
-                new ValueObjectList<PetPhoto>(new List<PetPhoto>()),
-                new ValueObjectList<Requisite>(new List<Requisite>())
-            );
+                [],
+                []);
             volunteer.AddPet(pet);
         }
 
         return volunteer;
+    }
+
+    private SpeciesDto CreateSpeciesWithBreeds()
+    {
+        var speciesId = Guid.NewGuid();
+        return new SpeciesDto()
+        {
+            Id = speciesId, Breeds = [new BreedDto { Id = new Guid(), SpeciesId = speciesId, Name = "котэк" }]
+        };
     }
 }
