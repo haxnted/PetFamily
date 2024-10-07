@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PetFamily.SharedKernel;
 using PetFamily.SharedKernel.EntityIds;
 using PetFamily.Species.Application;
+using PetFamily.Species.Domain.ValueObjects;
 using PetFamily.VolunteerManagement.Domain.ValueObjects;
 
 namespace PetFamily.Species.Infrastructure;

@@ -9,11 +9,6 @@
     <ItemGroup>
       <ProjectReference Include="..\PetFamily.Core\PetFamily.Core.csproj" />
       <ProjectReference Include="..\PetFamily.SharedKernel\PetFamily.SharedKernel.csproj" />
-      <ProjectReference Include="..\PetFamily.Species.Domain\PetFamily.Species.Domain.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="CSharpFunctionalExtensions" Version="2.42.5" />
     </ItemGroup>
 
     <ItemGroup>

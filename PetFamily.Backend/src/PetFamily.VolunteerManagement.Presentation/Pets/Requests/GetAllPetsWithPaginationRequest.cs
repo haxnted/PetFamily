@@ -22,7 +22,7 @@ public record GetAllPetsWithPaginationRequest(
     int? MaxWeight,
     int? MinAge,
     int? MaxAge,
-    HelpStatusPet? HelpStatus,
+    int? HelpStatus,
     bool? IsCastrated,
     bool? IsVaccinated)
 {

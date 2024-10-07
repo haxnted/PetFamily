@@ -2,7 +2,7 @@
 using CSharpFunctionalExtensions;
 using PetFamily.SharedKernel;
 
-namespace PetFamily.VolunteerManagement.Domain.ValueObjects;
+namespace PetFamily.Species.Domain.ValueObjects;
 
 public record TypeAnimal
 {

@@ -22,6 +22,6 @@ public record GetAllPetsWithPaginationQuery(
     int? MaxWeight = null,
     int? MinAge = null,
     int? MaxAge = null,
-    HelpStatusPet? HelpStatus = null,
+    int? HelpStatus = null,
     bool? IsCastrated = null,
     bool? IsVaccinated = null) : IQuery;

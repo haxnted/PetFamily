@@ -1,6 +1,4 @@
-﻿using PetFamily.VolunteerManagement.Domain.Enums;
-
-namespace PetFamily.Core.Dto;
+﻿namespace PetFamily.Core.Dto;
 
 public class PetDto
 {
@@ -18,7 +16,7 @@ public class PetDto
     public DateTime BirthDate { get; init; }
     public bool IsCastrated { get; init; }
     public bool IsVaccinated { get; init; }
-    public HelpStatusPet HelpStatus { get; init; }
+    public int HelpStatus { get; init; }
     public int Position { get; init; }
     public DateTime DateCreated { get; init; }
     public IEnumerable<RequisiteDto> Requisites { get; init; } = default!;

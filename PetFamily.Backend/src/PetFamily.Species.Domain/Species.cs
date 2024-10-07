@@ -2,7 +2,7 @@
 using PetFamily.SharedKernel;
 using PetFamily.SharedKernel.EntityIds;
 using PetFamily.Species.Domain.Entities;
-using PetFamily.VolunteerManagement.Domain.ValueObjects;
+using PetFamily.Species.Domain.ValueObjects;
 
 namespace PetFamily.Species.Domain;
 
