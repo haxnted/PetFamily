@@ -23,17 +23,18 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\PetFamily.Species.Infrastructure\PetFamily.Species.Infrastructure.csproj" />
-      <ProjectReference Include="..\PetFamily.Species.Presentation\PetFamily.Species.Presentation.csproj" />
-      <ProjectReference Include="..\PetFamily.VolunteerManagement.Application\PetFamily.VolunteerManagement.Application.csproj" />
-      <ProjectReference Include="..\PetFamily.VolunteerManagement.Infrastructure\PetFamily.VolunteerManagement.Infrastructure.csproj" />
-      <ProjectReference Include="..\PetFamily.VolunteerManagement.Presentation\PetFamily.VolunteerManagement.Presentation.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Content Include="..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Shared\PetFamily.Core\PetFamily.Core.csproj" />
+      <ProjectReference Include="..\Shared\PetFamily.SharedKernel\PetFamily.SharedKernel.csproj" />
+      <ProjectReference Include="..\Species\PetFamily.Species.Infrastructure\PetFamily.Species.Infrastructure.csproj" />
+      <ProjectReference Include="..\Species\PetFamily.Species.Presentation\PetFamily.Species.Presentation.csproj" />
+      <ProjectReference Include="..\VolunteerManagement\PetFamily.VolunteerManagement.Infrastructure\PetFamily.VolunteerManagement.Infrastructure.csproj" />
+      <ProjectReference Include="..\VolunteerManagement\PetFamily.VolunteerManagement.Presentation\PetFamily.VolunteerManagement.Presentation.csproj" />
     </ItemGroup>
 
 </Project>
