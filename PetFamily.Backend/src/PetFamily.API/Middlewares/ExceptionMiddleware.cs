@@ -1,6 +1,6 @@
 ﻿using System.Net;
-using PetFamily.API.Response;
-using PetFamily.Domain.Shared;
+using PetFamily.Framework;
+using PetFamily.SharedKernel;
 
 namespace PetFamily.API.Middlewares;
 

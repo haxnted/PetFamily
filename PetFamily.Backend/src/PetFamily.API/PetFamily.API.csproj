@@ -10,6 +10,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -23,15 +24,18 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\PetFamily.Application\PetFamily.Application.csproj" />
-      <ProjectReference Include="..\PetFamily.Domain\PetFamily.Domain.csproj" />
-      <ProjectReference Include="..\PetFamily.Infrastructure\PetFamily.Infrastructure.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Content Include="..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Shared\PetFamily.Framework\PetFamily.Framework.csproj" />
+      <ProjectReference Include="..\..\Shared\PetFamily.SharedKernel\PetFamily.SharedKernel.csproj" />
+      <ProjectReference Include="..\..\Species\PetFamily.Species.Presentation\PetFamily.Species.Presentation.csproj" />
+      <ProjectReference Include="..\VolunteerManagement\PetFamily.VolunteerManagement.Application\PetFamily.VolunteerManagement.Application.csproj" />
+      <ProjectReference Include="..\VolunteerManagement\PetFamily.VolunteerManagement.Infrastructure\PetFamily.VolunteerManagement.Infrastructure.csproj" />
+      <ProjectReference Include="..\VolunteerManagement\PetFamily.VolunteerManagement.Presentation\PetFamily.VolunteerManagement.Presentation.csproj" />
     </ItemGroup>
 
 </Project>

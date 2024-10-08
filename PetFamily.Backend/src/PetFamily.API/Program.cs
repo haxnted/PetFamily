@@ -1,8 +1,10 @@
 using PetFamily.API;
 using PetFamily.API.Extensions;
 using PetFamily.API.Middlewares;
-using PetFamily.Application;
-using PetFamily.Infrastructure;
+using PetFamily.Species.Infrastructure;
+using PetFamily.Species.Presentation;
+using PetFamily.VolunteerManagement.Infrastructure;
+using PetFamily.VolunteerManagement.Presentation;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,9 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddConfigureLogging();
 
 builder.Services
-    .AddApi()
-    .AddAInfrastructure(builder.Configuration)
-    .AddApplication()
+    .AddWeb()
+    .AddSpeciesModule(builder.Configuration)
+    .AddVolunteerModule(builder.Configuration)
     .AddHttpLogging(u => { u.CombineLogs = true; });
 
 var app = builder.Build();
@@ -23,7 +25,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    await app.ApplyMigrations();
+    await app.ApplyMigrations<SpeciesWriteDbContext>();
+    await app.ApplyMigrations<VolunteersWriteDbContext>();
 }
 
 app.UseHttpLogging();
