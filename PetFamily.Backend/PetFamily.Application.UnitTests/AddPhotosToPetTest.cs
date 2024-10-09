@@ -5,18 +5,17 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using Moq;
-using PetFamily.Application.Database;
-using PetFamily.Application.Features.VolunteerManagement;
-using PetFamily.Application.Features.VolunteerManagement.Commands.AddFilesPet;
-using PetFamily.Application.FileProvider;
-using PetFamily.Application.Messaging;
-using PetFamily.Domain.Shared;
-using PetFamily.Domain.Shared.EntityIds;
-using PetFamily.Domain.Shared.ValueObjects;
-using PetFamily.Domain.VolunteerManagement;
-using PetFamily.Domain.VolunteerManagement.Entities;
-using PetFamily.Domain.VolunteerManagement.Enums;
-using PetFamily.Domain.VolunteerManagement.ValueObjects;
+using PetFamily.Core.Messaging;
+using PetFamily.Core.Providers.FileProvider;
+using PetFamily.SharedKernel;
+using PetFamily.SharedKernel.EntityIds;
+using PetFamily.SharedKernel.ValueObjects;
+using PetFamily.VolunteerManagement.Application;
+using PetFamily.VolunteerManagement.Application.Commands.AddFilesPet;
+using PetFamily.VolunteerManagement.Domain;
+using PetFamily.VolunteerManagement.Domain.Entities;
+using PetFamily.VolunteerManagement.Domain.Enums;
+using PetFamily.VolunteerManagement.Domain.ValueObjects;
 
 namespace PetFamily.Application.UnitTests;
 
@@ -24,7 +23,7 @@ public class AddPhotosToPetTest
 {
     private readonly Mock<IVolunteersRepository> _volunteerRepositoryMock = new();
     private readonly Mock<IValidator<AddPhotosToPetCommand>> _validatorMock = new();
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
+    private readonly Mock<IVolunteerUnitOfWork> _unitOfWorkMock = new();
     private readonly Mock<ILogger<AddPhotosToPetHandler>> _loggerMock = new();
     private readonly Mock<IFileProvider> _fileProviderMock = new();
     private readonly Mock<IDbTransaction> _dbTransactionMock = new();
@@ -85,7 +84,7 @@ public class AddPhotosToPetTest
 
         // assert
         resultHandle.IsSuccess.Should().BeTrue();
-        resultHandle.Value.Equals(volunteerId.Id).Should().BeTrue();
+        resultHandle.Value.Equals(petId.Id).Should().BeTrue();
     }
 
     [Fact]

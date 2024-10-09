@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Shared\PetFamily.Core\PetFamily.Core.csproj" />
+      <ProjectReference Include="..\..\..\Species\PetFamily.Species.Contracts\PetFamily.Species.Contracts.csproj" />
+      <ProjectReference Include="..\PetFamily.VolunteerManagement.Domain\PetFamily.VolunteerManagement.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CSharpFunctionalExtensions" Version="2.42.5" />
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.5.1" />
+      <PackageReference Include="Scrutor.AspNetCore" Version="3.3.0" />
+    </ItemGroup>
+
+</Project>
