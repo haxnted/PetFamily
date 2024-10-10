@@ -16,6 +16,7 @@ using PetFamily.VolunteerManagement.Application.Commands.UpdateVolunteer;
 using PetFamily.VolunteerManagement.Application.Queries.GetVolunteerById;
 using PetFamily.VolunteerManagement.Application.Queries.GetVolunteersWithPagination;
 using PetFamily.VolunteerManagement.Presentation.Processors;
+using PetFamily.VolunteerManagement.Presentation.Volunteers.Requests;
 
 namespace PetFamily.VolunteerManagement.Presentation.Volunteers;
 
