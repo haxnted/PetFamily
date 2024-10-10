@@ -1,7 +1,7 @@
 ﻿using PetFamily.Core.Dto;
 using PetFamily.VolunteerManagement.Application.Commands.CreateVolunteer;
 
-namespace PetFamily.VolunteerManagement.Presentation.Volunteers;
+namespace PetFamily.VolunteerManagement.Presentation.Volunteers.Requests;
 
 public record CreateVolunteerRequest(
     FullNameDto FullName,

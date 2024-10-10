@@ -5,6 +5,7 @@ using PetFamily.SharedKernel.EntityIds;
 using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.VolunteerManagement.Application;
 using PetFamily.VolunteerManagement.Domain;
+using PetFamily.VolunteerManagement.Infrastructure.DbContexts;
 
 namespace PetFamily.VolunteerManagement.Infrastructure;
 
