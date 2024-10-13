@@ -2,7 +2,7 @@
 using PetFamily.VolunteerManagement.Application.Commands.AddPet;
 using PetFamily.VolunteerManagement.Domain.Enums;
 
-namespace PetFamily.VolunteerManagement.Presentation.Volunteers;
+namespace PetFamily.VolunteerManagement.Presentation.Volunteers.Requests;
 
 public record AddPetRequest(
     string NickName,
