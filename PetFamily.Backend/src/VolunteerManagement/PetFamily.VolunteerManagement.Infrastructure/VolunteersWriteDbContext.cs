@@ -13,6 +13,7 @@ public class VolunteersWriteDbContext(IConfiguration configuration) : DbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema("volunteers");
         modelBuilder.ApplyConfigurationsFromAssembly(
             typeof(VolunteersWriteDbContext).Assembly,
             type => type.FullName?.Contains("Configurations.Write") ?? false);
