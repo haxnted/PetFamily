@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using PetFamily.VolunteerManagement.Application.Commands.AddFilesPet;
 
-namespace PetFamily.VolunteerManagement.Presentation.Volunteers;
+namespace PetFamily.VolunteerManagement.Presentation.Volunteers.Requests;
 
 public record AddPetFilesRequest(IFormFileCollection Files)
 {

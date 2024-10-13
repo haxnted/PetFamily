@@ -1,10 +1,10 @@
-using PetFamily.API;
-using PetFamily.API.Extensions;
+using PetFamily.Accounts.Presentation;
 using PetFamily.Species.Infrastructure;
 using PetFamily.Species.Presentation;
 using PetFamily.VolunteerManagement.Infrastructure;
 using PetFamily.VolunteerManagement.Presentation;
 using Serilog;
+using Web;
 using Web.Extensions;
 using Web.Middlewares;
 
@@ -13,10 +13,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddConfigureLogging();
 
 builder.Services
-    .AddWeb()
     .AddSpeciesModule(builder.Configuration)
     .AddVolunteerModule(builder.Configuration)
-    .AddHttpLogging(u => { u.CombineLogs = true; });
+    .AddAccountsModule(builder.Configuration)
+    .AddWeb()
+    .AddHttpLogging(u =>
+    {
+        u.CombineLogs = true;
+    });
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -33,6 +39,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpLogging();
 app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.UseHttpsRedirection();
 app.Run();

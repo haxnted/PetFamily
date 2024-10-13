@@ -1,6 +1,6 @@
 ﻿using PetFamily.VolunteerManagement.Application.Commands.UpdatePetPhotoMain;
 
-namespace PetFamily.VolunteerManagement.Presentation.Volunteers;
+namespace PetFamily.VolunteerManagement.Presentation.Volunteers.Requests;
 
 public record UpdatePetPhotoMainRequest(Guid PetId, string FileName)
 {
