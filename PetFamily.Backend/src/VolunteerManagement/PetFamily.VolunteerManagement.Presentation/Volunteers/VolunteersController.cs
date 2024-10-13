@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Dto;
 using PetFamily.Framework;
 using PetFamily.VolunteerManagement.Application.Commands.AddFilesPet;
@@ -16,11 +17,13 @@ using PetFamily.VolunteerManagement.Application.Commands.UpdateVolunteer;
 using PetFamily.VolunteerManagement.Application.Queries.GetVolunteerById;
 using PetFamily.VolunteerManagement.Application.Queries.GetVolunteersWithPagination;
 using PetFamily.VolunteerManagement.Presentation.Processors;
+using PetFamily.VolunteerManagement.Presentation.Volunteers.Requests;
 
 namespace PetFamily.VolunteerManagement.Presentation.Volunteers;
 
 public class VolunteersController : ApplicationController
 {
+    [Authorize]
     [HttpPost("volunteer")]
     public async Task<ActionResult<Guid>> Create(
         [FromBody] CreateVolunteerRequest request,
@@ -35,6 +38,7 @@ public class VolunteersController : ApplicationController
         return Created(result.Value.ToString(), null);
     }
     
+    [Authorize]
     [HttpPost("{volunteerId:guid}/pet/{petId:guid}/photos")]
     public async Task<ActionResult> AddFilesToPet(
         [FromForm] AddPetFilesRequest request,
@@ -53,6 +57,7 @@ public class VolunteersController : ApplicationController
         return Ok(result.Value);
     }
     
+    [Authorize]
     [HttpPost("{volunteerId:guid}/pet/general")]
     public async Task<ActionResult> CreatePet(
         [FromBody] AddPetRequest request,
@@ -66,6 +71,8 @@ public class VolunteersController : ApplicationController
 
         return Ok(result.Value);
     }
+    
+    [Authorize]
     [HttpPatch("{volunteerId:guid}/main-info")]
     public async Task<ActionResult> UpdateMainInfo(
         [FromRoute] Guid volunteerId,
@@ -81,6 +88,7 @@ public class VolunteersController : ApplicationController
         return Ok(new { Message = volunteerId });
     }
 
+    [Authorize]
     [HttpPatch("{volunteerId:guid}/social-links")]
     public async Task<ActionResult> UpdateSocialLinks(
         [FromRoute] Guid volunteerId,
@@ -96,6 +104,7 @@ public class VolunteersController : ApplicationController
         return Ok(volunteerId);
     }
 
+    [Authorize]
     [HttpPatch("{volunteerId:guid}/requisites")]
     public async Task<ActionResult> UpdateRequisites(
         [FromRoute] Guid volunteerId,
@@ -111,7 +120,7 @@ public class VolunteersController : ApplicationController
         return Ok(volunteerId);
     }
     
-
+    [Authorize]
     [HttpPatch("{volunteerId:guid}/pet/{petId:guid}/general")]
     public async Task<ActionResult> UpdateGeneralInfoPet(
         [FromBody] UpdateGeneralPetInfoRequest request,
@@ -127,7 +136,7 @@ public class VolunteersController : ApplicationController
         return Ok(result.Value);
     }
     
-
+    [Authorize]
     [HttpPatch("{volunteerId:guid}/pet/{petId:guid}/position/{position:int}")]
     public async Task<ActionResult> UpdatePetPosition(
         [FromRoute] Guid volunteerId,
@@ -144,6 +153,7 @@ public class VolunteersController : ApplicationController
         return Ok(result.Value);
     }
 
+    [Authorize]
     [HttpDelete("{volunteerId:guid}")]
     public async Task<ActionResult> Delete(
         [FromRoute] Guid volunteerId,
@@ -157,6 +167,7 @@ public class VolunteersController : ApplicationController
         return Ok(volunteerId);
     }
 
+    [Authorize]
     [HttpDelete("{volunteerId:guid}/pet/{petId:guid}/soft")]
     public async Task<ActionResult> SoftDeletePet(
         [FromRoute] Guid volunteerId,
@@ -171,6 +182,7 @@ public class VolunteersController : ApplicationController
         return Ok(volunteerId);
     }
     
+    [Authorize]
     [HttpDelete("{volunteerId:guid}/pet/{petId:guid}/hard")]
     public async Task<ActionResult> SoftDeletePet(
         [FromRoute] Guid volunteerId,
@@ -185,6 +197,7 @@ public class VolunteersController : ApplicationController
         return Ok(volunteerId);
     }
     
+    [Authorize]
     [HttpDelete("{volunteerId:guid}/pet/{petId:guid}/photos")]
     public async Task<ActionResult> RemoveFilesFromPet(
         [FromRoute] Guid volunteerId,
