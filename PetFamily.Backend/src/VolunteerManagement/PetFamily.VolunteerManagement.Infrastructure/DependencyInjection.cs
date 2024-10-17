@@ -5,6 +5,7 @@ using PetFamily.Core.BackgroundServices;
 using PetFamily.Core.MessageQueues;
 using PetFamily.Core.Messaging;
 using PetFamily.Core.Providers.FileProvider;
+using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.VolunteerManagement.Application;
 using PetFamily.VolunteerManagement.Domain.ValueObjects;
 using PetFamily.VolunteerManagement.Infrastructure.Options;

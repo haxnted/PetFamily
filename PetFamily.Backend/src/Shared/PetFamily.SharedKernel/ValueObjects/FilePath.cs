@@ -1,7 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.SharedKernel;
 
-namespace PetFamily.VolunteerManagement.Domain.ValueObjects;
+namespace PetFamily.SharedKernel.ValueObjects;
 
 public record FilePath
 {

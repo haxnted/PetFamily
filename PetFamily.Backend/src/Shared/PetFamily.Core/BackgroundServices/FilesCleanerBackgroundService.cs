@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Core.Messaging;
 using PetFamily.Core.Providers.FileProvider;
 using PetFamily.SharedKernel;
-using PetFamily.VolunteerManagement.Domain.ValueObjects;
+using PetFamily.SharedKernel.ValueObjects;
 
 namespace PetFamily.Core.BackgroundServices;
 

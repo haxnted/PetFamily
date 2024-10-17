@@ -7,6 +7,7 @@ using PetFamily.Core.Messaging;
 using PetFamily.Core.Providers.FileProvider;
 using PetFamily.SharedKernel;
 using PetFamily.SharedKernel.EntityIds;
+using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.VolunteerManagement.Domain.ValueObjects;
 
 namespace PetFamily.VolunteerManagement.Application.Commands.AddFilesPet;

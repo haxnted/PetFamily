@@ -7,7 +7,6 @@ using PetFamily.SharedKernel;
 using PetFamily.SharedKernel.EntityIds;
 using PetFamily.Species.Application.Commands.AddSpecies;
 using PetFamily.VolunteerManagement.Contracts;
-using PetFamily.VolunteerManagement.Domain;
 
 namespace PetFamily.Species.Application.Commands.DeleteSpecies;
 
