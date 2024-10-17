@@ -12,6 +12,7 @@ public class SpeciesWriteDbContext(IConfiguration configuration) : DbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema("species");
         modelBuilder.ApplyConfigurationsFromAssembly(
             typeof(SpeciesWriteDbContext).Assembly,
             type => type.FullName?.Contains("Configurations.Write") ?? false);

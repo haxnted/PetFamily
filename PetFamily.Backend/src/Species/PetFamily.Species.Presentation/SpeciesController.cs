@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetFamily.Framework;
 using PetFamily.Species.Application.Commands.AddBreedToSpecies;
 using PetFamily.Species.Application.Commands.AddSpecies;
@@ -12,6 +13,7 @@ namespace PetFamily.Species.Presentation;
 
 public class SpeciesController : ApplicationController
 {
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult> Create(
         [FromBody] AddSpeciesRequest request,
@@ -25,6 +27,7 @@ public class SpeciesController : ApplicationController
         return Ok(result.Value);
     }
 
+    [Authorize]
     [HttpPost("{speciesId:guid}/breed")]
     public async Task<ActionResult> AddBreedToSpecial(
         [FromRoute] Guid speciesId,
@@ -39,7 +42,7 @@ public class SpeciesController : ApplicationController
         return Ok(result.Value);
     }
 
-
+    [Authorize]
     [HttpDelete]
     public async Task<ActionResult> RemoveSpecies(
         [FromQuery] Guid id,
@@ -53,6 +56,7 @@ public class SpeciesController : ApplicationController
         return Ok(result.Value);
     }
 
+    [Authorize]
     [HttpDelete("{speciesId:guid}/breed")]
     public async Task<ActionResult> RemoveBreedFromSpecies(
         [FromRoute] Guid speciesId,
