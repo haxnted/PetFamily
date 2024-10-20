@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Accounts.Application.Commands.Login;
 using PetFamily.Accounts.Application.Commands.Register;
+
 using PetFamily.Accounts.Presentation.Requests;
 using PetFamily.Framework;
 
@@ -8,6 +9,22 @@ namespace PetFamily.Accounts.Presentation;
 
 public class AccountsController : ApplicationController
 {
+    //test
+    [Permission("create.pet")]
+    [HttpPost("admin")]
+    public IActionResult CreatePet()
+    {
+        return Ok();
+    }
+    
+    //test
+    [Permission("delete.pet")]
+    [HttpPost("user")]
+    public IActionResult DeletePet()
+    {
+        return Ok();
+    }
+    
     [HttpPost("registration")]
     public async Task<IActionResult> Register(
         [FromBody] RegisterUserRequest request,
