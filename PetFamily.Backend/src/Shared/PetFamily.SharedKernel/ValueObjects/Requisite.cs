@@ -1,13 +1,12 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.SharedKernel;
 
-namespace PetFamily.VolunteerManagement.Domain.ValueObjects;
+namespace PetFamily.SharedKernel.ValueObjects;
 
 public record Requisite
 {
     public string Name { get; }
     public string Description { get; }
-
+    
     private Requisite(string name, string description)
     {
         Name = name;
