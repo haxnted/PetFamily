@@ -10,11 +10,15 @@ namespace PetFamily.Accounts.Infrastructure;
 public class AuthorizationDbContext(IConfiguration configuration) : IdentityDbContext<User, Role, Guid>
 {
     private const string DATABASE = "PetFamilyDatabase";
+    public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
+    public DbSet<Permission> Permissions => Set<Permission>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
-        
         modelBuilder.HasDefaultSchema("accounts");
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(
+            typeof(AuthorizationDbContext).Assembly,
+            type => type.FullName?.Contains("Configurations") ?? false);
         
         modelBuilder.Entity<User>()
             .ToTable("users");
