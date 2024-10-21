@@ -2,6 +2,8 @@
 
 public class CustomClaims
 {
+    public const string Id = "Id";
     public const string Subject = "subject";
-    public static string Email = "email";
+    public const string Email = "email";
+    public const string Role = "role";
 }

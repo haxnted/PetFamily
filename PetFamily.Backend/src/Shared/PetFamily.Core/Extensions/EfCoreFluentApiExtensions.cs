@@ -12,8 +12,7 @@ public static class EfCoreFluentApiExtensions
         Func<TValueObject, TDto> toDtoSelector,
         Func<TDto, TValueObject> toValueObjectsSelector)
     {
-        return property.HasConversion(
-                values => SerializeValueObjectsCollection(values, toDtoSelector),
+        return property.HasConversion(values => SerializeValueObjectsCollection(values, toDtoSelector),
                 json => DeserializeDtoCollection(json, toValueObjectsSelector),
                 CreateCollectionValueComparer<TValueObject>())
             .HasColumnType("jsonb");
@@ -36,8 +35,12 @@ public static class EfCoreFluentApiExtensions
     }
 
     private static ValueComparer<IReadOnlyList<T>> CreateCollectionValueComparer<T>() =>
-        new(
-            (c1, c2) => c1!.SequenceEqual(c2!),
+        new((c1, c2) => c1!.SequenceEqual(c2!),
+            c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v!.GetHashCode())),
+            c => c.ToList());
+
+    public static ValueComparer<IEnumerable<T>> CreateValueComparer<T>() =>
+        new((c1, c2) => c1!.SequenceEqual(c2!),
             c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v!.GetHashCode())),
             c => c.ToList());
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Accounts.Application;
 using PetFamily.Accounts.Domain;
@@ -27,7 +28,8 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<AuthorizationDbContext>();
 
         collection.AddScoped<AuthorizationDbContext>();
-
+        collection.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>();
+        collection.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
         return collection;
     }
 }

@@ -17,6 +17,7 @@ public static class DependencyInjection
         collection.AddSerilog();
         collection.AddAuthFieldInSwagger();
         collection.AddJwtAuthentication();
+        collection.AddCustomAuthorization();
         return collection;
     }
 
@@ -46,13 +47,24 @@ public static class DependencyInjection
         });
     }
 
+    private static IServiceCollection AddCustomAuthorization(this IServiceCollection collection)
+    {
+        collection.AddAuthorization();
+
+        collection.AddScoped<PermissionRequirement>(provider =>
+            new PermissionRequirement("your-permission-name"));
+
+        return collection;
+    }
+
     private static IServiceCollection AddJwtAuthentication(this IServiceCollection collection)
     {
-        collection.AddAuthentication (options =>
+        collection.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(options =>
             {
@@ -60,15 +72,15 @@ public static class DependencyInjection
                     .BuildServiceProvider()
                     .GetRequiredService<IOptions<JwtOptions>>().Value;
                 var issuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key));
-                
+
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidIssuer = jwtOptions.Issuer,
                     ValidAudience = jwtOptions.Audience,
                     IssuerSigningKey = issuerSigningKey,
-                    ValidateIssuer = false,
+                    ValidateIssuer = true,
                     ValidateAudience = true,
-                    ValidateLifetime = false,
+                    ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     ClockSkew = TimeSpan.Zero
                 };

@@ -22,7 +22,7 @@ builder.Services
         u.CombineLogs = true;
     });
 
-builder.Services.AddAuthorization();
+
 
 var app = builder.Build();
 

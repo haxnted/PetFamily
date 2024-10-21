@@ -4,6 +4,7 @@ using PetFamily.Core.Dto;
 using PetFamily.Core.Extensions;
 using PetFamily.SharedKernel;
 using PetFamily.SharedKernel.EntityIds;
+using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.VolunteerManagement.Domain.Entities;
 using PetFamily.VolunteerManagement.Domain.ValueObjects;
 

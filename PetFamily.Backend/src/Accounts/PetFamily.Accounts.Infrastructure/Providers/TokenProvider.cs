@@ -17,7 +17,12 @@ public class TokenProvider(IOptions<JwtOptions> options) : ITokenProvider
 
         Claim[] claims =
         [
-            new(CustomClaims.Subject, user.Id.ToString()), new Claim(CustomClaims.Email, user.Email ?? ""),
+            
+            new(CustomClaims.Id, user.Id.ToString()), 
+            new (CustomClaims.Email, user.Email ?? ""),
+            new (CustomClaims.Role, "volunteer"),
+            new ("permission", "create.pet"),
+            new ("permission", "delete.pet")
         ];
 
         var jwtToken = new JwtSecurityToken(issuer: options.Value.Issuer,
@@ -25,10 +30,7 @@ public class TokenProvider(IOptions<JwtOptions> options) : ITokenProvider
             expires: DateTime.UtcNow.AddMinutes(int.Parse(options.Value.ExpirationInMinutes)),
             signingCredentials: signingCredentials,
             claims: claims);
-
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("234523tryhfgdsewtrsgdadwaerweeegswaeqeqweqweqewq"));
-        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
+        
         var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
 
         return token;

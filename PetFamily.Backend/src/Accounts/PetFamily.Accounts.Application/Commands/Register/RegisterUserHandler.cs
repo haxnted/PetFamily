@@ -28,10 +28,18 @@ public class RegisterUserHandler(
         var existsUserWithUserName = await userManager.FindByNameAsync(command.UserName);
         if (existsUserWithUserName != null)
             return Errors.General.AlreadyExist("username").ToErrorList();
-
-        var user = new User { UserName = command.UserName, Email = command.Email };
+        
+        var user = new User
+        {
+            PhotoPath = "",
+            SocialLinks = [],
+            UserName = command.UserName, 
+            Email = command.Email
+        };
+        
+        
         var result = await userManager.CreateAsync(user, command.Password);
-
+        await userManager.AddToRoleAsync(user, "Participant");
         if (result.Succeeded)
         {
             logger.LogInformation("User {UserName} has created a new account", command.UserName);

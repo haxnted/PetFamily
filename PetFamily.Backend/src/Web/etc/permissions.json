@@ -1,0 +1,31 @@
+{
+  "Roles:": {
+    "Volunteer": [
+      "volunteer.update",
+      "volunteer.delete"
+    ],
+    "Participant": [
+      "volunteer.create"
+    ],
+    "Admin": [
+      "species.create",
+      "species.update",
+      "species.delete"
+    ]
+  },
+  "Permissions:": {
+    "Volunteer": [
+      "volunteer.create",
+      "volunteer.update",
+      "volunteer.delete"
+    ],
+    "Participant": [
+      "volunteer.create"
+    ],
+    "Admin": [
+      "species.create",
+      "species.update",
+      "species.delete"
+    ]
+  }
+}

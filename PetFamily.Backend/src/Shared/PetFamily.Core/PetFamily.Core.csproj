@@ -22,7 +22,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\VolunteerManagement\PetFamily.VolunteerManagement.Domain\PetFamily.VolunteerManagement.Domain.csproj" />
       <ProjectReference Include="..\PetFamily.SharedKernel\PetFamily.SharedKernel.csproj" />
     </ItemGroup>
 

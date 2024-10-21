@@ -1,13 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.SharedKernel;
 
-namespace PetFamily.VolunteerManagement.Domain.ValueObjects;
+namespace PetFamily.SharedKernel.ValueObjects;
 
 public record SocialLink
 {
     public string Name { get; }
     public string Url { get; }
-
     private SocialLink(string name, string url)
     {
         Name = name;

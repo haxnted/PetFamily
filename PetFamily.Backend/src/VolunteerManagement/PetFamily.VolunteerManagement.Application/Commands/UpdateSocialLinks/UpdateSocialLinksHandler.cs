@@ -5,6 +5,7 @@ using PetFamily.Core.Abstractions;
 using PetFamily.Core.Extensions;
 using PetFamily.SharedKernel;
 using PetFamily.SharedKernel.EntityIds;
+using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.VolunteerManagement.Domain.ValueObjects;
 
 namespace PetFamily.VolunteerManagement.Application.Commands.UpdateSocialLinks;

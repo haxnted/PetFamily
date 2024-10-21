@@ -10,4 +10,8 @@
       <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.10" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\Shared\PetFamily.SharedKernel\PetFamily.SharedKernel.csproj" />
+    </ItemGroup>
+
 </Project>
