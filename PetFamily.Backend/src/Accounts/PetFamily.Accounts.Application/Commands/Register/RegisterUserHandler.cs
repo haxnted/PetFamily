@@ -32,7 +32,7 @@ public class RegisterUserHandler(
         var user = new User
         {
             PhotoPath = "",
-            SocialLinkList = [],
+            SocialLinks = [],
             UserName = command.UserName, 
             Email = command.Email
         };

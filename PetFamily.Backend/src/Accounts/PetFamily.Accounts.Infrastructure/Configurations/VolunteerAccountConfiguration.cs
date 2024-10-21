@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Accounts.Domain;
+using PetFamily.Core.Extensions;
 using PetFamily.SharedKernel;
 using PetFamily.SharedKernel.ValueObjects;
 
@@ -27,14 +28,11 @@ public class VolunteerAccountConfiguration : IEntityTypeConfiguration<VolunteerA
                 .HasColumnName("patronymic");
         });
         
-        builder.Property(v => v.RequisiteList)
+        builder.Property(v => v.Requisites)
             .HasConversion(
                 u => JsonSerializer.Serialize(u, JsonSerializerOptions.Default),
                 json => JsonSerializer.Deserialize<List<Requisite>>(json, JsonSerializerOptions.Default)!,
-                new ValueComparer<List<Requisite>>(
-                    (c1, c2) => c1!.SequenceEqual(c2!),
-                    c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v!.GetHashCode())),
-                    c => c.ToList()))
+                EfCoreFluentApiExtensions.CreateValueComparer<List<Requisite>>())
             .HasColumnName("requisites");
     }
 }
